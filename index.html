@@ -3,148 +3,290 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>二游情报铺 · 售卖手册</title>
-<meta name="description" content="二游情报铺：版本情报 · 角色资料 · 武器档案。共收录 14 份资料。">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="bingbot" content="noindex, nofollow">
+<title>二游情报铺 · 版本情报 · 角色资料 · 武器档案</title>
+<meta name="description" content="">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
 <style>
   :root {
-    --bg: #101318;
-    --bg2: #151a22;
-    --panel: #1a212c;
-    --line: #2a3442;
-    --ink: #e8e4d8;
-    --ink-dim: #9aa3ad;
-    --ink-faint: #6b7480;
-    --gold: #d8b25c;
+    --bg: #fff5f7;
+    --bg2: #fff0f3;
+    --panel: #ffffff;
+    --line: #ffd6e0;
+    --ink: #3d2b3d;
+    --ink-dim: #7a6474;
+    --ink-faint: #b8a0b0;
+    --pink: #e87aa0;
+    --pink-deep: #d4608a;
+    --pink-soft: #f5b8cc;
+    --pink-pale: #fce4ec;
+    --gold: #f0a868;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
     background: var(--bg);
     color: var(--ink);
-    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
-    line-height: 1.6;
+    font-family: "LXGW WenKai", "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
   }
   body::before {
     content: "";
     position: fixed; inset: 0;
-    background-image: radial-gradient(circle at 1px 1px, rgba(216,178,92,.05) 1px, transparent 0);
-    background-size: 26px 26px;
+    background-image:
+      radial-gradient(circle at 2px 2px, rgba(232,122,160,.06) 1.5px, transparent 0);
+    background-size: 28px 28px;
     pointer-events: none;
     z-index: 0;
   }
   .wrap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 0 22px; }
 
+  /* ===== 密码门控 ===== */
+  #gate {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity .4s;
+  }
+  #gate.unlocked { opacity: 0; pointer-events: none; }
+  .gate-box {
+    text-align: center; max-width: 360px; width: 90%; padding: 40px 24px;
+  }
+  .gate-icon { font-size: 48px; margin-bottom: 16px; }
+  .gate-title {
+    font-size: 28px; font-weight: 700; color: var(--pink-deep);
+    letter-spacing: .06em; margin-bottom: 6px;
+  }
+  .gate-sub { color: var(--ink-dim); font-size: 14px; margin-bottom: 28px; letter-spacing: .15em; }
+  .gate-field { display: flex; gap: 8px; }
+  .gate-field input {
+    flex: 1; background: var(--panel); border: 2px solid var(--line);
+    border-radius: 10px; color: var(--ink); padding: 12px 16px;
+    font-size: 15px; outline: none; font-family: inherit;
+    transition: border-color .2s;
+  }
+  .gate-field input:focus { border-color: var(--pink); }
+  .gate-field input::placeholder { color: var(--ink-faint); }
+  .gate-field button {
+    background: var(--pink); color: #fff; border: none; border-radius: 10px;
+    padding: 12px 22px; font-size: 15px; font-weight: 700; cursor: pointer;
+    font-family: inherit; transition: background .2s;
+  }
+  .gate-field button:hover { background: var(--pink-deep); }
+  .gate-err { color: #e05070; font-size: 13px; margin-top: 10px; display: none; }
+
   /* ===== 顶栏 ===== */
   .masthead {
-    border-bottom: 1px solid var(--line);
-    background: linear-gradient(180deg, var(--bg2), var(--bg));
-    padding: 46px 0 34px;
+    border-bottom: 2px solid var(--line);
+    background: linear-gradient(180deg, #fff8fa, var(--bg));
+    padding: 40px 0 28px;
   }
-  .brand { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
   .brand h1 {
-    font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
-    font-size: clamp(30px, 5vw, 44px);
-    font-weight: 900;
-    letter-spacing: .06em;
-    color: var(--ink);
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: 900; letter-spacing: .05em; color: var(--ink);
   }
-  .brand h1 em { font-style: normal; color: var(--gold); }
-  .brand .sub { color: var(--ink-dim); font-size: 14px; letter-spacing: .28em; }
-  .mast-note { margin-top: 14px; color: var(--ink-faint); font-size: 13.5px; max-width: 640px; }
-  .mast-note b { color: var(--ink-dim); font-weight: 600; }
+  .brand h1 em { font-style: normal; color: var(--pink); }
+  .brand .sub { color: var(--ink-dim); font-size: 13.5px; letter-spacing: .22em; }
+  .mast-note { margin-top: 12px; color: var(--ink-dim); font-size: 14px; max-width: 620px; }
+  .mast-note b { color: var(--pink-deep); font-weight: 700; }
 
   .all-share {
-    margin-top: 22px;
+    margin-top: 18px;
     display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap;
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-left: 3px solid var(--gold);
-    border-radius: 8px;
-    padding: 12px 18px;
-    font-size: 14px;
+    background: var(--panel); border: 1.5px solid var(--line);
+    border-left: 4px solid var(--pink); border-radius: 10px;
+    padding: 10px 16px; font-size: 14px;
   }
   .all-share .lbl { color: var(--ink-dim); }
-  .all-share a { color: var(--gold); text-decoration: none; font-family: "SF Mono", Consolas, monospace; font-size: 13px; word-break: break-all; }
+  .all-share a {
+    color: var(--pink-deep); text-decoration: none;
+    font-family: "SF Mono", Consolas, monospace; font-size: 13px; word-break: break-all;
+  }
   .all-share a:hover { text-decoration: underline; }
-  .all-share .pwd { color: var(--ink); background: #232d3a; border-radius: 4px; padding: 2px 8px; font-family: Consolas, monospace; font-size: 13px; }
-
-  .nav { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
-  .nav-chip {
-    text-decoration: none; font-size: 13.5px; color: var(--ink-dim);
-    border: 1px solid var(--line); border-radius: 999px; padding: 6px 16px;
-    transition: all .18s;
+  .all-share .pwd {
+    color: var(--ink); background: var(--pink-pale); border-radius: 5px;
+    padding: 2px 8px; font-family: Consolas, monospace; font-size: 13px;
   }
-  .nav-chip:hover { color: var(--ac); border-color: var(--ac); }
 
-  .search { margin-top: 20px; max-width: 380px; }
+  /* ===== 标签导航 ===== */
+  .tabs {
+    display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; align-items: center;
+  }
+  .tab-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    text-decoration: none; font-size: 15px; color: var(--ink-dim);
+    border: 1.5px solid var(--line); border-radius: 999px;
+    padding: 8px 20px; cursor: pointer; transition: all .2s;
+    background: transparent; font-family: inherit;
+  }
+  .tab-btn:hover { color: var(--pink-deep); border-color: var(--pink-soft); }
+  .tab-btn.active {
+    color: #fff; background: var(--pink); border-color: var(--pink);
+    font-weight: 700;
+  }
+  .tab-count {
+    font-size: 12px; background: rgba(255,255,255,.3);
+    border-radius: 999px; padding: 1px 7px;
+  }
+  .tab-btn:not(.active) .tab-count {
+    background: var(--pink-pale); color: var(--pink-deep);
+  }
+
+  .search { margin-top: 16px; max-width: 360px; }
   .search input {
-    width: 100%; background: var(--bg2); border: 1px solid var(--line);
-    border-radius: 8px; color: var(--ink); padding: 10px 14px; font-size: 14px; outline: none;
+    width: 100%; background: var(--panel); border: 1.5px solid var(--line);
+    border-radius: 10px; color: var(--ink); padding: 10px 14px;
+    font-size: 14px; outline: none; font-family: inherit;
+    transition: border-color .2s;
   }
-  .search input:focus { border-color: var(--gold); }
+  .search input:focus { border-color: var(--pink); }
   .search input::placeholder { color: var(--ink-faint); }
 
-  /* ===== 分区 ===== */
-  .game { padding: 48px 0 8px; }
-  .game-head { display: flex; align-items: baseline; gap: 14px; border-bottom: 2px solid var(--ac); padding-bottom: 10px; }
-  .game-idx { font-family: Georgia, serif; font-size: 15px; color: var(--ac); letter-spacing: .1em; }
+  /* ===== 分区标题 ===== */
+  .section-panel { padding: 36px 0 8px; }
+  .section-panel.hidden { display: none; }
+  .section-head {
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 2.5px solid var(--pink); padding-bottom: 10px; margin-bottom: 6px;
+  }
+  .section-head h2 {
+    font-size: clamp(22px, 3.5vw, 28px); font-weight: 900;
+    letter-spacing: .04em; color: var(--pink-deep);
+  }
+  .section-head .desc {
+    font-size: 13px; color: var(--ink-faint); letter-spacing: .08em;
+  }
+
+  /* ===== 版本段 ===== */
+  .ver-section { margin-top: 28px; }
+  .ver-badge {
+    display: inline-block; font-size: 13px; color: var(--pink-deep);
+    background: var(--pink-pale); border: 1.5px solid var(--pink-soft);
+    border-radius: 6px; padding: 3px 14px; letter-spacing: .1em;
+    margin-bottom: 12px; font-weight: 700;
+  }
+  .archive-badge {
+    color: var(--ink-dim); background: #f8f0f2; border-color: var(--line);
+  }
+
+  /* ===== 游戏块 ===== */
+  .game-block { margin-top: 8px; }
+  .game-head {
+    display: flex; align-items: baseline; gap: 10px; padding-bottom: 8px;
+    border-bottom: 1.5px dashed var(--line); margin-bottom: 14px;
+  }
   .game-head h2 {
-    font-family: "Noto Serif SC", "Songti SC", serif;
-    font-size: clamp(22px, 3.4vw, 30px); font-weight: 900; letter-spacing: .04em;
+    font-size: clamp(18px, 3vw, 24px); font-weight: 800;
+    letter-spacing: .03em; color: var(--ink);
   }
-  .branch { padding-top: 20px; }
-  .ver-tag {
-    display: inline-block; font-size: 12.5px; color: var(--ac);
-    border: 1px solid var(--ac); border-radius: 4px; padding: 2px 10px; letter-spacing: .12em;
+
+  .group { margin-top: 16px; }
+  .group-label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; color: var(--ink-dim); letter-spacing: .15em;
+    margin-bottom: 10px; font-weight: 700;
   }
-  .group { margin-top: 18px; }
-  .group-label { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-dim); letter-spacing: .2em; margin-bottom: 12px; }
-  .group-label i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+  .group-label i { width: 8px; height: 8px; border-radius: 3px; display: inline-block; }
 
   /* ===== 卡片 ===== */
-  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(235px, 1fr)); gap: 16px; }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 16px;
+  }
   .card {
-    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
-    overflow: hidden; transition: transform .18s, border-color .18s;
+    background: var(--panel); border: 1.5px solid var(--line);
+    border-radius: 12px; overflow: hidden;
+    transition: transform .2s, border-color .2s, box-shadow .2s;
     display: flex; flex-direction: column;
   }
-  .card:hover { transform: translateY(-3px); border-color: #3d4a5c; }
-  .art { aspect-ratio: 16 / 10; overflow: hidden; background: var(--bg2); }
-  .art img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s; }
-  .card:hover .art img { transform: scale(1.04); }
-  .art-ph { display: flex; align-items: center; justify-content: center; }
-  .art-ph span {
-    font-family: "Noto Serif SC", serif; font-size: 22px; letter-spacing: .3em;
-    color: var(--ink-faint); border: 1px dashed var(--line); border-radius: 6px;
-    padding: 14px 22px; text-align: center; line-height: 1.8;
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: var(--pink-soft);
+    box-shadow: 0 6px 20px rgba(232,122,160,.12);
   }
-  .card-body { padding: 14px 15px 15px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-  .card-kind { font-size: 11.5px; color: var(--ink-faint); letter-spacing: .2em; }
-  .card-title { font-size: 17px; font-weight: 700; }
-  .card-meta { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--ink-faint); }
-  .card-meta span:first-child { color: var(--ink-dim); word-break: break-all; }
-  .card-actions { margin-top: auto; padding-top: 10px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .art {
+    aspect-ratio: 16 / 10; overflow: hidden;
+    background: var(--pink-pale); position: relative;
+  }
+  .art img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block; transition: transform .35s;
+  }
+  .card:hover .art img { transform: scale(1.05); }
+  .art-ph {
+    display: flex; align-items: center; justify-content: center;
+    height: 100%;
+  }
+  .art-ph span {
+    font-size: 18px; letter-spacing: .2em;
+    color: var(--ink-faint); border: 1.5px dashed var(--line);
+    border-radius: 8px; padding: 12px 20px; text-align: center; line-height: 1.8;
+  }
+  .card-body {
+    padding: 14px 15px 16px; display: flex;
+    flex-direction: column; gap: 7px; flex: 1;
+  }
+  .card-kind {
+    font-size: 11.5px; color: var(--pink-deep);
+    letter-spacing: .15em; font-weight: 700;
+  }
+  .card-title { font-size: 17px; font-weight: 700; color: var(--ink); }
+  .card-meta {
+    display: flex; flex-direction: column; gap: 2px;
+    font-size: 12.5px; color: var(--ink-faint);
+  }
+  .card-meta span:first-child {
+    color: var(--ink-dim); word-break: break-all;
+  }
+  .card-actions {
+    margin-top: auto; padding-top: 10px;
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  }
   .btn-main {
     flex: 1; text-align: center; text-decoration: none;
-    background: var(--gold); color: #1a1608; font-weight: 700; font-size: 13.5px;
-    border-radius: 6px; padding: 8px 12px; transition: filter .15s;
+    background: var(--pink); color: #fff; font-weight: 700;
+    font-size: 13.5px; border-radius: 8px; padding: 9px 12px;
+    transition: background .15s; font-family: inherit;
   }
-  .btn-main:hover { filter: brightness(1.1); }
+  .btn-main:hover { background: var(--pink-deep); }
   .btn-pwd {
     display: inline-flex; align-items: center; gap: 5px;
-    background: #232d3a; border: 1px solid var(--line); color: var(--ink-dim);
-    font-size: 12px; border-radius: 6px; padding: 8px 10px; cursor: pointer;
-    font-family: Consolas, monospace; transition: all .15s;
+    background: var(--pink-pale); border: 1.5px solid var(--line);
+    color: var(--ink-dim); font-size: 12px; border-radius: 8px;
+    padding: 8px 10px; cursor: pointer; font-family: Consolas, monospace;
+    transition: all .15s;
   }
-  .btn-pwd:hover { color: var(--ink); border-color: var(--gold); }
-  .btn-pwd.copied { color: #7ec98a; border-color: #3f6b49; }
+  .btn-pwd:hover { color: var(--pink-deep); border-color: var(--pink-soft); }
+  .btn-pwd.copied { color: #50b878; border-color: #78d4a0; }
+
+  /* ===== 空档案 ===== */
+  .empty-archive {
+    text-align: center; padding: 48px 0;
+    color: var(--ink-faint); font-size: 15px;
+  }
+  .empty-sub { font-size: 13px; margin-top: 8px; }
+
+  .empty-tip {
+    display: none; color: var(--ink-faint);
+    padding: 30px 0; text-align: center;
+  }
 
   /* ===== 页脚 ===== */
-  footer { border-top: 1px solid var(--line); margin-top: 56px; padding: 30px 0 44px; color: var(--ink-faint); font-size: 13px; }
-  footer .f-row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-  footer .sig { font-family: "Noto Serif SC", serif; color: var(--ink-dim); letter-spacing: .1em; }
-  .empty-tip { display: none; color: var(--ink-faint); padding: 30px 0; text-align: center; }
+  footer {
+    border-top: 1.5px solid var(--line); margin-top: 48px;
+    padding: 28px 0 40px; color: var(--ink-faint); font-size: 13px;
+  }
+  footer .f-row {
+    display: flex; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap;
+  }
+  footer .sig { color: var(--pink-deep); letter-spacing: .08em; }
 
   @media (max-width: 560px) {
     .cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
@@ -152,316 +294,302 @@
     .card-meta { font-size: 11px; }
     .btn-main { font-size: 12.5px; padding: 7px 8px; }
     .btn-pwd { font-size: 11px; padding: 7px 8px; }
+    .brand h1 { font-size: 26px; }
+    .gate-field { flex-direction: column; }
+    .gate-field button { width: 100%; }
   }
 </style>
 </head>
 <body>
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-icon">&#x1F338;</div>
+    <h2 class="gate-title">二游情报铺</h2>
+    <p class="gate-sub">版本情报 · 角色资料 · 武器档案</p>
+    <div class="gate-field">
+      <input type="password" id="gate-pwd" placeholder="请输入访问密码" autocomplete="off">
+      <button id="gate-btn" onclick="tryGate()">进入</button>
+    </div>
+    <p id="gate-err" class="gate-err">密码不对哦，再试试？</p>
+  </div>
+</div>
   <header class="masthead">
     <div class="wrap">
       <div class="brand">
         <h1>二游<em>情报铺</em></h1>
         <span class="sub">版本情报 · 角色资料 · 武器档案</span>
       </div>
-      <p class="mast-note">小铺专营各大二游版本情报，角色、武器资料随版本持续上新。下方每份资料均有独立获取入口，<b>点「获取资料」跳转夸克网盘，配合提取码即可保存</b>。全部资料也可通过顶部分享链接一次打包拿走。</p>
+      <p class="mast-note">小铺专营各大二游版本情报，角色、武器资料随版本持续上新。每份资料有独立获取入口，<b>点「获取资料」跳转夸克网盘，配合提取码即可保存</b>。</p>
       <div class="all-share">
         <span class="lbl">全部资料 · 总链接</span>
         <a href="https://pan.quark.cn/s/9781c1fd59d7" target="_blank" rel="noopener">https://pan.quark.cn/s/9781c1fd59d7</a>
         <span class="pwd">提取码 f6zt</span>
       </div>
-      <nav class="nav"><a class="nav-chip" style="--ac:#6f8cff" href="#g01">崩坏：星穹铁道</a><a class="nav-chip" style="--ac:#e8b04b" href="#g02">原神</a><a class="nav-chip" style="--ac:#5fd68b" href="#g03">异环</a></nav>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('preview')">前瞻<span class="tab-count">3</span></button>
+        <button class="tab-btn" onclick="showTab('archive')">二游遗产名录<span class="tab-count">0</span></button>
+      </div>
       <div class="search"><input id="q" type="search" placeholder="搜索资料名，例如：薇斯纳、单手剑…"></div>
     </div>
   </header>
 
   <main class="wrap">
-    
-    <section class="game" id="g01" style="--ac:#6f8cff">
-      <div class="game-head">
-        <span class="game-idx">01</span>
-        <h2>崩坏：星穹铁道</h2>
+    <section class="section-panel" id="sec-preview">
+      <div class="section-head">
+        <h2>前瞻</h2>
+        <span class="desc">各游戏最新版本情报</span>
       </div>
-      
-      <div class="branch">
-        <span class="ver-tag">版本 4.5</span>
-        
-        <div class="group">
-          <div class="group-label"><i style="background:#6f8cff"></i>角色</div>
-          <div class="cards">
-        <div class="card" data-name="砂金•戏浪 砂金•戏浪V4.pdf">
-          <div class="art"><img src="assets/cover-sandin.webp" alt="砂金•戏浪" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">角色</div>
-            <h3 class="card-title">砂金•戏浪</h3>
-            <div class="card-meta">
-              <span>砂金•戏浪V4.pdf</span>
-              <span>20.1 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/d9c6ec5181a9" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="P3d1">提取码 P3d1<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-        <div class="card" data-name="知更鸟•晴歌 知更鸟•晴歌V4.pdf">
-          <div class="art"><img src="assets/cover-zhigengniao.webp" alt="知更鸟•晴歌" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">角色</div>
-            <h3 class="card-title">知更鸟•晴歌</h3>
-            <div class="card-meta">
-              <span>知更鸟•晴歌V4.pdf</span>
-              <span>20.1 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/3f7baae5c342" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="UBjM">提取码 UBjM<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-          </div>
-        </div>
-        <div class="group">
-          <div class="group-label"><i style="background:#6f8cff"></i>光锥</div>
-          <div class="cards">
-        <div class="card" data-name="向浪花掷下盛夏 向浪花掷下盛夏-欢愉.pdf">
-          <div class="art"><img src="assets/cover-xianglanghua.webp" alt="向浪花掷下盛夏" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">光锥·5星</div>
-            <h3 class="card-title">向浪花掷下盛夏</h3>
-            <div class="card-meta">
-              <span>向浪花掷下盛夏-欢愉.pdf</span>
-              <span>3.3 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/f5ef7f93fa6f" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="JADj">提取码 JADj<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-        <div class="card" data-name="向着地平线的终点 向着地平线的终点-巡猎.pdf">
-          <div class="art"><img src="assets/cover-xiangzhedipingxian.webp" alt="向着地平线的终点" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">光锥·4星</div>
-            <h3 class="card-title">向着地平线的终点</h3>
-            <div class="card-meta">
-              <span>向着地平线的终点-巡猎.pdf</span>
-              <span>3.2 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/f6f084d0feaf" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="2h6G">提取码 2h6G<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-        <div class="card" data-name="你将起身歌唱 你将起身歌唱-记忆.pdf">
-          <div class="art"><img src="assets/cover-nijiangqishenggechang.webp" alt="你将起身歌唱" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">光锥·5星</div>
-            <h3 class="card-title">你将起身歌唱</h3>
-            <div class="card-meta">
-              <span>你将起身歌唱-记忆.pdf</span>
-              <span>3.1 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/777b6993c94f" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="UfaM">提取码 UfaM<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-        <div class="card" data-name="放个短假 放个短假-欢愉.pdf">
-          <div class="art"><img src="assets/cover-fanggeduanjia.webp" alt="放个短假" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">光锥·4星</div>
-            <h3 class="card-title">放个短假</h3>
-            <div class="card-meta">
-              <span>放个短假-欢愉.pdf</span>
-              <span>3.2 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/78cba8840a6f" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="yfkw">提取码 yfkw<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-          </div>
-        </div>
-      </div>
+      <div class="ver-section">
+  <span class="ver-badge">版本 4.5</span>
+  <div class="game-block" style="--ac:#6f8cff">
+  <div class="game-head">
+    <h2>崩坏：星穹铁道</h2>
+  </div>
+  <div class="group">
+  <div class="group-label"><i style="background:#6f8cff"></i>角色</div>
+  <div class="cards"><div class="card" data-name="砂金•戏浪 砂金•戏浪V4.pdf">
+  <div class="art"><img src="assets/cover-sandin.webp" alt="砂金•戏浪" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">角色</div>
+    <h3 class="card-title">砂金•戏浪</h3>
+    <div class="card-meta">
+      <span>砂金•戏浪V4.pdf</span>
+      <span>20.1 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/d9c6ec5181a9" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="P3d1">提取码 P3d1<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div><div class="card" data-name="知更鸟•晴歌 知更鸟•晴歌V4.pdf">
+  <div class="art"><img src="assets/cover-zhigengniao.webp" alt="知更鸟•晴歌" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">角色</div>
+    <h3 class="card-title">知更鸟•晴歌</h3>
+    <div class="card-meta">
+      <span>知更鸟•晴歌V4.pdf</span>
+      <span>20.1 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/3f7baae5c342" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="UBjM">提取码 UBjM<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div></div>
+</div><div class="group">
+  <div class="group-label"><i style="background:#6f8cff"></i>光锥</div>
+  <div class="cards"><div class="card" data-name="向浪花掷下盛夏 向浪花掷下盛夏-欢愉.pdf">
+  <div class="art"><img src="assets/cover-xianglanghua.webp" alt="向浪花掷下盛夏" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">光锥·5星</div>
+    <h3 class="card-title">向浪花掷下盛夏</h3>
+    <div class="card-meta">
+      <span>向浪花掷下盛夏-欢愉.pdf</span>
+      <span>3.3 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/f5ef7f93fa6f" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="JADj">提取码 JADj<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div><div class="card" data-name="向着地平线的终点 向着地平线的终点-巡猎.pdf">
+  <div class="art"><img src="assets/cover-xiangzhedipingxian.webp" alt="向着地平线的终点" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">光锥·4星</div>
+    <h3 class="card-title">向着地平线的终点</h3>
+    <div class="card-meta">
+      <span>向着地平线的终点-巡猎.pdf</span>
+      <span>3.2 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/f6f084d0feaf" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="2h6G">提取码 2h6G<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div><div class="card" data-name="你将起身歌唱 你将起身歌唱-记忆.pdf">
+  <div class="art"><img src="assets/cover-nijiangqishenggechang.webp" alt="你将起身歌唱" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">光锥·5星</div>
+    <h3 class="card-title">你将起身歌唱</h3>
+    <div class="card-meta">
+      <span>你将起身歌唱-记忆.pdf</span>
+      <span>3.1 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/777b6993c94f" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="UfaM">提取码 UfaM<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div><div class="card" data-name="放个短假 放个短假-欢愉.pdf">
+  <div class="art"><img src="assets/cover-fanggeduanjia.webp" alt="放个短假" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">光锥·4星</div>
+    <h3 class="card-title">放个短假</h3>
+    <div class="card-meta">
+      <span>放个短假-欢愉.pdf</span>
+      <span>3.2 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/78cba8840a6f" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="yfkw">提取码 yfkw<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div></div>
+</div>
+</div>
+</div>
+<div class="ver-section">
+  <span class="ver-badge">版本 7.1</span>
+  <div class="game-block" style="--ac:#e8b04b">
+  <div class="game-head">
+    <h2>原神</h2>
+  </div>
+  <div class="group">
+  <div class="group-label"><i style="background:#e8b04b"></i>角色</div>
+  <div class="cards"><div class="card" data-name="沃雅妮莎 沃雅妮莎.pdf">
+  <div class="art"><img src="assets/cover-woyanisha.webp" alt="沃雅妮莎" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">角色</div>
+    <h3 class="card-title">沃雅妮莎</h3>
+    <div class="card-meta">
+      <span>沃雅妮莎.pdf</span>
+      <span>5.0 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/82351b47111b" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="FcEd">提取码 FcEd<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div><div class="card" data-name="薇斯纳 薇斯纳V4.pdf">
+  <div class="art"><img src="assets/cover-weisina.webp" alt="薇斯纳" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">角色</div>
+    <h3 class="card-title">薇斯纳</h3>
+    <div class="card-meta">
+      <span>薇斯纳V4.pdf</span>
+      <span>4.2 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/ea7643664330" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="rj4i">提取码 rj4i<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div></div>
+</div><div class="group">
+  <div class="group-label"><i style="background:#e8b04b"></i>武器</div>
+  <div class="cards"><div class="card" data-name="蝶变-单手剑 蝶变.pdf">
+  <div class="art"><img src="assets/icon-diebian.webp" alt="蝶变-单手剑" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">武器</div>
+    <h3 class="card-title">蝶变-单手剑</h3>
+    <div class="card-meta">
+      <span>蝶变.pdf</span>
+      <span>1.0 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/4d15d5efc8a6" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="wGZb">提取码 wGZb<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div><div class="card" data-name="漩流颂歌-法器 漩流颂歌-法器.pdf">
+  <div class="art"><img src="assets/cover-xuanliusonge.webp" alt="漩流颂歌-法器" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">武器</div>
+    <h3 class="card-title">漩流颂歌-法器</h3>
+    <div class="card-meta">
+      <span>漩流颂歌-法器.pdf</span>
+      <span>1.2 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/d7ec682e9203" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="gbVT">提取码 gbVT<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div></div>
+</div>
+</div>
+</div>
+<div class="ver-section">
+  <span class="ver-badge">版本 1.3</span>
+  <div class="game-block" style="--ac:#5fd68b">
+  <div class="game-head">
+    <h2>异环</h2>
+  </div>
+  <div class="group">
+  <div class="group-label"><i style="background:#5fd68b"></i>角色</div>
+  <div class="cards"><div class="card" data-name="灵可 灵可V3.pdf">
+  <div class="art"><img src="assets/cover-lingke-new.webp" alt="灵可" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">角色</div>
+    <h3 class="card-title">灵可</h3>
+    <div class="card-meta">
+      <span>灵可V3.pdf</span>
+      <span>3.2 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/ee281838249a" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="VpmM">提取码 VpmM<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div><div class="card" data-name="残虹 残虹V3.pdf">
+  <div class="art"><img src="assets/cover-canhong.webp" alt="残虹" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">角色</div>
+    <h3 class="card-title">残虹</h3>
+    <div class="card-meta">
+      <span>残虹V3.pdf</span>
+      <span>1.7 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/56f08fab0713" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="8bFG">提取码 8bFG<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div></div>
+</div><div class="group">
+  <div class="group-label"><i style="background:#5fd68b"></i>武器</div>
+  <div class="cards"><div class="card" data-name="远行者之声 远行者之声-等离子.pdf">
+  <div class="art"><img src="assets/cover-yuanxingzhe.webp" alt="远行者之声" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">武器</div>
+    <h3 class="card-title">远行者之声</h3>
+    <div class="card-meta">
+      <span>远行者之声-等离子.pdf</span>
+      <span>1.9 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/a28a285d658c" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="Kend">提取码 Kend<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div><div class="card" data-name="噬心诡刃 噬心诡刃-气体.pdf">
+  <div class="art"><img src="assets/cover-shixin.webp" alt="噬心诡刃" loading="lazy"></div>
+  <div class="card-body">
+    <div class="card-kind">武器</div>
+    <h3 class="card-title">噬心诡刃</h3>
+    <div class="card-meta">
+      <span>噬心诡刃-气体.pdf</span>
+      <span>918 KB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main" href="https://pan.quark.cn/s/f06d289fcbff" target="_blank" rel="noopener">获取资料</a>
+      <button class="btn-pwd" data-pwd="ythX">提取码 ythX<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div></div>
+</div>
+</div>
+</div>
     </section>
-    <section class="game" id="g02" style="--ac:#e8b04b">
-      <div class="game-head">
-        <span class="game-idx">02</span>
-        <h2>原神</h2>
+
+    <section class="section-panel hidden" id="sec-archive">
+      <div class="section-head">
+        <h2>二游遗产名录</h2>
+        <span class="desc">历史版本情报归档，按版本号分类</span>
       </div>
-      
-      <div class="branch">
-        <span class="ver-tag">版本 7.1</span>
-        
-        <div class="group">
-          <div class="group-label"><i style="background:#e8b04b"></i>角色</div>
-          <div class="cards">
-        <div class="card" data-name="沃雅妮莎 沃雅妮莎.pdf">
-          <div class="art"><img src="assets/cover-woyanisha.webp" alt="沃雅妮莎" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">角色</div>
-            <h3 class="card-title">沃雅妮莎</h3>
-            <div class="card-meta">
-              <span>沃雅妮莎.pdf</span>
-              <span>5.0 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/82351b47111b" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="FcEd">提取码 FcEd<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-        <div class="card" data-name="薇斯纳 薇斯纳V4.pdf">
-          <div class="art"><img src="assets/cover-weisina.webp" alt="薇斯纳" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">角色</div>
-            <h3 class="card-title">薇斯纳</h3>
-            <div class="card-meta">
-              <span>薇斯纳V4.pdf</span>
-              <span>4.2 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/ea7643664330" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="rj4i">提取码 rj4i<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-          </div>
-        </div>
-        <div class="group">
-          <div class="group-label"><i style="background:#e8b04b"></i>武器</div>
-          <div class="cards">
-        <div class="card" data-name="蝶变-单手剑 蝶变.pdf">
-          <div class="art"><img src="assets/icon-diebian.webp" alt="蝶变-单手剑" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">武器</div>
-            <h3 class="card-title">蝶变-单手剑</h3>
-            <div class="card-meta">
-              <span>蝶变.pdf</span>
-              <span>1.0 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/4d15d5efc8a6" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="wGZb">提取码 wGZb<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-        <div class="card" data-name="漩流颂歌-法器 漩流颂歌-法器.pdf">
-          <div class="art"><img src="assets/cover-xuanliusonge.webp" alt="漩流颂歌-法器" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">武器</div>
-            <h3 class="card-title">漩流颂歌-法器</h3>
-            <div class="card-meta">
-              <span>漩流颂歌-法器.pdf</span>
-              <span>1.2 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/d7ec682e9203" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="gbVT">提取码 gbVT<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-          </div>
-        </div>
-      </div>
+      <div class="empty-archive"><p>暂无历史版本，所有情报均为最新版本。</p><p class="empty-sub">当游戏更新新版本后，旧版本的情报会自动归档到这里。</p></div>
     </section>
-    <section class="game" id="g03" style="--ac:#5fd68b">
-      <div class="game-head">
-        <span class="game-idx">03</span>
-        <h2>异环</h2>
-      </div>
-      
-      <div class="branch">
-        <span class="ver-tag">版本 1.3</span>
-        
-        <div class="group">
-          <div class="group-label"><i style="background:#5fd68b"></i>角色</div>
-          <div class="cards">
-        <div class="card" data-name="灵可 灵可V3.pdf">
-          <div class="art"><img src="assets/cover-lingke-new.webp" alt="灵可" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">角色</div>
-            <h3 class="card-title">灵可</h3>
-            <div class="card-meta">
-              <span>灵可V3.pdf</span>
-              <span>3.2 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/ee281838249a" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="VpmM">提取码 VpmM<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-        <div class="card" data-name="残虹 残虹V3.pdf">
-          <div class="art"><img src="assets/cover-canhong.webp" alt="残虹" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">角色</div>
-            <h3 class="card-title">残虹</h3>
-            <div class="card-meta">
-              <span>残虹V3.pdf</span>
-              <span>1.7 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/56f08fab0713" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="8bFG">提取码 8bFG<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-          </div>
-        </div>
-        <div class="group">
-          <div class="group-label"><i style="background:#5fd68b"></i>武器</div>
-          <div class="cards">
-        <div class="card" data-name="远行者之声 远行者之声-等离子.pdf">
-          <div class="art"><img src="assets/cover-yuanxingzhe.webp" alt="远行者之声" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">武器</div>
-            <h3 class="card-title">远行者之声</h3>
-            <div class="card-meta">
-              <span>远行者之声-等离子.pdf</span>
-              <span>1.9 MB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/a28a285d658c" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="Kend">提取码 Kend<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-        <div class="card" data-name="噬心诡刃 噬心诡刃-气体.pdf">
-          <div class="art"><img src="assets/cover-shixin.webp" alt="噬心诡刃" loading="lazy"></div>
-          <div class="card-body">
-            <div class="card-kind">武器</div>
-            <h3 class="card-title">噬心诡刃</h3>
-            <div class="card-meta">
-              <span>噬心诡刃-气体.pdf</span>
-              <span>918 KB</span>
-              <span>更新 2026-08-18</span>
-            </div>
-            <div class="card-actions">
-              <a class="btn-main" href="https://pan.quark.cn/s/f06d289fcbff" target="_blank" rel="noopener">获取资料</a>
-              <button class="btn-pwd" data-pwd="ythX">提取码 ythX<svg viewBox="0 0 24 24" width="13" height="13"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </div>
-          </div>
-        </div>
-          </div>
-        </div>
-      </div>
-    </section>
+
     <p class="empty-tip" id="empty">没有找到匹配的资料，换个关键词试试。</p>
   </main>
 
@@ -469,22 +597,67 @@
     <div class="wrap">
       <div class="f-row">
         <span class="sig">—— 二游情报铺 · 情报常新，欢迎常来 ——</span>
-        <span>共收录 14 份资料 · 本页最后同步：2026-08-18 19:44</span>
+        <span>共收录 14 份资料 · 同步于 2026-08-18 19:44</span>
       </div>
     </div>
   </footer>
 
 <script>
-  // 提取码复制
-  document.querySelectorAll('.btn-pwd').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      var pwd = btn.getAttribute('data-pwd');
+  // ===== 密码门控 =====
+  var GATE_PWD = "情报铺2026";
+  function tryGate() {
+    var inp = document.getElementById("gate-pwd");
+    var err = document.getElementById("gate-err");
+    if (inp.value === GATE_PWD) {
+      document.getElementById("gate").classList.add("unlocked");
+      try { localStorage.setItem("erp_ok", "1"); } catch(e) {}
+      setTimeout(function() { document.getElementById("gate").style.display = "none"; }, 500);
+    } else {
+      err.style.display = "block";
+      inp.value = "";
+      inp.focus();
+    }
+  }
+  (function() {
+    try {
+      if (localStorage.getItem("erp_ok") === "1") {
+        var g = document.getElementById("gate");
+        if (g) { g.style.display = "none"; }
+      }
+    } catch(e) {}
+    var inp = document.getElementById("gate-pwd");
+    if (inp) {
+      inp.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") tryGate();
+      });
+    }
+  })();
+
+  // ===== 标签切换 =====
+  function showTab(which) {
+    var tabs = document.querySelectorAll(".tab-btn");
+    tabs.forEach(function(t, i) {
+      t.classList.toggle("active", (i === 0 && which === "preview") || (i === 1 && which === "archive"));
+    });
+    var sp = document.getElementById("sec-preview");
+    var sa = document.getElementById("sec-archive");
+    if (which === "preview") {
+      sp.classList.remove("hidden"); sa.classList.add("hidden");
+    } else {
+      sp.classList.add("hidden"); sa.classList.remove("hidden");
+    }
+  }
+
+  // ===== 提取码复制 =====
+  document.querySelectorAll(".btn-pwd").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      var pwd = btn.getAttribute("data-pwd");
       var done = function() {
-        btn.classList.add('copied');
+        btn.classList.add("copied");
         var t = btn.firstChild;
         var old = t.textContent;
-        t.textContent = '已复制 ';
-        setTimeout(function() { btn.classList.remove('copied'); t.textContent = old; }, 1400);
+        t.textContent = "已复制 ";
+        setTimeout(function() { btn.classList.remove("copied"); t.textContent = old; }, 1400);
       };
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(pwd).then(done).catch(function() { fallback(pwd); done(); });
@@ -492,29 +665,32 @@
     });
   });
   function fallback(text) {
-    var ta = document.createElement('textarea');
-    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
     document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); } catch (e) {}
+    try { document.execCommand("copy"); } catch(e) {}
     document.body.removeChild(ta);
   }
 
-  // 站内搜索
-  var q = document.getElementById('q');
-  q.addEventListener('input', function() {
+  // ===== 站内搜索 =====
+  var q = document.getElementById("q");
+  q.addEventListener("input", function() {
     var kw = q.value.trim().toLowerCase();
     var any = false;
-    document.querySelectorAll('.card').forEach(function(c) {
-      var hit = !kw || c.getAttribute('data-name').toLowerCase().indexOf(kw) > -1;
-      c.style.display = hit ? '' : 'none';
+    document.querySelectorAll(".card").forEach(function(c) {
+      var hit = !kw || c.getAttribute("data-name").toLowerCase().indexOf(kw) > -1;
+      c.style.display = hit ? "" : "none";
       if (hit) any = true;
     });
-    document.querySelectorAll('.group, .branch, .game').forEach(function(el) {
-      var visible = el.querySelector('.card[style=""], .card:not([style])');
-      var hasVisible = Array.prototype.some.call(el.querySelectorAll('.card'), function(c) { return c.style.display !== 'none'; });
-      el.style.display = (!kw || hasVisible) ? '' : 'none';
+    document.querySelectorAll(".group, .game-block, .ver-section").forEach(function(el) {
+      var hasVisible = Array.prototype.some.call(el.querySelectorAll(".card"), function(c) { return c.style.display !== "none"; });
+      el.style.display = (!kw || hasVisible) ? "" : "none";
     });
-    document.getElementById('empty').style.display = (kw && !any) ? 'block' : 'none';
+    document.getElementById("empty").style.display = (kw && !any) ? "block" : "none";
+    // 搜索时显示所有分区
+    if (kw) {
+      document.querySelectorAll(".section-panel").forEach(function(p) { p.classList.remove("hidden"); });
+    }
   });
 </script>
 </body>
