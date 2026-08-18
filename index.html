@@ -2,352 +2,296 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="googlebot" content="noindex, nofollow">
-<meta name="bingbot" content="noindex, nofollow">
-<title>二游情报铺 · 版本情报 · 角色资料 · 武器档案</title>
+<title>二游情报铺</title>
 <meta name="description" content="">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #fff5f7;
-    --bg2: #fff0f3;
-    --panel: #ffffff;
-    --line: #ffd6e0;
-    --ink: #3d2b3d;
-    --ink-dim: #7a6474;
-    --ink-faint: #b8a0b0;
-    --pink: #e87aa0;
-    --pink-deep: #d4608a;
-    --pink-soft: #f5b8cc;
-    --pink-pale: #fce4ec;
-    --gold: #f0a868;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: "LXGW WenKai", "PingFang SC", "Microsoft YaHei", sans-serif;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-  }
-  body::before {
-    content: "";
-    position: fixed; inset: 0;
-    background-image:
-      radial-gradient(circle at 2px 2px, rgba(232,122,160,.06) 1.5px, transparent 0);
-    background-size: 28px 28px;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .wrap { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 0 22px; }
+/* ===== themes ===== */
+:root, [data-theme="pink"] {
+  --bg:#fff5f7; --panel:#ffffff; --line:#ffd6e0;
+  --ink:#3d2b3d; --ink-dim:#7a6474; --ink-faint:#b8a0b0;
+  --accent:#e87aa0; --accent-deep:#d4608a; --accent-soft:#f5b8cc; --accent-pale:#fce4ec;
+  --bar-bg:rgba(255,245,247,.92);
+}
+[data-theme="dark"] {
+  --bg:#101318; --panel:#1a212c; --line:#2a3442;
+  --ink:#e8e4d8; --ink-dim:#9aa3ad; --ink-faint:#6b7480;
+  --accent:#d8b25c; --accent-deep:#c49a3c; --accent-soft:#3d3420; --accent-pale:#2a2318;
+  --bar-bg:rgba(16,19,24,.94);
+}
+[data-theme="mint"] {
+  --bg:#f2faf7; --panel:#ffffff; --line:#c8e6dc;
+  --ink:#263832; --ink-dim:#5a7a6e; --ink-faint:#94b0a4;
+  --accent:#52b788; --accent-deep:#3a9a6e; --accent-soft:#b8e4d0; --accent-pale:#e4f5ed;
+  --bar-bg:rgba(242,250,247,.92);
+}
+[data-theme="lavender"] {
+  --bg:#f6f2ff; --panel:#ffffff; --line:#d8ccf0;
+  --ink:#2e2640; --ink-dim:#6a5e82; --ink-faint:#a498b8;
+  --accent:#9070d8; --accent-deep:#7858c0; --accent-soft:#c8b8e8; --accent-pale:#ece4f8;
+  --bar-bg:rgba(246,242,255,.92);
+}
+[data-theme="cream"] {
+  --bg:#fdf8f0; --panel:#ffffff; --line:#e8dcc8;
+  --ink:#3a3020; --ink-dim:#7a6e58; --ink-faint:#b0a488;
+  --accent:#d8a040; --accent-deep:#c08828; --accent-soft:#ecd8a8; --accent-pale:#f8f0e0;
+  --bar-bg:rgba(253,248,240,.92);
+}
 
-  /* ===== 密码门控 ===== */
-  #gate {
-    position: fixed; inset: 0; z-index: 9999;
-    background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    transition: opacity .4s;
-  }
-  #gate.unlocked { opacity: 0; pointer-events: none; }
-  .gate-box {
-    text-align: center; max-width: 360px; width: 90%; padding: 40px 24px;
-  }
-  .gate-icon { font-size: 48px; margin-bottom: 16px; }
-  .gate-title {
-    font-size: 28px; font-weight: 700; color: var(--pink-deep);
-    letter-spacing: .06em; margin-bottom: 6px;
-  }
-  .gate-sub { color: var(--ink-dim); font-size: 14px; margin-bottom: 28px; letter-spacing: .15em; }
-  .gate-field { display: flex; gap: 8px; }
-  .gate-field input {
-    flex: 1; background: var(--panel); border: 2px solid var(--line);
-    border-radius: 10px; color: var(--ink); padding: 12px 16px;
-    font-size: 15px; outline: none; font-family: inherit;
-    transition: border-color .2s;
-  }
-  .gate-field input:focus { border-color: var(--pink); }
-  .gate-field input::placeholder { color: var(--ink-faint); }
-  .gate-field button {
-    background: var(--pink); color: #fff; border: none; border-radius: 10px;
-    padding: 12px 22px; font-size: 15px; font-weight: 700; cursor: pointer;
-    font-family: inherit; transition: background .2s;
-  }
-  .gate-field button:hover { background: var(--pink-deep); }
-  .gate-err { color: #e05070; font-size: 13px; margin-top: 10px; display: none; }
+/* ===== fonts ===== */
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--bg); color:var(--ink);
+  font-family:"LXGW WenKai","PingFang SC","Microsoft YaHei",sans-serif;
+  line-height:1.7; -webkit-font-smoothing:antialiased;
+  padding-bottom:72px;
+}
+[data-cfont="cute"] body { font-family:"LXGW WenKai","PingFang SC","Microsoft YaHei",sans-serif; }
+[data-cfont="hei"] body  { font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif; }
+[data-cfont="write"] body { font-family:"ZCOOL XiaoWei","LXGW WenKai","STKaiti","KaiTi",serif; }
 
-  /* ===== 顶栏 ===== */
-  .masthead {
-    border-bottom: 2px solid var(--line);
-    background: linear-gradient(180deg, #fff8fa, var(--bg));
-    padding: 40px 0 28px;
-  }
-  .brand { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
-  .brand h1 {
-    font-size: clamp(28px, 5vw, 40px);
-    font-weight: 900; letter-spacing: .05em; color: var(--ink);
-  }
-  .brand h1 em { font-style: normal; color: var(--pink); }
-  .brand .sub { color: var(--ink-dim); font-size: 13.5px; letter-spacing: .22em; }
-  .mast-note { margin-top: 12px; color: var(--ink-dim); font-size: 14px; max-width: 620px; }
-  .mast-note b { color: var(--pink-deep); font-weight: 700; }
+body::before {
+  content:""; position:fixed; inset:0;
+  background-image:radial-gradient(circle at 2px 2px, color-mix(in srgb, var(--accent) 6%, transparent) 1.5px, transparent 0);
+  background-size:28px 28px;
+  pointer-events:none; z-index:0;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 22px; }
 
-  .all-share {
-    margin-top: 18px;
-    display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap;
-    background: var(--panel); border: 1.5px solid var(--line);
-    border-left: 4px solid var(--pink); border-radius: 10px;
-    padding: 10px 16px; font-size: 14px;
-  }
-  .all-share .lbl { color: var(--ink-dim); }
-  .all-share a {
-    color: var(--pink-deep); text-decoration: none;
-    font-family: "SF Mono", Consolas, monospace; font-size: 13px; word-break: break-all;
-  }
-  .all-share a:hover { text-decoration: underline; }
-  .all-share .pwd {
-    color: var(--ink); background: var(--pink-pale); border-radius: 5px;
-    padding: 2px 8px; font-family: Consolas, monospace; font-size: 13px;
-  }
+/* ===== masthead ===== */
+.masthead {
+  border-bottom:2px solid var(--line);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 80%, #fff), var(--bg));
+  padding:40px 0 28px;
+}
+.brand { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; }
+.brand h1 {
+  font-size:clamp(28px,5vw,40px); font-weight:900;
+  letter-spacing:.05em; color:var(--ink);
+}
+.brand h1 em { font-style:normal; color:var(--accent); }
+.brand .sub { color:var(--ink-dim); font-size:13.5px; letter-spacing:.22em; }
+.mast-note { margin-top:12px; color:var(--ink-dim); font-size:14px; max-width:620px; }
+.mast-note b { color:var(--accent-deep); font-weight:700; }
 
-  /* ===== 标签导航 ===== */
-  .tabs {
-    display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; align-items: center;
-  }
-  .tab-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    text-decoration: none; font-size: 15px; color: var(--ink-dim);
-    border: 1.5px solid var(--line); border-radius: 999px;
-    padding: 8px 20px; cursor: pointer; transition: all .2s;
-    background: transparent; font-family: inherit;
-  }
-  .tab-btn:hover { color: var(--pink-deep); border-color: var(--pink-soft); }
-  .tab-btn.active {
-    color: #fff; background: var(--pink); border-color: var(--pink);
-    font-weight: 700;
-  }
-  .tab-count {
-    font-size: 12px; background: rgba(255,255,255,.3);
-    border-radius: 999px; padding: 1px 7px;
-  }
-  .tab-btn:not(.active) .tab-count {
-    background: var(--pink-pale); color: var(--pink-deep);
-  }
+.all-share {
+  margin-top:18px; display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap;
+  background:var(--panel); border:1.5px solid var(--line);
+  border-left:4px solid var(--accent); border-radius:10px;
+  padding:10px 16px; font-size:14px;
+}
+.all-share .lbl { color:var(--ink-dim); }
+.all-share a { color:var(--accent-deep); text-decoration:none; font-family:"SF Mono",Consolas,monospace; font-size:13px; word-break:break-all; }
+.all-share a:hover { text-decoration:underline; }
+.all-share .pwd { color:var(--ink); background:var(--accent-pale); border-radius:5px; padding:2px 8px; font-family:Consolas,monospace; font-size:13px; }
 
-  .search { margin-top: 16px; max-width: 360px; }
-  .search input {
-    width: 100%; background: var(--panel); border: 1.5px solid var(--line);
-    border-radius: 10px; color: var(--ink); padding: 10px 14px;
-    font-size: 14px; outline: none; font-family: inherit;
-    transition: border-color .2s;
-  }
-  .search input:focus { border-color: var(--pink); }
-  .search input::placeholder { color: var(--ink-faint); }
+.search { margin-top:16px; max-width:360px; }
+.search input {
+  width:100%; background:var(--panel); border:1.5px solid var(--line);
+  border-radius:10px; color:var(--ink); padding:10px 14px;
+  font-size:14px; outline:none; font-family:inherit; transition:border-color .2s;
+}
+.search input:focus { border-color:var(--accent); }
+.search input::placeholder { color:var(--ink-faint); }
 
-  /* ===== 分区标题 ===== */
-  .section-panel { padding: 36px 0 8px; }
-  .section-panel.hidden { display: none; }
-  .section-head {
-    display: flex; align-items: center; gap: 12px;
-    border-bottom: 2.5px solid var(--pink); padding-bottom: 10px; margin-bottom: 6px;
-  }
-  .section-head h2 {
-    font-size: clamp(22px, 3.5vw, 28px); font-weight: 900;
-    letter-spacing: .04em; color: var(--pink-deep);
-  }
-  .section-head .desc {
-    font-size: 13px; color: var(--ink-faint); letter-spacing: .08em;
-  }
+/* ===== section panels ===== */
+.section-panel { padding:32px 0 8px; }
+.section-panel.hidden { display:none; }
+.section-head {
+  display:flex; align-items:center; gap:12px;
+  border-bottom:2.5px solid var(--accent); padding-bottom:10px; margin-bottom:6px;
+}
+.section-head h2 {
+  font-size:clamp(22px,3.5vw,28px); font-weight:900;
+  letter-spacing:.04em; color:var(--accent-deep);
+}
+.section-head .desc { font-size:13px; color:var(--ink-faint); letter-spacing:.08em; }
 
-  /* ===== 版本段 ===== */
-  .ver-section { margin-top: 28px; }
-  .ver-badge {
-    display: inline-block; font-size: 13px; color: var(--pink-deep);
-    background: var(--pink-pale); border: 1.5px solid var(--pink-soft);
-    border-radius: 6px; padding: 3px 14px; letter-spacing: .1em;
-    margin-bottom: 12px; font-weight: 700;
-  }
-  .archive-badge {
-    color: var(--ink-dim); background: #f8f0f2; border-color: var(--line);
-  }
+/* ===== version / game blocks ===== */
+.ver-section { margin-top:28px; }
+.ver-badge {
+  display:inline-block; font-size:13px; color:var(--accent-deep);
+  background:var(--accent-pale); border:1.5px solid var(--accent-soft);
+  border-radius:6px; padding:3px 14px; letter-spacing:.1em;
+  margin-bottom:12px; font-weight:700;
+}
+.archive-badge { color:var(--ink-dim); background:color-mix(in srgb, var(--bg) 90%, var(--accent)); border-color:var(--line); }
 
-  /* ===== 游戏块 ===== */
-  .game-block { margin-top: 8px; }
-  .game-head {
-    display: flex; align-items: baseline; gap: 10px; padding-bottom: 8px;
-    border-bottom: 1.5px dashed var(--line); margin-bottom: 14px;
-  }
-  .game-head h2 {
-    font-size: clamp(18px, 3vw, 24px); font-weight: 800;
-    letter-spacing: .03em; color: var(--ink);
-  }
+.game-block { margin-top:8px; }
+.game-head {
+  display:flex; align-items:baseline; gap:10px;
+  padding-bottom:8px; border-bottom:1.5px dashed var(--line); margin-bottom:14px;
+}
+.game-head h2 { font-size:clamp(18px,3vw,24px); font-weight:800; letter-spacing:.03em; }
 
-  .group { margin-top: 16px; }
-  .group-label {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 14px; color: var(--ink-dim); letter-spacing: .15em;
-    margin-bottom: 10px; font-weight: 700;
-  }
-  .group-label i { width: 8px; height: 8px; border-radius: 3px; display: inline-block; }
+.group { margin-top:16px; }
+.group-label {
+  display:flex; align-items:center; gap:8px;
+  font-size:14px; color:var(--ink-dim); letter-spacing:.15em;
+  margin-bottom:10px; font-weight:700;
+}
+.group-label i { width:8px; height:8px; border-radius:3px; display:inline-block; }
 
-  /* ===== 卡片 ===== */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 16px;
-  }
-  .card {
-    background: var(--panel); border: 1.5px solid var(--line);
-    border-radius: 12px; overflow: hidden;
-    transition: transform .2s, border-color .2s, box-shadow .2s;
-    display: flex; flex-direction: column;
-  }
-  .card:hover {
-    transform: translateY(-3px);
-    border-color: var(--pink-soft);
-    box-shadow: 0 6px 20px rgba(232,122,160,.12);
-  }
-  .art {
-    aspect-ratio: 16 / 10; overflow: hidden;
-    background: var(--pink-pale); position: relative;
-  }
-  .art img {
-    width: 100%; height: 100%; object-fit: cover;
-    display: block; transition: transform .35s;
-  }
-  .card:hover .art img { transform: scale(1.05); }
-  .art-ph {
-    display: flex; align-items: center; justify-content: center;
-    height: 100%;
-  }
-  .art-ph span {
-    font-size: 18px; letter-spacing: .2em;
-    color: var(--ink-faint); border: 1.5px dashed var(--line);
-    border-radius: 8px; padding: 12px 20px; text-align: center; line-height: 1.8;
-  }
-  .card-body {
-    padding: 14px 15px 16px; display: flex;
-    flex-direction: column; gap: 7px; flex: 1;
-  }
-  .card-kind {
-    font-size: 11.5px; color: var(--pink-deep);
-    letter-spacing: .15em; font-weight: 700;
-  }
-  .card-title { font-size: 17px; font-weight: 700; color: var(--ink); }
-  .card-meta {
-    display: flex; flex-direction: column; gap: 2px;
-    font-size: 12.5px; color: var(--ink-faint);
-  }
-  .card-meta span:first-child {
-    color: var(--ink-dim); word-break: break-all;
-  }
-  .card-actions {
-    margin-top: auto; padding-top: 10px;
-    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
-  }
-  .btn-main {
-    flex: 1; text-align: center; text-decoration: none;
-    background: var(--pink); color: #fff; font-weight: 700;
-    font-size: 13.5px; border-radius: 8px; padding: 9px 12px;
-    transition: background .15s; font-family: inherit;
-  }
-  .btn-main:hover { background: var(--pink-deep); }
-  .btn-pwd {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: var(--pink-pale); border: 1.5px solid var(--line);
-    color: var(--ink-dim); font-size: 12px; border-radius: 8px;
-    padding: 8px 10px; cursor: pointer; font-family: Consolas, monospace;
-    transition: all .15s;
-  }
-  .btn-pwd:hover { color: var(--pink-deep); border-color: var(--pink-soft); }
-  .btn-pwd.copied { color: #50b878; border-color: #78d4a0; }
+/* ===== cards ===== */
+.cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:16px; }
+.card {
+  background:var(--panel); border:1.5px solid var(--line);
+  border-radius:12px; overflow:hidden;
+  transition:transform .2s, border-color .2s, box-shadow .2s;
+  display:flex; flex-direction:column;
+}
+.card:hover {
+  transform:translateY(-3px); border-color:var(--accent-soft);
+  box-shadow:0 6px 20px color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.art { aspect-ratio:16/10; overflow:hidden; background:var(--accent-pale); position:relative; }
+.art img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .35s; }
+.card:hover .art img { transform:scale(1.05); }
+.art-ph { display:flex; align-items:center; justify-content:center; height:100%; }
+.art-ph span { font-size:16px; letter-spacing:.2em; color:var(--ink-faint); border:1.5px dashed var(--line); border-radius:8px; padding:12px 20px; text-align:center; line-height:1.8; }
+.card-body { padding:14px 15px 16px; display:flex; flex-direction:column; gap:7px; flex:1; }
+.card-kind { font-size:11.5px; color:var(--accent-deep); letter-spacing:.15em; font-weight:700; }
+.card-title { font-size:17px; font-weight:700; }
+.card-meta { display:flex; flex-direction:column; gap:2px; font-size:12.5px; color:var(--ink-faint); }
+.card-meta span:first-child { color:var(--ink-dim); word-break:break-all; }
+.card-actions { margin-top:auto; padding-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.btn-main {
+  flex:1; text-align:center; text-decoration:none;
+  background:var(--accent); color:#fff; font-weight:700;
+  font-size:13.5px; border-radius:8px; padding:9px 12px;
+  transition:background .15s; font-family:inherit;
+}
+.btn-main:hover { background:var(--accent-deep); }
+.btn-pwd {
+  display:inline-flex; align-items:center; gap:5px;
+  background:var(--accent-pale); border:1.5px solid var(--line);
+  color:var(--ink-dim); font-size:12px; border-radius:8px;
+  padding:8px 10px; cursor:pointer; font-family:Consolas,monospace;
+  transition:all .15s;
+}
+.btn-pwd:hover { color:var(--accent-deep); border-color:var(--accent-soft); }
+.btn-pwd.copied { color:#50b878; border-color:#78d4a0; }
 
-  /* ===== 空档案 ===== */
-  .empty-archive {
-    text-align: center; padding: 48px 0;
-    color: var(--ink-faint); font-size: 15px;
-  }
-  .empty-sub { font-size: 13px; margin-top: 8px; }
+/* ===== bottom nav ===== */
+#bnav {
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  background:var(--bar-bg);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border-top:1px solid var(--line);
+  display:flex; justify-content:center;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.bnav-inner {
+  display:flex; width:100%; max-width:480px;
+}
+.bnav-item {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+  padding:8px 0 6px; cursor:pointer; color:var(--ink-faint);
+  transition:color .2s; border:none; background:none;
+  font-family:inherit; font-size:11px; letter-spacing:.05em;
+}
+.bnav-item.active { color:var(--accent); }
+.bnav-item svg { transition:transform .2s; }
+.bnav-item.active svg { transform:scale(1.1); }
+.bnav-label { font-weight:600; }
 
-  .empty-tip {
-    display: none; color: var(--ink-faint);
-    padding: 30px 0; text-align: center;
-  }
+/* ===== settings panel ===== */
+#settings-overlay {
+  position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,.3);
+  opacity:0; pointer-events:none; transition:opacity .3s;
+}
+#settings-overlay.open { opacity:1; pointer-events:auto; }
+#settings-panel {
+  position:fixed; bottom:0; left:0; right:0; z-index:201;
+  background:var(--panel); border-top:2px solid var(--line);
+  border-radius:20px 20px 0 0; padding:24px 22px 32px;
+  padding-bottom:calc(32px + env(safe-area-inset-bottom));
+  max-height:70vh; overflow-y:auto;
+  transform:translateY(100%); transition:transform .35s cubic-bezier(.4,0,.2,1);
+}
+#settings-panel.open { transform:translateY(0); }
+.settings-title {
+  font-size:20px; font-weight:800; color:var(--accent-deep);
+  margin-bottom:20px; text-align:center;
+}
+.setting-group { margin-bottom:22px; }
+.setting-label {
+  font-size:13px; color:var(--ink-dim); font-weight:700;
+  letter-spacing:.12em; margin-bottom:10px;
+}
+.setting-options { display:flex; gap:8px; flex-wrap:wrap; }
+.opt-btn {
+  padding:8px 18px; border-radius:999px; border:1.5px solid var(--line);
+  background:var(--bg); color:var(--ink-dim); font-size:13.5px;
+  cursor:pointer; font-family:inherit; font-weight:600;
+  transition:all .2s; display:inline-flex; align-items:center; gap:6px;
+}
+.opt-btn:hover { border-color:var(--accent-soft); color:var(--accent-deep); }
+.opt-btn.active {
+  background:var(--accent); color:#fff; border-color:var(--accent);
+}
+.color-dot {
+  width:14px; height:14px; border-radius:50%; display:inline-block;
+  border:2px solid rgba(0,0,0,.1);
+}
 
-  /* ===== 页脚 ===== */
-  footer {
-    border-top: 1.5px solid var(--line); margin-top: 48px;
-    padding: 28px 0 40px; color: var(--ink-faint); font-size: 13px;
-  }
-  footer .f-row {
-    display: flex; justify-content: space-between;
-    gap: 12px; flex-wrap: wrap;
-  }
-  footer .sig { color: var(--pink-deep); letter-spacing: .08em; }
+/* ===== empty states ===== */
+.empty-archive { text-align:center; padding:48px 0; color:var(--ink-faint); font-size:15px; }
+.empty-sub { font-size:13px; margin-top:8px; }
+.empty-tip { display:none; color:var(--ink-faint); padding:30px 0; text-align:center; }
 
-  @media (max-width: 560px) {
-    .cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .card-title { font-size: 14.5px; }
-    .card-meta { font-size: 11px; }
-    .btn-main { font-size: 12.5px; padding: 7px 8px; }
-    .btn-pwd { font-size: 11px; padding: 7px 8px; }
-    .brand h1 { font-size: 26px; }
-    .gate-field { flex-direction: column; }
-    .gate-field button { width: 100%; }
-  }
+/* ===== footer ===== */
+footer {
+  border-top:1.5px solid var(--line); margin-top:48px;
+  padding:28px 0 40px; color:var(--ink-faint); font-size:13px;
+}
+footer .f-row { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
+
+@media (max-width:560px) {
+  .cards { grid-template-columns:repeat(2,1fr); gap:10px; }
+  .card-title { font-size:14.5px; }
+  .card-meta { font-size:11px; }
+  .btn-main { font-size:12.5px; padding:7px 8px; }
+  .btn-pwd { font-size:11px; padding:7px 8px; }
+  .brand h1 { font-size:26px; }
+}
 </style>
 </head>
-<body>
-<div id="gate">
-  <div class="gate-box">
-    <div class="gate-icon">&#x1F338;</div>
-    <h2 class="gate-title">二游情报铺</h2>
-    <p class="gate-sub">版本情报 · 角色资料 · 武器档案</p>
-    <div class="gate-field">
-      <input type="password" id="gate-pwd" placeholder="请输入访问密码" autocomplete="off">
-      <button id="gate-btn" onclick="tryGate()">进入</button>
-    </div>
-    <p id="gate-err" class="gate-err">密码不对哦，再试试？</p>
-  </div>
-</div>
+<body data-theme="pink" data-cfont="cute">
+
   <header class="masthead">
     <div class="wrap">
       <div class="brand">
-        <h1>二游<em>情报铺</em></h1>
-        <span class="sub">版本情报 · 角色资料 · 武器档案</span>
+        <h1><span data-i18n="siteName">二游</span><em data-i18n="siteNameEm">情报铺</em></h1>
+        <span class="sub" data-i18n="tagline">版本情报 · 角色资料 · 武器档案</span>
       </div>
-      <p class="mast-note">小铺专营各大二游版本情报，角色、武器资料随版本持续上新。每份资料有独立获取入口，<b>点「获取资料」跳转夸克网盘，配合提取码即可保存</b>。</p>
+      <p class="mast-note" data-i18n-html="mastNote">小铺专营各大二游版本情报，角色、武器资料随版本持续上新。每份资料有独立获取入口，<b>点「获取资料」跳转夸克网盘，配合提取码即可保存</b>。</p>
       <div class="all-share">
-        <span class="lbl">全部资料 · 总链接</span>
+        <span class="lbl" data-i18n="allLabel">全部资料 · 总链接</span>
         <a href="https://pan.quark.cn/s/9781c1fd59d7" target="_blank" rel="noopener">https://pan.quark.cn/s/9781c1fd59d7</a>
-        <span class="pwd">提取码 f6zt</span>
+        <span class="pwd"><span data-i18n="pwdLabel">提取码</span> f6zt</span>
       </div>
-      <div class="tabs">
-        <button class="tab-btn active" onclick="showTab('preview')">前瞻<span class="tab-count">3</span></button>
-        <button class="tab-btn" onclick="showTab('archive')">二游遗产名录<span class="tab-count">0</span></button>
-      </div>
-      <div class="search"><input id="q" type="search" placeholder="搜索资料名，例如：薇斯纳、单手剑…"></div>
+      <div class="search"><input id="q" type="search" data-i18n-ph="searchPh" placeholder="搜索资料名，例如：薇斯纳、单手剑…"></div>
     </div>
   </header>
 
   <main class="wrap">
     <section class="section-panel" id="sec-preview">
       <div class="section-head">
-        <h2>前瞻</h2>
-        <span class="desc">各游戏最新版本情报</span>
+        <h2 data-i18n="previewTitle">前瞻</h2>
+        <span class="desc" data-i18n="previewDesc">各游戏最新版本情报</span>
       </div>
-      <div class="ver-section">
-  <span class="ver-badge">版本 4.5</span>
-  <div class="game-block" style="--ac:#6f8cff">
-  <div class="game-head">
-    <h2>崩坏：星穹铁道</h2>
-  </div>
-  <div class="group">
-  <div class="group-label"><i style="background:#6f8cff"></i>角色</div>
-  <div class="cards"><div class="card" data-name="砂金•戏浪 砂金•戏浪V4.pdf">
+      <div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">4.5</span><div class="game-block" style="--ac:#6f8cff"><div class="game-head"><h2>崩坏：星穹铁道</h2></div><div class="group"><div class="group-label"><i style="background:#6f8cff"></i>角色</div><div class="cards"><div class="card" data-name="砂金•戏浪 砂金•戏浪V4.pdf">
   <div class="art"><img src="assets/cover-sandin.webp" alt="砂金•戏浪" loading="lazy"></div>
   <div class="card-body">
     <div class="card-kind">角色</div>
@@ -357,8 +301,8 @@
       <span>20.1 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/d9c6ec5181a9" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="P3d1">提取码 P3d1<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/d9c6ec5181a9" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="P3d1"><span data-i18n="pwdLabel">提取码</span> P3d1 <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
 </div><div class="card" data-name="知更鸟•晴歌 知更鸟•晴歌V4.pdf">
@@ -371,14 +315,11 @@
       <span>20.1 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/3f7baae5c342" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="UBjM">提取码 UBjM<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/3f7baae5c342" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="UBjM"><span data-i18n="pwdLabel">提取码</span> UBjM <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div>
-</div><div class="group">
-  <div class="group-label"><i style="background:#6f8cff"></i>光锥</div>
-  <div class="cards"><div class="card" data-name="向浪花掷下盛夏 向浪花掷下盛夏-欢愉.pdf">
+</div></div></div><div class="group"><div class="group-label"><i style="background:#6f8cff"></i>光锥</div><div class="cards"><div class="card" data-name="向浪花掷下盛夏 向浪花掷下盛夏-欢愉.pdf">
   <div class="art"><img src="assets/cover-xianglanghua.webp" alt="向浪花掷下盛夏" loading="lazy"></div>
   <div class="card-body">
     <div class="card-kind">光锥·5星</div>
@@ -388,8 +329,8 @@
       <span>3.3 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/f5ef7f93fa6f" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="JADj">提取码 JADj<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/f5ef7f93fa6f" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="JADj"><span data-i18n="pwdLabel">提取码</span> JADj <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
 </div><div class="card" data-name="向着地平线的终点 向着地平线的终点-巡猎.pdf">
@@ -402,8 +343,8 @@
       <span>3.2 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/f6f084d0feaf" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="2h6G">提取码 2h6G<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/f6f084d0feaf" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="2h6G"><span data-i18n="pwdLabel">提取码</span> 2h6G <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
 </div><div class="card" data-name="你将起身歌唱 你将起身歌唱-记忆.pdf">
@@ -416,8 +357,8 @@
       <span>3.1 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/777b6993c94f" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="UfaM">提取码 UfaM<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/777b6993c94f" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="UfaM"><span data-i18n="pwdLabel">提取码</span> UfaM <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
 </div><div class="card" data-name="放个短假 放个短假-欢愉.pdf">
@@ -430,23 +371,12 @@
       <span>3.2 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/78cba8840a6f" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="yfkw">提取码 yfkw<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/78cba8840a6f" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="yfkw"><span data-i18n="pwdLabel">提取码</span> yfkw <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div>
-</div>
-</div>
-</div>
-<div class="ver-section">
-  <span class="ver-badge">版本 7.1</span>
-  <div class="game-block" style="--ac:#e8b04b">
-  <div class="game-head">
-    <h2>原神</h2>
-  </div>
-  <div class="group">
-  <div class="group-label"><i style="background:#e8b04b"></i>角色</div>
-  <div class="cards"><div class="card" data-name="沃雅妮莎 沃雅妮莎.pdf">
+</div></div></div></div></div>
+<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">7.1</span><div class="game-block" style="--ac:#e8b04b"><div class="game-head"><h2>原神</h2></div><div class="group"><div class="group-label"><i style="background:#e8b04b"></i>角色</div><div class="cards"><div class="card" data-name="沃雅妮莎 沃雅妮莎.pdf">
   <div class="art"><img src="assets/cover-woyanisha.webp" alt="沃雅妮莎" loading="lazy"></div>
   <div class="card-body">
     <div class="card-kind">角色</div>
@@ -456,8 +386,8 @@
       <span>5.0 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/82351b47111b" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="FcEd">提取码 FcEd<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/82351b47111b" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="FcEd"><span data-i18n="pwdLabel">提取码</span> FcEd <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
 </div><div class="card" data-name="薇斯纳 薇斯纳V4.pdf">
@@ -470,14 +400,11 @@
       <span>4.2 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/ea7643664330" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="rj4i">提取码 rj4i<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/ea7643664330" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="rj4i"><span data-i18n="pwdLabel">提取码</span> rj4i <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div>
-</div><div class="group">
-  <div class="group-label"><i style="background:#e8b04b"></i>武器</div>
-  <div class="cards"><div class="card" data-name="蝶变-单手剑 蝶变.pdf">
+</div></div></div><div class="group"><div class="group-label"><i style="background:#e8b04b"></i>武器</div><div class="cards"><div class="card" data-name="蝶变-单手剑 蝶变.pdf">
   <div class="art"><img src="assets/icon-diebian.webp" alt="蝶变-单手剑" loading="lazy"></div>
   <div class="card-body">
     <div class="card-kind">武器</div>
@@ -487,8 +414,8 @@
       <span>1.0 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/4d15d5efc8a6" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="wGZb">提取码 wGZb<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/4d15d5efc8a6" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="wGZb"><span data-i18n="pwdLabel">提取码</span> wGZb <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
 </div><div class="card" data-name="漩流颂歌-法器 漩流颂歌-法器.pdf">
@@ -501,23 +428,12 @@
       <span>1.2 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/d7ec682e9203" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="gbVT">提取码 gbVT<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/d7ec682e9203" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="gbVT"><span data-i18n="pwdLabel">提取码</span> gbVT <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div>
-</div>
-</div>
-</div>
-<div class="ver-section">
-  <span class="ver-badge">版本 1.3</span>
-  <div class="game-block" style="--ac:#5fd68b">
-  <div class="game-head">
-    <h2>异环</h2>
-  </div>
-  <div class="group">
-  <div class="group-label"><i style="background:#5fd68b"></i>角色</div>
-  <div class="cards"><div class="card" data-name="灵可 灵可V3.pdf">
+</div></div></div></div></div>
+<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">1.3</span><div class="game-block" style="--ac:#5fd68b"><div class="game-head"><h2>异环</h2></div><div class="group"><div class="group-label"><i style="background:#5fd68b"></i>角色</div><div class="cards"><div class="card" data-name="灵可 灵可V3.pdf">
   <div class="art"><img src="assets/cover-lingke-new.webp" alt="灵可" loading="lazy"></div>
   <div class="card-body">
     <div class="card-kind">角色</div>
@@ -527,8 +443,8 @@
       <span>3.2 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/ee281838249a" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="VpmM">提取码 VpmM<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/ee281838249a" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="VpmM"><span data-i18n="pwdLabel">提取码</span> VpmM <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
 </div><div class="card" data-name="残虹 残虹V3.pdf">
@@ -541,14 +457,11 @@
       <span>1.7 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/56f08fab0713" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="8bFG">提取码 8bFG<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/56f08fab0713" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="8bFG"><span data-i18n="pwdLabel">提取码</span> 8bFG <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div>
-</div><div class="group">
-  <div class="group-label"><i style="background:#5fd68b"></i>武器</div>
-  <div class="cards"><div class="card" data-name="远行者之声 远行者之声-等离子.pdf">
+</div></div></div><div class="group"><div class="group-label"><i style="background:#5fd68b"></i>武器</div><div class="cards"><div class="card" data-name="远行者之声 远行者之声-等离子.pdf">
   <div class="art"><img src="assets/cover-yuanxingzhe.webp" alt="远行者之声" loading="lazy"></div>
   <div class="card-body">
     <div class="card-kind">武器</div>
@@ -558,8 +471,8 @@
       <span>1.9 MB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/a28a285d658c" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="Kend">提取码 Kend<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/a28a285d658c" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="Kend"><span data-i18n="pwdLabel">提取码</span> Kend <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
 </div><div class="card" data-name="噬心诡刃 噬心诡刃-气体.pdf">
@@ -572,126 +485,285 @@
       <span>918 KB · 2026-08-18</span>
     </div>
     <div class="card-actions">
-      <a class="btn-main" href="https://pan.quark.cn/s/f06d289fcbff" target="_blank" rel="noopener">获取资料</a>
-      <button class="btn-pwd" data-pwd="ythX">提取码 ythX<svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <a class="btn-main" href="https://pan.quark.cn/s/f06d289fcbff" target="_blank" rel="noopener" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd" data-pwd="ythX"><span data-i18n="pwdLabel">提取码</span> ythX <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div>
-</div>
-</div>
-</div>
+</div></div></div></div></div>
     </section>
 
     <section class="section-panel hidden" id="sec-archive">
       <div class="section-head">
-        <h2>二游遗产名录</h2>
-        <span class="desc">历史版本情报归档，按版本号分类</span>
+        <h2 data-i18n="archiveTitle">二游遗产名录</h2>
+        <span class="desc" data-i18n="archiveDesc">历史版本情报归档，按版本号分类</span>
       </div>
-      <div class="empty-archive"><p>暂无历史版本，所有情报均为最新版本。</p><p class="empty-sub">当游戏更新新版本后，旧版本的情报会自动归档到这里。</p></div>
+      <div class="empty-archive"><p data-i18n="noArchive">暂无历史版本，所有情报均为最新版本。</p><p class="empty-sub" data-i18n="noArchiveSub">当游戏更新新版本后，旧版本情报会自动归档到这里。</p></div>
     </section>
 
-    <p class="empty-tip" id="empty">没有找到匹配的资料，换个关键词试试。</p>
+    <p class="empty-tip" id="empty" data-i18n="noResult">没有找到匹配的资料，换个关键词试试。</p>
   </main>
 
   <footer>
     <div class="wrap">
       <div class="f-row">
-        <span class="sig">—— 二游情报铺 · 情报常新，欢迎常来 ——</span>
-        <span>共收录 14 份资料 · 同步于 2026-08-18 19:44</span>
+        <span class="sig" data-i18n-html="footerSig">—— 二游情报铺 · 情报常新，欢迎常来 ——</span>
+        <span data-i18n-html="footerMeta">共收录 14 份资料 · 同步于 2026-08-18 19:44</span>
       </div>
     </div>
   </footer>
 
+  <!-- ===== Bottom Navigation ===== -->
+  <nav id="bnav">
+    <div class="bnav-inner">
+      <button class="bnav-item active" data-tab="preview">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+        <span class="bnav-label" data-i18n="navPreview">前瞻</span>
+      </button>
+      <button class="bnav-item" data-tab="archive">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
+        <span class="bnav-label" data-i18n="navArchive">遗产名录</span>
+      </button>
+      <button class="bnav-item" data-tab="settings">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="bnav-label" data-i18n="navSettings">设置</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== Settings Panel ===== -->
+  <div id="settings-overlay"></div>
+  <div id="settings-panel">
+    <div class="settings-title" data-i18n="settingsTitle">设置</div>
+
+    <div class="setting-group">
+      <div class="setting-label" data-i18n="langLabel">语言 / Language</div>
+      <div class="setting-options" data-setting="lang">
+        <button class="opt-btn active" data-val="zh">中文</button>
+        <button class="opt-btn" data-val="en">English</button>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-label" data-i18n="themeLabel">主题色</div>
+      <div class="setting-options" data-setting="theme">
+        <button class="opt-btn active" data-val="pink"><span class="color-dot" style="background:#e87aa0"></span> <span data-i18n="themePink">粉白</span></button>
+        <button class="opt-btn" data-val="dark"><span class="color-dot" style="background:#d8b25c"></span> <span data-i18n="themeDark">暗夜</span></button>
+        <button class="opt-btn" data-val="mint"><span class="color-dot" style="background:#52b788"></span> <span data-i18n="themeMint">薄荷</span></button>
+        <button class="opt-btn" data-val="lavender"><span class="color-dot" style="background:#9070d8"></span> <span data-i18n="themeLavender">薰衣草</span></button>
+        <button class="opt-btn" data-val="cream"><span class="color-dot" style="background:#d8a040"></span> <span data-i18n="themeCream">奶油</span></button>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-label" data-i18n="fontLabel">中文字体</div>
+      <div class="setting-options" data-setting="cfont">
+        <button class="opt-btn active" data-val="cute" data-i18n="fontCute">可爱体</button>
+        <button class="opt-btn" data-val="hei" data-i18n="fontHei">黑体</button>
+        <button class="opt-btn" data-val="write" data-i18n="fontWrite">手写体</button>
+      </div>
+    </div>
+  </div>
+
 <script>
-  // ===== 密码门控 =====
-  var GATE_PWD = "情报铺2026";
-  function tryGate() {
-    var inp = document.getElementById("gate-pwd");
-    var err = document.getElementById("gate-err");
-    if (inp.value === GATE_PWD) {
-      document.getElementById("gate").classList.add("unlocked");
-      try { localStorage.setItem("erp_ok", "1"); } catch(e) {}
-      setTimeout(function() { document.getElementById("gate").style.display = "none"; }, 500);
-    } else {
-      err.style.display = "block";
-      inp.value = "";
-      inp.focus();
-    }
-  }
-  (function() {
-    try {
-      if (localStorage.getItem("erp_ok") === "1") {
-        var g = document.getElementById("gate");
-        if (g) { g.style.display = "none"; }
-      }
-    } catch(e) {}
-    var inp = document.getElementById("gate-pwd");
-    if (inp) {
-      inp.addEventListener("keydown", function(e) {
-        if (e.key === "Enter") tryGate();
-      });
-    }
-  })();
+/* ===== site data ===== */
+var SITE_TOTAL = 14;
+var SITE_SYNCED = "2026-08-18 19:44";
 
-  // ===== 标签切换 =====
-  function showTab(which) {
-    var tabs = document.querySelectorAll(".tab-btn");
-    tabs.forEach(function(t, i) {
-      t.classList.toggle("active", (i === 0 && which === "preview") || (i === 1 && which === "archive"));
-    });
-    var sp = document.getElementById("sec-preview");
-    var sa = document.getElementById("sec-archive");
-    if (which === "preview") {
-      sp.classList.remove("hidden"); sa.classList.add("hidden");
-    } else {
-      sp.classList.add("hidden"); sa.classList.remove("hidden");
-    }
+/* ===== i18n ===== */
+var LANG = {
+  zh: {
+    siteName:"二游", siteNameEm:"情报铺",
+    tagline:"版本情报 · 角色资料 · 武器档案",
+    mastNote:'小铺专营各大二游版本情报，角色、武器资料随版本持续上新。每份资料有独立获取入口，<b>点「获取资料」跳转夸克网盘，配合提取码即可保存</b>。',
+    allLabel:"全部资料 · 总链接", pwdLabel:"提取码",
+    searchPh:"搜索资料名，例如：薇斯纳、单手剑…",
+    previewTitle:"前瞻", previewDesc:"各游戏最新版本情报",
+    archiveTitle:"二游遗产名录", archiveDesc:"历史版本情报归档，按版本号分类",
+    navPreview:"前瞻", navArchive:"遗产名录", navSettings:"设置",
+    noResult:"没有找到匹配的资料，换个关键词试试。",
+    noArchive:"暂无历史版本，所有情报均为最新版本。",
+    noArchiveSub:"当游戏更新新版本后，旧版本情报会自动归档到这里。",
+    noCover:"暂无封面", getDoc:"获取资料", ver:"版本",
+    settingsTitle:"设置",
+    langLabel:"语言 / Language", themeLabel:"主题色", fontLabel:"中文字体",
+    themePink:"粉白", themeDark:"暗夜", themeMint:"薄荷", themeLavender:"薰衣草", themeCream:"奶油",
+    fontCute:"可爱体", fontHei:"黑体", fontWrite:"手写体",
+    copied:"已复制",
+    footerSig:"—— 二游情报铺 · 情报常新，欢迎常来 ——",
+    footerMeta:"共收录 %total% 份资料 · 同步于 %synced%"
+  },
+  en: {
+    siteName:"Game", siteNameEm:"Intel Shop",
+    tagline:"Version Intel · Character Files · Weapon Archives",
+    mastNote:'This shop specializes in game version intel, with character and weapon files updated each version. <b>Tap "Get File" to jump to Quark Drive and save with the extraction code</b>.',
+    allLabel:"All Files · Master Link", pwdLabel:"Code",
+    searchPh:"Search files, e.g. character name…",
+    previewTitle:"Preview", previewDesc:"Latest version intel for each game",
+    archiveTitle:"Legacy Archive", archiveDesc:"Historical version intel, sorted by version number",
+    navPreview:"Preview", navArchive:"Archive", navSettings:"Settings",
+    noResult:"No matching files found. Try a different keyword.",
+    noArchive:"No legacy versions yet — all intel is up to date.",
+    noArchiveSub:"When a new version is released, older intel will be archived here automatically.",
+    noCover:"No Cover", getDoc:"Get File", ver:"Ver.",
+    settingsTitle:"Settings",
+    langLabel:"Language / 语言", themeLabel:"Theme", fontLabel:"Chinese Font",
+    themePink:"Pink", themeDark:"Dark", themeMint:"Mint", themeLavender:"Lavender", themeCream:"Cream",
+    fontCute:"Cute", fontHei:"Sans", fontWrite:"Handwriting",
+    copied:"Copied",
+    footerSig:"—— Game Intel Shop · Always fresh intel ——",
+    footerMeta:"Total %total% files · Synced %synced%"
   }
+};
 
-  // ===== 提取码复制 =====
-  document.querySelectorAll(".btn-pwd").forEach(function(btn) {
+/* ===== persistence ===== */
+function loadPref() {
+  try { return JSON.parse(localStorage.getItem("erp2_prefs")) || {}; }
+  catch(e) { return {}; }
+}
+function savePref(p) {
+  try { localStorage.setItem("erp2_prefs", JSON.stringify(p)); } catch(e) {}
+}
+var prefs = loadPref();
+if (!prefs.lang) prefs.lang = "zh";
+if (!prefs.theme) prefs.theme = "pink";
+if (!prefs.cfont) prefs.cfont = "cute";
+
+/* ===== apply helpers ===== */
+function applyTheme(t) {
+  document.body.setAttribute("data-theme", t);
+  prefs.theme = t; savePref(prefs);
+  setActive("theme", t);
+}
+function applyFont(f) {
+  document.body.setAttribute("data-cfont", f);
+  prefs.cfont = f; savePref(prefs);
+  setActive("cfont", f);
+}
+function applyLang(lang) {
+  var dict = LANG[lang];
+  if (!dict) return;
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+  prefs.lang = lang; savePref(prefs);
+  setActive("lang", lang);
+  function tpl(s) { return s.replace(/%total%/g, SITE_TOTAL).replace(/%synced%/g, SITE_SYNCED); }
+  // text nodes
+  document.querySelectorAll("[data-i18n]").forEach(function(el) {
+    var key = el.getAttribute("data-i18n");
+    if (dict[key] !== undefined) el.textContent = tpl(dict[key]);
+  });
+  // html nodes
+  document.querySelectorAll("[data-i18n-html]").forEach(function(el) {
+    var key = el.getAttribute("data-i18n-html");
+    if (dict[key] !== undefined) el.innerHTML = tpl(dict[key]);
+  });
+  // placeholders
+  document.querySelectorAll("[data-i18n-ph]").forEach(function(el) {
+    var key = el.getAttribute("data-i18n-ph");
+    if (dict[key] !== undefined) el.placeholder = dict[key];
+  });
+}
+function setActive(setting, val) {
+  document.querySelectorAll('[data-setting="'+setting+'"] .opt-btn').forEach(function(b) {
+    b.classList.toggle("active", b.getAttribute("data-val") === val);
+  });
+}
+
+/* ===== init prefs ===== */
+applyTheme(prefs.theme);
+applyFont(prefs.cfont);
+applyLang(prefs.lang);
+
+/* ===== setting button clicks ===== */
+document.querySelectorAll(".setting-options").forEach(function(group) {
+  var setting = group.getAttribute("data-setting");
+  group.querySelectorAll(".opt-btn").forEach(function(btn) {
     btn.addEventListener("click", function() {
-      var pwd = btn.getAttribute("data-pwd");
-      var done = function() {
-        btn.classList.add("copied");
-        var t = btn.firstChild;
-        var old = t.textContent;
-        t.textContent = "已复制 ";
-        setTimeout(function() { btn.classList.remove("copied"); t.textContent = old; }, 1400);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(pwd).then(done).catch(function() { fallback(pwd); done(); });
-      } else { fallback(pwd); done(); }
+      var val = btn.getAttribute("data-val");
+      if (setting === "theme") applyTheme(val);
+      else if (setting === "cfont") applyFont(val);
+      else if (setting === "lang") applyLang(val);
     });
   });
-  function fallback(text) {
-    var ta = document.createElement("textarea");
-    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
-    document.body.appendChild(ta); ta.select();
-    try { document.execCommand("copy"); } catch(e) {}
-    document.body.removeChild(ta);
-  }
+});
 
-  // ===== 站内搜索 =====
-  var q = document.getElementById("q");
-  q.addEventListener("input", function() {
-    var kw = q.value.trim().toLowerCase();
-    var any = false;
-    document.querySelectorAll(".card").forEach(function(c) {
-      var hit = !kw || c.getAttribute("data-name").toLowerCase().indexOf(kw) > -1;
-      c.style.display = hit ? "" : "none";
-      if (hit) any = true;
-    });
-    document.querySelectorAll(".group, .game-block, .ver-section").forEach(function(el) {
-      var hasVisible = Array.prototype.some.call(el.querySelectorAll(".card"), function(c) { return c.style.display !== "none"; });
-      el.style.display = (!kw || hasVisible) ? "" : "none";
-    });
-    document.getElementById("empty").style.display = (kw && !any) ? "block" : "none";
-    // 搜索时显示所有分区
-    if (kw) {
-      document.querySelectorAll(".section-panel").forEach(function(p) { p.classList.remove("hidden"); });
-    }
+/* ===== bottom nav ===== */
+var settingsOpen = false;
+function toggleSettings(open) {
+  settingsOpen = typeof open === "boolean" ? open : !settingsOpen;
+  document.getElementById("settings-overlay").classList.toggle("open", settingsOpen);
+  document.getElementById("settings-panel").classList.toggle("open", settingsOpen);
+  // highlight settings tab
+  document.querySelectorAll(".bnav-item").forEach(function(b) {
+    if (b.getAttribute("data-tab") === "settings") b.classList.toggle("active", settingsOpen);
   });
+}
+document.getElementById("settings-overlay").addEventListener("click", function() { toggleSettings(false); });
+
+function showTab(which) {
+  toggleSettings(false);
+  var sp = document.getElementById("sec-preview");
+  var sa = document.getElementById("sec-archive");
+  sp.classList.toggle("hidden", which !== "preview");
+  sa.classList.toggle("hidden", which !== "archive");
+  document.querySelectorAll(".bnav-item").forEach(function(b) {
+    var t = b.getAttribute("data-tab");
+    b.classList.toggle("active", t === which);
+  });
+}
+
+document.querySelectorAll(".bnav-item").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    var tab = btn.getAttribute("data-tab");
+    if (tab === "settings") { toggleSettings(); }
+    else { showTab(tab); }
+  });
+});
+
+/* ===== copy extraction code ===== */
+document.querySelectorAll(".btn-pwd").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    var pwd = btn.getAttribute("data-pwd");
+    var dict = LANG[prefs.lang] || LANG.zh;
+    var done = function() {
+      btn.classList.add("copied");
+      var span = btn.querySelector("span[data-i18n]");
+      if (!span) span = btn.firstChild;
+      var old = span.textContent;
+      span.textContent = dict.copied + " ";
+      setTimeout(function() { btn.classList.remove("copied"); span.textContent = old; }, 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(pwd).then(done).catch(function() { fbCopy(pwd); done(); });
+    } else { fbCopy(pwd); done(); }
+  });
+});
+function fbCopy(text) {
+  var ta = document.createElement("textarea");
+  ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+/* ===== search ===== */
+var q = document.getElementById("q");
+q.addEventListener("input", function() {
+  var kw = q.value.trim().toLowerCase();
+  var any = false;
+  document.querySelectorAll(".card").forEach(function(c) {
+    var hit = !kw || c.getAttribute("data-name").toLowerCase().indexOf(kw) > -1;
+    c.style.display = hit ? "" : "none";
+    if (hit) any = true;
+  });
+  document.querySelectorAll(".group, .game-block, .ver-section").forEach(function(el) {
+    var vis = Array.prototype.some.call(el.querySelectorAll(".card"), function(c) { return c.style.display !== "none"; });
+    el.style.display = (!kw || vis) ? "" : "none";
+  });
+  document.getElementById("empty").style.display = (kw && !any) ? "block" : "none";
+  if (kw) {
+    document.querySelectorAll(".section-panel").forEach(function(p) { p.classList.remove("hidden"); });
+  }
+});
 </script>
 </body>
 </html>
