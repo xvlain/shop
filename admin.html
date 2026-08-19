@@ -3,316 +3,541 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>管理员面板 - 二游情报铺</title>
+<title>二游情报铺 · 管理后台</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
+<meta name="robots" content="noindex, nofollow">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #fff5f8;
+  --panel: #ffffff;
+  --ink: #2d2a32;
+  --ink-dim: #8a7f8e;
+  --ink-faint: #c4b8c8;
+  --line: #f0dce4;
+  --accent: #e87aa0;
+  --accent-deep: #d4567e;
+  --accent-soft: #f5c6d8;
+  --accent-pale: #fdf0f5;
+  --danger: #e05555;
+  --success: #50b878;
+  --warning: #e8a040;
+  --font: 'LXGW WenKai', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --radius: 14px;
+  --shadow: 0 2px 12px rgba(232,122,160,.08);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { font-size:15px; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: #f5f5f5;
-  padding: 20px;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  min-height:100vh;
+  padding-bottom: 40px;
 }
-.container { max-width: 1200px; margin: 0 auto; }
+
+/* ===== login gate ===== */
+#gate {
+  position:fixed; inset:0; z-index:999;
+  background:var(--bg);
+  display:flex; align-items:center; justify-content:center;
+}
+#gate.hidden { display:none; }
+.gate-box {
+  background:var(--panel); border:1.5px solid var(--line);
+  border-radius:var(--radius); padding:40px 36px; max-width:360px; width:90%;
+  text-align:center; box-shadow:var(--shadow);
+}
+.gate-box h2 { font-size:20px; margin-bottom:6px; color:var(--accent-deep); }
+.gate-box p { font-size:13px; color:var(--ink-dim); margin-bottom:24px; }
+.gate-input {
+  width:100%; padding:12px 16px; border:1.5px solid var(--line);
+  border-radius:10px; font-size:15px; font-family:var(--font);
+  outline:none; transition:border-color .2s;
+  text-align:center; letter-spacing:2px;
+}
+.gate-input:focus { border-color:var(--accent); }
+.gate-btn {
+  width:100%; margin-top:16px; padding:12px;
+  background:var(--accent); color:#fff; border:none;
+  border-radius:10px; font-size:15px; font-weight:700;
+  font-family:var(--font); cursor:pointer; transition:background .15s;
+}
+.gate-btn:hover { background:var(--accent-deep); }
+.gate-err { color:var(--danger); font-size:13px; margin-top:12px; display:none; }
+.gate-err.show { display:block; }
+
+/* ===== header ===== */
 .header {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  background:var(--panel); border-bottom:1.5px solid var(--line);
+  padding:20px 24px 16px; position:sticky; top:0; z-index:50;
 }
-.header h1 {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 8px;
-}
-.header p { color: #666; font-size: 14px; }
-.stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 20px;
+.header h1 { font-size:18px; color:var(--accent-deep); display:flex; align-items:center; gap:8px; }
+.header h1 svg { width:22px; height:22px; }
+.header .sub { font-size:12px; color:var(--ink-faint); margin-top:2px; }
+
+/* ===== stats bar ===== */
+.stats-bar {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));
+  gap:10px; padding:16px 24px;
 }
 .stat-card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  background:var(--panel); border:1.5px solid var(--line);
+  border-radius:12px; padding:14px 16px; text-align:center;
 }
-.stat-card .label {
-  font-size: 13px;
-  color: #999;
-  margin-bottom: 8px;
+.stat-card .num { font-size:24px; font-weight:700; color:var(--accent-deep); }
+.stat-card .label { font-size:11px; color:var(--ink-dim); margin-top:2px; }
+
+/* ===== tabs ===== */
+.tabs {
+  display:flex; gap:0; padding:0 24px; margin-bottom:4px;
+  border-bottom:1.5px solid var(--line);
 }
-.stat-card .value {
-  font-size: 32px;
-  font-weight: 700;
-  color: #333;
+.tab {
+  padding:10px 18px; font-size:13px; font-weight:700;
+  color:var(--ink-dim); cursor:pointer; border:none; background:none;
+  font-family:var(--font); border-bottom:2.5px solid transparent;
+  transition:all .15s;
 }
-.section {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+.tab:hover { color:var(--accent); }
+.tab.active { color:var(--accent-deep); border-bottom-color:var(--accent); }
+
+/* ===== content ===== */
+.content { padding:16px 24px; }
+.panel { display:none; }
+.panel.active { display:block; }
+
+/* ===== code list ===== */
+.code-toolbar {
+  display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; align-items:center;
 }
-.section h2 {
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #f0f0f0;
+.btn-sm {
+  padding:7px 16px; border-radius:8px; border:1.5px solid var(--accent-soft);
+  background:var(--accent-pale); color:var(--accent-deep);
+  font-size:12px; font-weight:700; font-family:var(--font);
+  cursor:pointer; transition:all .15s;
 }
-.codes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 8px;
+.btn-sm:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+.btn-sm.danger { border-color:#f5c0c0; background:#fff5f5; color:var(--danger); }
+.btn-sm.danger:hover { background:var(--danger); color:#fff; }
+.btn-sm.success { border-color:#b8e8c8; background:#f0faf4; color:var(--success); }
+
+.code-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+  gap:8px;
 }
-.code-item {
-  background: #f9f9f9;
-  padding: 10px;
-  border-radius: 8px;
-  font-family: 'Courier New', monospace;
-  font-size: 13px;
-  text-align: center;
-  border: 1px solid #e0e0e0;
-  cursor: pointer;
-  transition: all 0.2s;
+.code-chip {
+  background:var(--panel); border:1.5px solid var(--line);
+  border-radius:8px; padding:8px 12px;
+  font-family:'Consolas','Courier New',monospace; font-size:13px; font-weight:600;
+  cursor:pointer; text-align:center; transition:all .15s;
+  user-select:all; position:relative;
 }
-.code-item:hover {
-  background: #e8f5e9;
-  border-color: #4caf50;
+.code-chip:hover { border-color:var(--accent); background:var(--accent-pale); }
+.code-chip.copied { border-color:var(--success); background:#f0faf4; }
+.code-chip .copied-tag {
+  position:absolute; top:-8px; right:-4px; font-size:9px;
+  background:var(--success); color:#fff; padding:1px 5px; border-radius:4px;
 }
-.code-item.copied {
-  background: #4caf50;
-  color: #fff;
-  border-color: #4caf50;
+
+/* ===== table ===== */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { background:var(--accent-pale); color:var(--accent-deep); font-weight:700;
+  padding:10px 12px; text-align:left; border-bottom:1.5px solid var(--line);
+  font-size:12px; letter-spacing:.03em;
 }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
+td { padding:10px 12px; border-bottom:1px solid var(--line); }
+tr:hover td { background:var(--accent-pale); }
+td.mono { font-family:'Consolas','Courier New',monospace; font-weight:600; }
+td.dim { color:var(--ink-dim); font-size:12px; }
+
+/* ===== generate form ===== */
+.gen-form {
+  background:var(--panel); border:1.5px solid var(--line);
+  border-radius:var(--radius); padding:24px; max-width:400px;
 }
-th {
-  background: #f9f9f9;
-  padding: 12px;
-  text-align: left;
-  font-weight: 600;
-  color: #666;
-  border-bottom: 2px solid #e0e0e0;
+.gen-form label { display:block; font-size:12px; color:var(--ink-dim); font-weight:700; margin-bottom:4px; }
+.gen-form input[type="number"] {
+  width:100%; padding:10px 14px; border:1.5px solid var(--line);
+  border-radius:8px; font-size:15px; font-family:var(--font);
+  outline:none; margin-bottom:14px;
 }
-td {
-  padding: 12px;
-  border-bottom: 1px solid #f0f0f0;
-  color: #333;
+.gen-form input:focus { border-color:var(--accent); }
+.gen-result {
+  margin-top:16px; padding:14px; border-radius:10px;
+  background:var(--accent-pale); border:1.5px solid var(--accent-soft);
+  font-size:13px; display:none; max-height:300px; overflow-y:auto;
 }
-tr:hover td { background: #fafafa; }
-.badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.badge-success { background: #e8f5e9; color: #2e7d32; }
-.badge-info { background: #e3f2fd; color: #1976d2; }
-.login-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-.login-box {
-  background: #fff;
-  padding: 40px;
-  border-radius: 16px;
-  max-width: 400px;
-  width: 90%;
-}
-.login-box h2 {
-  margin-bottom: 20px;
-  color: #333;
-}
-.login-box input {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 16px;
-  margin-bottom: 16px;
-}
-.login-box button {
-  width: 100%;
-  padding: 12px;
-  background: #4caf50;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.login-box button:hover { background: #43a047; }
-.login-error {
-  color: #f44336;
-  margin-bottom: 16px;
-  font-size: 14px;
-}
-.hidden { display: none; }
+.gen-result.show { display:block; }
+
+/* ===== loading ===== */
 .loading {
-  text-align: center;
-  padding: 40px;
-  color: #999;
+  text-align:center; padding:40px; color:var(--ink-faint);
+}
+.loading .spinner {
+  width:24px; height:24px; border:3px solid var(--line);
+  border-top-color:var(--accent); border-radius:50%;
+  animation:spin .6s linear infinite; margin:0 auto 10px;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ===== toast ===== */
+.toast {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+  background:var(--ink); color:#fff; padding:10px 24px;
+  border-radius:999px; font-size:13px; z-index:999;
+  opacity:0; transition:opacity .3s; pointer-events:none;
+}
+.toast.show { opacity:1; }
+
+/* ===== responsive ===== */
+@media(max-width:600px) {
+  .header { padding:16px 16px 12px; }
+  .stats-bar { padding:12px 16px; grid-template-columns:repeat(2, 1fr); }
+  .tabs { padding:0 16px; overflow-x:auto; }
+  .tab { padding:10px 12px; font-size:12px; white-space:nowrap; }
+  .content { padding:14px 16px; }
+  .code-grid { grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); }
+  th, td { padding:8px 8px; font-size:12px; }
 }
 </style>
 </head>
 <body>
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-box">
-    <h2>管理员登录</h2>
-    <div class="login-error hidden" id="loginError">密码错误</div>
-    <input type="password" id="loginPassword" placeholder="请输入管理员密码">
-    <button onclick="checkPassword()">登录</button>
+
+<!-- ===== Login Gate ===== -->
+<div id="gate">
+  <div class="gate-box">
+    <h2>管理后台</h2>
+    <p>二游情报铺 · 仅限店主访问</p>
+    <input type="password" id="gate-pwd" class="gate-input" placeholder="请输入管理密码" autocomplete="off">
+    <button class="gate-btn" id="gate-login">进入</button>
+    <div class="gate-err" id="gate-err">密码错误</div>
   </div>
 </div>
 
-<div class="container hidden" id="mainContent">
-  <div class="header">
-    <h1>管理员面板 - 二游情报铺</h1>
-    <p>管理兑换码和查看兑换记录</p>
+<!-- ===== Main App ===== -->
+<div class="header">
+  <h1>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+    二游情报铺 · 管理后台
+  </h1>
+  <div class="sub" id="header-sub">加载中…</div>
+</div>
+
+<!-- Stats -->
+<div class="stats-bar" id="stats-bar">
+  <div class="stat-card"><div class="num" id="st-unused">-</div><div class="label">可用兑换码</div></div>
+  <div class="stat-card"><div class="num" id="st-used">-</div><div class="label">已用兑换码</div></div>
+  <div class="stat-card"><div class="num" id="st-redeem">-</div><div class="label">兑换记录</div></div>
+  <div class="stat-card"><div class="num" id="st-dev-free">-</div><div class="label">空闲设备码</div></div>
+  <div class="stat-card"><div class="num" id="st-dev-claimed">-</div><div class="label">已分配设备码</div></div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab active" data-panel="p-unused">可用兑换码</button>
+  <button class="tab" data-panel="p-used">已用兑换码</button>
+  <button class="tab" data-panel="p-records">兑换记录</button>
+  <button class="tab" data-panel="p-devices">设备码</button>
+  <button class="tab" data-panel="p-generate">生成新码</button>
+</div>
+
+<!-- Content -->
+<div class="content">
+  <!-- 可用兑换码 -->
+  <div class="panel active" id="p-unused">
+    <div class="code-toolbar">
+      <button class="btn-sm" id="btn-copy-all-unused">复制全部</button>
+      <span style="font-size:12px;color:var(--ink-dim)" id="unused-count"></span>
+    </div>
+    <div class="code-grid" id="unused-grid"></div>
   </div>
 
-  <div class="stats">
-    <div class="stat-card">
-      <div class="label">可用兑换码</div>
-      <div class="value" id="statAvailable">-</div>
-    </div>
-    <div class="stat-card">
-      <div class="label">已使用兑换码</div>
-      <div class="value" id="statUsed">-</div>
-    </div>
-    <div class="stat-card">
-      <div class="label">总兑换码数</div>
-      <div class="value" id="statTotal">-</div>
-    </div>
-    <div class="stat-card">
-      <div class="label">兑换记录数</div>
-      <div class="value" id="statRedemptions">-</div>
+  <!-- 已用兑换码 -->
+  <div class="panel" id="p-used">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>兑换码</th><th>使用时间</th><th>设备码</th><th>商品</th></tr></thead>
+        <tbody id="used-tbody"><tr><td colspan="4" class="loading"><div class="spinner"></div>加载中…</td></tr></tbody>
+      </table>
     </div>
   </div>
 
-  <div class="section">
-    <h2>可用兑换码 <span style="font-size:14px;color:#999;">(点击复制)</span></h2>
-    <div class="codes-grid" id="codesGrid">
-      <div class="loading">加载中...</div>
+  <!-- 兑换记录 -->
+  <div class="panel" id="p-records">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>时间</th><th>设备码</th><th>商品码</th><th>兑换码</th><th>派生密码</th></tr></thead>
+        <tbody id="records-tbody"><tr><td colspan="6" class="loading"><div class="spinner"></div>加载中…</td></tr></tbody>
+      </table>
     </div>
   </div>
 
-  <div class="section">
-    <h2>兑换记录</h2>
-    <table id="redemptionsTable">
-      <thead>
-        <tr>
-          <th>设备码</th>
-          <th>商品</th>
-          <th>兑换码</th>
-          <th>密码</th>
-          <th>时间</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td colspan="5" class="loading">加载中...</td></tr>
-      </tbody>
-    </table>
+  <!-- 设备码 -->
+  <div class="panel" id="p-devices">
+    <div class="code-toolbar">
+      <span style="font-size:12px;color:var(--ink-dim)" id="dev-summary"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>设备码</th><th>状态</th><th>指纹</th><th>分配时间</th></tr></thead>
+        <tbody id="dev-tbody"><tr><td colspan="4" class="loading"><div class="spinner"></div>加载中…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 生成新码 -->
+  <div class="panel" id="p-generate">
+    <div class="gen-form">
+      <h3 style="font-size:16px;margin-bottom:16px;color:var(--accent-deep)">生成新兑换码</h3>
+      <label>生成数量（1-500）</label>
+      <input type="number" id="gen-count" value="50" min="1" max="500">
+      <button class="btn-sm success" id="btn-gen-codes" style="width:100%;padding:10px;font-size:14px;">生成兑换码</button>
+      <div class="gen-result" id="gen-result"></div>
+    </div>
+    <div class="gen-form" style="margin-top:20px;">
+      <h3 style="font-size:16px;margin-bottom:16px;color:var(--accent-deep)">生成新设备码</h3>
+      <label>生成数量（1-200）</label>
+      <input type="number" id="gen-dev-count" value="20" min="1" max="200">
+      <button class="btn-sm success" id="btn-gen-dev" style="width:100%;padding:10px;font-size:14px;">生成设备码</button>
+      <div class="gen-result" id="gen-dev-result"></div>
+    </div>
   </div>
 </div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
 <script>
-const SB_URL = "https://xajqidptrsnbavqxraws.supabase.co";
-const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhanFpZHB0cnNuYmF2cXhyYXdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjI0ODAsImV4cCI6MjEwMjY5ODQ4MH0.MsdG-uCbLv3C8w43grFPcybaas-RT20nKPyNLV8afM0";
-const ADMIN_PASSWORD = "admin2026";
+var SB_URL = "https://xajqidptrsnbavqxraws.supabase.co";
+var SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhanFpZHB0cnNuYmF2cXhyYXdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjI0ODAsImV4cCI6MjEwMjY5ODQ4MH0.MsdG-uCbLv3C8w43grFPcybaas-RT20nKPyNLV8afM0";
+var ADMIN_SECRET = "";
 
-function checkPassword() {
-  const pwd = document.getElementById("loginPassword").value;
-  if (pwd === ADMIN_PASSWORD) {
-    document.getElementById("loginOverlay").classList.add("hidden");
-    document.getElementById("mainContent").classList.remove("hidden");
-    loadDashboard();
+function rpc(fn, args) {
+  return fetch(SB_URL + "/rest/v1/rpc/" + fn, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "apikey": SB_KEY, "Authorization": "Bearer " + SB_KEY },
+    body: JSON.stringify(args)
+  }).then(function(r) { return r.json(); });
+}
+
+function toast(msg) {
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(function() { t.classList.remove("show"); }, 2000);
+}
+
+function copyText(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() { toast("已复制: " + text); });
   } else {
-    document.getElementById("loginError").classList.remove("hidden");
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.cssText = "position:fixed;opacity:0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); toast("已复制: " + text); } catch(e) {}
+    document.body.removeChild(ta);
   }
 }
 
-document.getElementById("loginPassword").addEventListener("keypress", function(e) {
-  if (e.key === "Enter") checkPassword();
+function fmtTime(iso) {
+  if (!iso) return "-";
+  var d = new Date(iso);
+  var pad = function(n) { return n < 10 ? "0" + n : n; };
+  return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+}
+
+// ===== Login =====
+var gate = document.getElementById("gate");
+var gateInput = document.getElementById("gate-pwd");
+var gateErr = document.getElementById("gate-err");
+
+// Check saved session
+var savedSecret = localStorage.getItem("erp3_admin_secret");
+if (savedSecret) {
+  rpc("admin_verify", { p_secret: savedSecret }).then(function(res) {
+    if (res && res.ok) {
+      ADMIN_SECRET = savedSecret;
+      gate.classList.add("hidden");
+      loadAll();
+    }
+  });
+}
+
+document.getElementById("gate-login").addEventListener("click", doLogin);
+gateInput.addEventListener("keydown", function(e) { if (e.key === "Enter") doLogin(); });
+
+function doLogin() {
+  var pwd = gateInput.value.trim();
+  if (!pwd) return;
+  rpc("admin_verify", { p_secret: pwd }).then(function(res) {
+    if (res && res.ok) {
+      ADMIN_SECRET = pwd;
+      localStorage.setItem("erp3_admin_secret", pwd);
+      gate.classList.add("hidden");
+      loadAll();
+    } else {
+      gateErr.classList.add("show");
+      gateInput.value = "";
+      gateInput.focus();
+    }
+  }).catch(function() {
+    gateErr.textContent = "网络连接失败";
+    gateErr.classList.add("show");
+  });
+}
+
+// ===== Tabs =====
+document.querySelectorAll(".tab").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    var target = btn.getAttribute("data-panel");
+    document.querySelectorAll(".tab").forEach(function(b) { b.classList.toggle("active", b === btn); });
+    document.querySelectorAll(".panel").forEach(function(p) { p.classList.toggle("active", p.id === target); });
+  });
 });
 
-async function sbQuery(table, params = "") {
-  const url = `${SB_URL}/rest/v1/${table}${params}`;
-  const res = await fetch(url, {
-    headers: {
-      "apikey": SB_KEY,
-      "Authorization": `Bearer ${SB_KEY}`
-    }
-  });
-  return await res.json();
+// ===== Load Data =====
+function loadAll() {
+  loadStats();
+  loadUnused();
+  loadUsed();
+  loadRecords();
+  loadDevices();
+  document.getElementById("header-sub").textContent = "已登录 · " + new Date().toLocaleString("zh-CN");
 }
 
-async function loadDashboard() {
-  try {
-    const [unused, used, redemptions] = await Promise.all([
-      sbQuery("redemption_codes", "?select=code&used=eq.false&order=code"),
-      sbQuery("redemption_codes", "?select=code&used=eq.true&order=code"),
-      sbQuery("redemptions", "?select=*&order=redeemed_at.desc")
-    ]);
-
-    document.getElementById("statAvailable").textContent = unused.length;
-    document.getElementById("statUsed").textContent = used.length;
-    document.getElementById("statTotal").textContent = unused.length + used.length;
-    document.getElementById("statRedemptions").textContent = redemptions.length;
-
-    const codesGrid = document.getElementById("codesGrid");
-    if (unused.length === 0) {
-      codesGrid.innerHTML = '<div class="loading">暂无可用兑换码</div>';
-    } else {
-      codesGrid.innerHTML = unused.map(c => 
-        `<div class="code-item" onclick="copyCode(this, '${c.code}')">${c.code}</div>`
-      ).join("");
-    }
-
-    const tbody = document.querySelector("#redemptionsTable tbody");
-    if (redemptions.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" class="loading">暂无兑换记录</td></tr>';
-    } else {
-      tbody.innerHTML = redemptions.map(r => {
-        const date = new Date(r.redeemed_at).toLocaleString("zh-CN");
-        return `<tr>
-          <td>${r.device_code}</td>
-          <td><span class="badge badge-info">${r.product_code}</span></td>
-          <td style="font-family:monospace;">${r.redemption_code}</td>
-          <td style="font-family:monospace;">${r.password}</td>
-          <td>${date}</td>
-        </tr>`;
-      }).join("");
-    }
-  } catch (err) {
-    console.error("加载失败:", err);
-    alert("加载数据失败，请检查网络连接");
-  }
-}
-
-function copyCode(el, code) {
-  navigator.clipboard.writeText(code).then(() => {
-    el.classList.add("copied");
-    const original = el.textContent;
-    el.textContent = "已复制";
-    setTimeout(() => {
-      el.classList.remove("copied");
-      el.textContent = original;
-    }, 1000);
+function loadStats() {
+  rpc("admin_stats", { p_secret: ADMIN_SECRET }).then(function(res) {
+    if (!res || !res.ok) return;
+    document.getElementById("st-unused").textContent = res.unused_codes;
+    document.getElementById("st-used").textContent = res.used_codes;
+    document.getElementById("st-redeem").textContent = res.total_redemptions;
+    document.getElementById("st-dev-free").textContent = res.free_devices;
+    document.getElementById("st-dev-claimed").textContent = res.claimed_devices;
   });
 }
+
+function loadUnused() {
+  var grid = document.getElementById("unused-grid");
+  grid.innerHTML = '<div class="loading"><div class="spinner"></div>加载中…</div>';
+  rpc("admin_unused_codes", { p_secret: ADMIN_SECRET }).then(function(res) {
+    if (!res || !res.ok) { grid.innerHTML = '<div style="color:var(--danger)">加载失败: ' + (res && res.error || '未知错误') + '</div>'; return; }
+    var codes = res.codes || [];
+    document.getElementById("unused-count").textContent = "共 " + codes.length + " 个可用";
+    if (!codes.length) { grid.innerHTML = '<div style="color:var(--ink-faint);padding:20px">暂无可用兑换码</div>'; return; }
+    grid.innerHTML = codes.map(function(c) {
+      return '<div class="code-chip" data-code="' + c + '" title="点击复制">' + c + '</div>';
+    }).join("");
+    grid.querySelectorAll(".code-chip").forEach(function(chip) {
+      chip.addEventListener("click", function() {
+        copyText(chip.getAttribute("data-code"));
+        chip.classList.add("copied");
+        setTimeout(function() { chip.classList.remove("copied"); }, 1000);
+      });
+    });
+  });
+}
+
+document.getElementById("btn-copy-all-unused").addEventListener("click", function() {
+  rpc("admin_unused_codes", { p_secret: ADMIN_SECRET }).then(function(res) {
+    if (!res || !res.ok) return;
+    var codes = res.codes || [];
+    copyText(codes.join("\n"));
+  });
+});
+
+function loadUsed() {
+  var tbody = document.getElementById("used-tbody");
+  rpc("admin_used_codes", { p_secret: ADMIN_SECRET }).then(function(res) {
+    if (!res || !res.ok) { tbody.innerHTML = '<tr><td colspan="4" style="color:var(--danger)">加载失败</td></tr>'; return; }
+    var codes = res.codes || [];
+    if (!codes.length) { tbody.innerHTML = '<tr><td colspan="4" style="color:var(--ink-faint);padding:20px;text-align:center">暂无已使用的兑换码</td></tr>'; return; }
+    tbody.innerHTML = codes.map(function(c) {
+      return '<tr><td class="mono">' + c.code + '</td><td class="dim">' + fmtTime(c.used_at) + '</td><td class="mono">' + (c.device || '-') + '</td><td>' + (c.product || '-') + '</td></tr>';
+    }).join("");
+  });
+}
+
+function loadRecords() {
+  var tbody = document.getElementById("records-tbody");
+  rpc("admin_redemptions", { p_secret: ADMIN_SECRET }).then(function(res) {
+    if (!res || !res.ok) { tbody.innerHTML = '<tr><td colspan="6" style="color:var(--danger)">加载失败</td></tr>'; return; }
+    var records = res.redemptions || [];
+    if (!records.length) { tbody.innerHTML = '<tr><td colspan="6" style="color:var(--ink-faint);padding:20px;text-align:center">暂无兑换记录</td></tr>'; return; }
+    tbody.innerHTML = records.map(function(r) {
+      return '<tr><td>' + r.id + '</td><td class="dim">' + fmtTime(r.redeemed_at) + '</td><td class="mono">' + r.device_code + '</td><td>' + r.product_code + '</td><td class="mono">' + r.redemption_code + '</td><td class="mono" style="color:var(--accent-deep);cursor:pointer" data-pwd="' + r.password + '">' + r.password + '</td></tr>';
+    }).join("");
+    tbody.querySelectorAll("[data-pwd]").forEach(function(td) {
+      td.addEventListener("click", function() { copyText(td.getAttribute("data-pwd")); });
+    });
+  });
+}
+
+function loadDevices() {
+  var tbody = document.getElementById("dev-tbody");
+  rpc("admin_device_codes", { p_secret: ADMIN_SECRET }).then(function(res) {
+    if (!res || !res.ok) { tbody.innerHTML = '<tr><td colspan="4" style="color:var(--danger)">加载失败</td></tr>'; return; }
+    var codes = res.codes || [];
+    document.getElementById("dev-summary").textContent = "已分配 " + res.claimed + " / 空闲 " + res.free + " / 共 " + codes.length;
+    if (!codes.length) { tbody.innerHTML = '<tr><td colspan="4" style="color:var(--ink-faint);padding:20px;text-align:center">暂无设备码</td></tr>'; return; }
+    tbody.innerHTML = codes.map(function(d) {
+      var status = d.claimed
+        ? '<span style="color:var(--success);font-weight:700">已分配</span>'
+        : '<span style="color:var(--ink-faint)">空闲</span>';
+      return '<tr><td class="mono">' + d.code + '</td><td>' + status + '</td><td class="dim">' + (d.fingerprint || '-') + '</td><td class="dim">' + fmtTime(d.assigned_at) + '</td></tr>';
+    }).join("");
+  });
+}
+
+// ===== Generate =====
+document.getElementById("btn-gen-codes").addEventListener("click", function() {
+  var count = parseInt(document.getElementById("gen-count").value) || 50;
+  if (count < 1 || count > 500) { toast("数量范围 1-500"); return; }
+  var btn = this;
+  btn.disabled = true; btn.textContent = "生成中…";
+  var result = document.getElementById("gen-result");
+  rpc("admin_generate_codes", { p_secret: ADMIN_SECRET, p_count: count }).then(function(res) {
+    btn.disabled = false; btn.textContent = "生成兑换码";
+    if (!res || !res.ok) { toast("生成失败: " + (res && res.error || "")); return; }
+    var codes = res.codes || [];
+    result.classList.add("show");
+    result.innerHTML = '<div style="margin-bottom:8px;font-weight:700;color:var(--success)">成功生成 ' + codes.length + ' 个兑换码</div>' +
+      '<div style="font-family:Consolas,monospace;font-size:12px;line-height:1.8;white-space:pre-wrap;user-select:all">' + codes.join(" ") + '</div>' +
+      '<button class="btn-sm" style="margin-top:10px" id="btn-copy-gen">复制全部</button>';
+    document.getElementById("btn-copy-gen").addEventListener("click", function() { copyText(codes.join("\n")); });
+    loadStats();
+    loadUnused();
+  }).catch(function() {
+    btn.disabled = false; btn.textContent = "生成兑换码";
+    toast("网络错误");
+  });
+});
+
+document.getElementById("btn-gen-dev").addEventListener("click", function() {
+  var count = parseInt(document.getElementById("gen-dev-count").value) || 20;
+  if (count < 1 || count > 200) { toast("数量范围 1-200"); return; }
+  var btn = this;
+  btn.disabled = true; btn.textContent = "生成中…";
+  var result = document.getElementById("gen-dev-result");
+  rpc("admin_generate_device_codes", { p_secret: ADMIN_SECRET, p_count: count }).then(function(res) {
+    btn.disabled = false; btn.textContent = "生成设备码";
+    if (!res || !res.ok) { toast("生成失败: " + (res && res.error || "")); return; }
+    var codes = res.codes || [];
+    result.classList.add("show");
+    result.innerHTML = '<div style="margin-bottom:8px;font-weight:700;color:var(--success)">成功生成 ' + codes.length + ' 个设备码</div>' +
+      '<div style="font-family:Consolas,monospace;font-size:12px;line-height:1.8;white-space:pre-wrap;user-select:all">' + codes.join(" ") + '</div>' +
+      '<button class="btn-sm" style="margin-top:10px" id="btn-copy-gen-dev">复制全部</button>';
+    document.getElementById("btn-copy-gen-dev").addEventListener("click", function() { copyText(codes.join("\n")); });
+    loadStats();
+    loadDevices();
+  }).catch(function() {
+    btn.disabled = false; btn.textContent = "生成设备码";
+    toast("网络错误");
+  });
+});
 </script>
 </body>
 </html>
