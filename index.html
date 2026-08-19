@@ -1509,8 +1509,9 @@ prevOverlay.addEventListener("click", function(ev) {
   if (ev.target === prevOverlay) closePreview();
 });
 
-/* ===== Worker API ===== */
-var WORKER_URL = "https://eryou-shop.eryou-shop.workers.dev";
+/* ===== Supabase API ===== */
+var SUPABASE_URL = "https://xajqidptrsnbavqxraws.supabase.co";
+var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhanFpZHB0cnNuYmF2cXhyYXdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjI0ODAsImV4cCI6MjEwMjY5ODQ4MH0.MsdG-uCbLv3C8w43grFPcybaas-RT20nKPyNLV8afM0";
 var DEVICE_CODE = localStorage.getItem("erp3_device_code") || "";
 
 function getFingerprint() {
@@ -1554,10 +1555,14 @@ function assignDeviceCode() {
     devRetryBtn.classList.add("show");
   }, 6000);
 
-  fetch(WORKER_URL + "/api/device/assign", {
+  fetch(SUPABASE_URL + "/rest/v1/rpc/claim_device_code", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fingerprint: fp })
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": "Bearer " + SUPABASE_KEY
+    },
+    body: JSON.stringify({ fp: fp })
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
@@ -1672,13 +1677,17 @@ redeemConfirmBtn.addEventListener("click", function() {
   redeemMsg.className = "redeem-msg loading";
   redeemConfirmBtn.disabled = true;
 
-  fetch(WORKER_URL + "/api/redeem", {
+  fetch(SUPABASE_URL + "/rest/v1/rpc/do_redeem", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_KEY,
+      "Authorization": "Bearer " + SUPABASE_KEY
+    },
     body: JSON.stringify({
-      device_code: DEVICE_CODE,
-      product_code: productCode,
-      redemption_code: redemptionCode
+      p_device: DEVICE_CODE,
+      p_product: productCode,
+      p_redemption: redemptionCode
     })
   })
   .then(function(r) { return r.json(); })
@@ -1744,6 +1753,7 @@ redeemConfirmBtn.addEventListener("click", function() {
         "invalid_device_code": "设备码无效",
         "device_not_assigned": "设备码未激活",
         "invalid_redemption_code": "兑换码无效",
+        "invalid_or_used_redemption_code": "兑换码无效或已被使用",
         "redemption_code_already_used": "兑换码已被使用",
         "invalid_product_code": "商品码无效",
         "code_in_use_retry": "兑换码正在被使用，请稍后重试",
