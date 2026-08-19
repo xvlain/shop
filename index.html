@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=ZCOOL+XiaoWei&family=Caveat:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ===== themes ===== */
 :root, [data-theme="pink"] {
@@ -48,15 +48,36 @@
 /* ===== fonts ===== */
 * { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior:smooth; }
+
+/* Chinese font stacks */
+[data-cfont="cute"]  body { --font-cn: "LXGW WenKai","PingFang SC","Microsoft YaHei",sans-serif; }
+[data-cfont="hei"]   body { --font-cn: "Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif; }
+[data-cfont="write"] body { --font-cn: "ZCOOL XiaoWei","LXGW WenKai","STKaiti",serif; }
+
+/* English font stacks */
+[data-efont="hs"]      body { --font-en: "Caveat",cursive; }
+[data-efont="italic"]  body { --font-en: "Lora",Georgia,serif; }
+[data-efont="sans"]    body { --font-en: "Inter","Helvetica Neue",Arial,sans-serif; }
+
 body {
   background:var(--bg); color:var(--ink);
-  font-family:"LXGW WenKai","PingFang SC","Microsoft YaHei",sans-serif;
+  font-family: var(--font-cn);
   line-height:1.7; -webkit-font-smoothing:antialiased;
   padding-bottom:72px;
 }
-[data-cfont="cute"] body { font-family:"LXGW WenKai","PingFang SC","Microsoft YaHei",sans-serif; }
-[data-cfont="hei"] body  { font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif; }
-[data-cfont="write"] body { font-family:"ZCOOL XiaoWei","LXGW WenKai","STKaiti","KaiTi",serif; }
+/* Apply font globally to fix unresponsive issue */
+body, h1, h2, h3, h4, h5, h6, p, span, div, button, input, a, li, label,
+.card-title, .card-kind, .card-meta, .group-label, .ver-badge, .settings-title,
+.setting-label, .opt-btn, .bnav-label, .pwd-title, .pwd-hint, .pwd-input,
+.home-title, .letter-body, .letter-body p, .cl-entry h4, .cl-entry .cl-date,
+.about-row .about-label, .about-row .about-val, .mast-note, .sub, .brand h1 {
+  font-family: var(--font-cn) !important;
+}
+/* English text class: use English font */
+.en-text { font-family: var(--font-en) !important; }
+/* Game names and proper nouns always use Chinese font */
+.game-name { font-family: var(--font-cn) !important; }
+code, .font-mono { font-family: "SF Mono",Consolas,"Courier New",monospace !important; }
 
 body::before {
   content:""; position:fixed; inset:0;
@@ -79,19 +100,14 @@ body::before {
 }
 .brand h1 em { font-style:normal; color:var(--accent); }
 .brand .sub { color:var(--ink-dim); font-size:13.5px; letter-spacing:.22em; }
+.brand .ver-tag {
+  font-size:11px; color:var(--accent-deep); background:var(--accent-pale);
+  border:1px solid var(--accent-soft); border-radius:6px;
+  padding:2px 10px; letter-spacing:.08em; font-weight:700;
+  align-self:center; margin-left:4px;
+}
 .mast-note { margin-top:12px; color:var(--ink-dim); font-size:14px; max-width:620px; }
 .mast-note b { color:var(--accent-deep); font-weight:700; }
-
-.all-share {
-  margin-top:18px; display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap;
-  background:var(--panel); border:1.5px solid var(--line);
-  border-left:4px solid var(--accent); border-radius:10px;
-  padding:10px 16px; font-size:14px;
-}
-.all-share .lbl { color:var(--ink-dim); }
-.all-share a { color:var(--accent-deep); text-decoration:none; font-family:"SF Mono",Consolas,monospace; font-size:13px; word-break:break-all; }
-.all-share a:hover { text-decoration:underline; }
-.all-share .pwd { color:var(--ink); background:var(--accent-pale); border-radius:5px; padding:2px 8px; font-family:Consolas,monospace; font-size:13px; }
 
 .search { margin-top:16px; max-width:360px; }
 .search input {
@@ -114,6 +130,57 @@ body::before {
   letter-spacing:.04em; color:var(--accent-deep);
 }
 .section-head .desc { font-size:13px; color:var(--ink-faint); letter-spacing:.08em; }
+
+/* ===== home section ===== */
+.home-section { padding:32px 0 8px; }
+.home-section.hidden { display:none; }
+
+.letter-card {
+  background:var(--panel); border:1.5px solid var(--line);
+  border-radius:16px; padding:28px 24px; margin-top:20px;
+  box-shadow:0 2px 16px color-mix(in srgb, var(--accent) 6%, transparent);
+}
+.letter-title {
+  font-size:20px; font-weight:800; color:var(--accent-deep);
+  margin-bottom:16px; text-align:center;
+}
+.letter-body { font-size:15px; line-height:2; color:var(--ink); }
+.letter-body p { margin-bottom:14px; text-indent:2em; }
+.letter-sign {
+  text-align:right; margin-top:20px; font-weight:700;
+  color:var(--accent-deep); font-size:14px; letter-spacing:.05em;
+}
+
+.about-card {
+  background:var(--panel); border:1.5px solid var(--line);
+  border-radius:16px; padding:22px 24px; margin-top:18px;
+}
+.about-card h3 {
+  font-size:16px; font-weight:800; color:var(--accent-deep);
+  margin-bottom:14px; letter-spacing:.06em;
+}
+.about-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:8px 0; border-bottom:1px solid var(--line);
+  font-size:14px;
+}
+.about-row:last-child { border-bottom:none; }
+.about-row .about-label { color:var(--ink-dim); font-weight:600; }
+.about-row .about-val { color:var(--ink); font-weight:700; font-family:"SF Mono",Consolas,monospace; font-size:13px; }
+
+.cl-entry {
+  padding:16px 0; border-bottom:1.5px solid var(--line);
+}
+.cl-entry:last-child { border-bottom:none; }
+.cl-entry .cl-ver {
+  display:inline-block; font-size:13px; color:var(--accent-deep);
+  background:var(--accent-pale); border:1px solid var(--accent-soft);
+  border-radius:6px; padding:2px 12px; font-weight:700; margin-right:8px;
+}
+.cl-entry .cl-date { font-size:12px; color:var(--ink-faint); }
+.cl-entry h4 { font-size:15px; font-weight:700; margin-top:8px; color:var(--ink); }
+.cl-entry ul { margin-top:8px; padding-left:20px; font-size:13.5px; color:var(--ink-dim); line-height:1.9; }
+.cl-entry ul li { margin-bottom:2px; }
 
 /* ===== version / game blocks ===== */
 .ver-section { margin-top:28px; }
@@ -196,14 +263,23 @@ body::before {
   display:flex; flex-direction:column; align-items:center; gap:8px;
 }
 .lock-inner svg { color:var(--accent); width:24px; height:24px; }
-.lock-inner span { font-size:13px; color:var(--ink-dim); }
+.lock-inner > span { font-size:13px; color:var(--ink-dim); }
+.lock-btn-row { display:flex; gap:8px; margin-top:4px; }
 .btn-unlock {
-  margin-top:4px; padding:8px 24px; border-radius:999px;
+  padding:8px 24px; border-radius:999px;
   background:var(--accent); color:#fff; font-size:13px;
   font-weight:700; border:none; cursor:pointer; font-family:inherit;
   transition:background .15s;
 }
 .btn-unlock:hover { background:var(--accent-deep); }
+.btn-preview {
+  padding:8px 18px; border-radius:999px;
+  background:transparent; color:var(--accent-deep); font-size:13px;
+  font-weight:700; border:1.5px solid var(--accent-soft); cursor:pointer;
+  font-family:inherit; transition:all .15s;
+  display:inline-flex; align-items:center; gap:5px;
+}
+.btn-preview:hover { background:var(--accent-pale); border-color:var(--accent); }
 .group-locked .art img { filter:blur(3px) brightness(.92); }
 .group-locked .btn-locked { pointer-events:none; opacity:.5; }
 .group.unlocked .lock-overlay { display:none; }
@@ -249,6 +325,47 @@ body::before {
 .pwd-confirm { background:var(--accent); color:#fff; }
 .pwd-confirm:hover { background:var(--accent-deep); }
 
+/* ===== preview modal ===== */
+#preview-overlay {
+  position:fixed; inset:0; z-index:310;
+  background:rgba(0,0,0,.55);
+  opacity:0; pointer-events:none; transition:opacity .3s;
+  display:flex; align-items:center; justify-content:center;
+}
+#preview-overlay.open { opacity:1; pointer-events:auto; }
+#preview-modal {
+  background:var(--panel); border-radius:18px;
+  width:min(600px,92vw); max-height:80vh; overflow-y:auto;
+  padding:24px; box-shadow:0 12px 40px rgba(0,0,0,.25);
+  transform:scale(.92); transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+#preview-overlay.open #preview-modal { transform:scale(1); }
+.preview-header {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:16px; padding-bottom:12px; border-bottom:1.5px solid var(--line);
+}
+.preview-header h3 { font-size:18px; font-weight:800; color:var(--accent-deep); }
+.preview-close {
+  background:var(--bg); border:1.5px solid var(--line); border-radius:8px;
+  width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:18px; color:var(--ink-dim); transition:all .15s;
+  font-family:inherit;
+}
+.preview-close:hover { color:var(--accent); border-color:var(--accent-soft); }
+.preview-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:14px;
+}
+.preview-item {
+  background:var(--bg); border:1.5px solid var(--line); border-radius:12px;
+  overflow:hidden; transition:border-color .2s;
+}
+.preview-item:hover { border-color:var(--accent-soft); }
+.preview-item .pimg { aspect-ratio:16/10; overflow:hidden; background:var(--accent-pale); }
+.preview-item .pimg img { width:100%; height:100%; object-fit:cover; display:block; }
+.preview-item .pinfo { padding:10px 12px; }
+.preview-item .pinfo .pname { font-size:14px; font-weight:700; color:var(--ink); }
+.preview-item .pinfo .pkind { font-size:11px; color:var(--accent-deep); letter-spacing:.1em; margin-top:2px; }
+
 /* ===== bottom nav ===== */
 #bnav {
   position:fixed; bottom:0; left:0; right:0; z-index:100;
@@ -258,9 +375,7 @@ body::before {
   display:flex; justify-content:center;
   padding-bottom:env(safe-area-inset-bottom);
 }
-.bnav-inner {
-  display:flex; width:100%; max-width:480px;
-}
+.bnav-inner { display:flex; width:100%; max-width:520px; }
 .bnav-item {
   flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
   padding:8px 0 6px; cursor:pointer; color:var(--ink-faint);
@@ -333,24 +448,69 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   .btn-main { font-size:12.5px; padding:7px 8px; }
   .btn-pwd { font-size:11px; padding:7px 8px; }
   .brand h1 { font-size:26px; }
+  .preview-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
+  .letter-body { font-size:14px; }
 }
 </style>
 </head>
-<body data-theme="pink" data-cfont="cute">
+<body data-theme="pink" data-cfont="cute" data-efont="sans">
 
   <header class="masthead">
     <div class="wrap">
       <div class="brand">
         <h1><span data-i18n="siteName">二游</span><em data-i18n="siteNameEm">情报铺</em></h1>
         <span class="sub" data-i18n="tagline">版本情报 · 角色资料 · 武器档案</span>
+        <span class="ver-tag">v1.0.0</span>
       </div>
-      <p class="mast-note" data-i18n-html="mastNote">小铺专营各大二游版本情报，角色、武器资料随版本持续上新。每份资料有独立获取入口，<b>解锁对应资料库后即可查看网盘链接和提取码</b>。</p>
+      <p class="mast-note" data-i18n-html="mastnote">小铺专营各大二游版本情报，角色、武器资料随版本持续上新。每份资料有独立获取入口，<b>解锁对应资料库后即可查看网盘链接和提取码</b>。</p>
       <div class="search"><input id="q" type="search" data-i18n-ph="searchPh" placeholder="搜索资料名，例如：薇斯纳、单手剑…"></div>
     </div>
   </header>
 
   <main class="wrap">
-    <section class="section-panel" id="sec-preview">
+    <!-- ===== HOME ===== -->
+    <section class="section-panel" id="sec-home">
+      <div class="letter-card">
+        <div class="letter-title" data-i18n="letterTitle">致各位旅行者的一封信</div>
+        <div class="letter-body" data-i18n-html="letterBody">
+<p>你好呀，欢迎来到二游情报铺。</p>
+<p>这里是店主的小铺子，专营各大二次元游戏的版本情报——角色立绘、武器档案、光锥资料，按版本整理归档，方便各位旅行者按需取用。</p>
+<p>每份资料都经过店主精心整理，有独立的获取入口。购买后店主会发给你对应的资料库密码和网盘链接，解锁即可查看下载。不用担心打包购买的问题——你需要什么就买什么，绝不捆绑。</p>
+<p>资料会随游戏版本持续更新，旧版本的情报也会妥善归档到「二游遗产名录」中。情报常新，欢迎常来。</p>
+        </div>
+        <div class="letter-sign" data-i18n="letterSign">—— 二游情报铺 · 店主敬上</div>
+      </div>
+
+      <div class="about-card">
+        <h3 data-i18n="aboutTitle">关于本站</h3>
+        <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.0.0 「初晴」</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutTotal">收录资料</span><span class="about-val font-mono">14 份</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutSync">最后同步</span><span class="about-val font-mono">2026-08-18 23:15</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutGames">收录游戏</span><span class="about-val">崩坏：星穹铁道、原神、异环</span></div>
+      </div>
+
+      <div class="about-card">
+        <h3 data-i18n="changelogTitle">更新日志</h3>
+        <div class="cl-entry">
+          <span class="cl-ver">v1.0.0</span>
+          <span class="cl-date">2026-08-19</span>
+          <h4 data-i18n="clV1Title">「初晴」正式版发布</h4>
+          <ul>
+            <li data-i18n="clV1_1">首页改版：致客信 + 站点信息 + 更新日志</li>
+            <li data-i18n="clV1_2">底部导航新增首页入口</li>
+            <li data-i18n="clV1_3">新增 3 种英文字体：衡水体、斜体、黑体</li>
+            <li data-i18n="clV1_4">五星角色/武器自动排列在四星之前</li>
+            <li data-i18n="clV1_5">加密资料库新增预览按钮，可查看角色/物品高清图片</li>
+            <li data-i18n="clV1_6">全站图片压缩优化，加载速度大幅提升</li>
+            <li data-i18n="clV1_7">修复字体设置偶发无响应问题</li>
+            <li data-i18n="clV1_8">收录游戏：崩坏：星穹铁道、原神、异环</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PREVIEW ===== -->
+    <section class="section-panel hidden" id="sec-preview">
       <div class="section-head">
         <h2 data-i18n="previewTitle">前瞻</h2>
         <span class="desc" data-i18n="previewDesc">各游戏最新版本情报</span>
@@ -359,10 +519,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
-    <button class="btn-unlock" data-gid="崩坏星穹铁道-4.5-角色" data-i18n="btnUnlock">解锁</button>
+    <div class="lock-btn-row">
+      <button class="btn-preview" data-gid="崩坏星穹铁道-4.5-角色" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
+      <button class="btn-unlock" data-gid="崩坏星穹铁道-4.5-角色" data-i18n="btnUnlock">解锁</button>
+    </div>
   </div>
-</div><div class="cards"><div class="card" data-name="砂金•戏浪 砂金•戏浪V4.pdf">
-  <div class="art"><img src="assets/cover-sandin.webp" alt="砂金•戏浪" loading="lazy"></div>
+</div><div class="cards"><div class="card" data-name="砂金•戏浪 砂金•戏浪V4.pdf" data-star="2">
+  <div class="art"><img src="assets/cover-sandin.webp" alt="砂金•戏浪" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">角色</div>
     <h3 class="card-title">砂金•戏浪</h3>
@@ -375,8 +538,8 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="UDNkMQ=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div><div class="card" data-name="知更鸟•晴歌 知更鸟•晴歌V4.pdf">
-  <div class="art"><img src="assets/cover-zhigengniao.webp" alt="知更鸟•晴歌" loading="lazy"></div>
+</div><div class="card" data-name="知更鸟•晴歌 知更鸟•晴歌V4.pdf" data-star="2">
+  <div class="art"><img src="assets/cover-zhigengniao.webp" alt="知更鸟•晴歌" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">角色</div>
     <h3 class="card-title">知更鸟•晴歌</h3>
@@ -393,10 +556,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
-    <button class="btn-unlock" data-gid="崩坏星穹铁道-4.5-光锥" data-i18n="btnUnlock">解锁</button>
+    <div class="lock-btn-row">
+      <button class="btn-preview" data-gid="崩坏星穹铁道-4.5-光锥" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
+      <button class="btn-unlock" data-gid="崩坏星穹铁道-4.5-光锥" data-i18n="btnUnlock">解锁</button>
+    </div>
   </div>
-</div><div class="cards"><div class="card" data-name="向浪花掷下盛夏 向浪花掷下盛夏-欢愉.pdf">
-  <div class="art"><img src="assets/cover-xianglanghua.webp" alt="向浪花掷下盛夏" loading="lazy"></div>
+</div><div class="cards"><div class="card" data-name="向浪花掷下盛夏 向浪花掷下盛夏-欢愉.pdf" data-star="0">
+  <div class="art"><img src="assets/cover-xianglanghua.webp" alt="向浪花掷下盛夏" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">光锥·5星</div>
     <h3 class="card-title">向浪花掷下盛夏</h3>
@@ -409,22 +575,8 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="SkFEag=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div><div class="card" data-name="向着地平线的终点 向着地平线的终点-巡猎.pdf">
-  <div class="art"><img src="assets/cover-xiangzhedipingxian.webp" alt="向着地平线的终点" loading="lazy"></div>
-  <div class="card-body">
-    <div class="card-kind">光锥·4星</div>
-    <h3 class="card-title">向着地平线的终点</h3>
-    <div class="card-meta">
-      <span>向着地平线的终点-巡猎.pdf</span>
-      <span>3.2 MB · 2026-08-18</span>
-    </div>
-    <div class="card-actions">
-      <a class="btn-main btn-locked" data-share-url="aHR0cHM6Ly9wYW4ucXVhcmsuY24vcy9mNmYwODRkMGZlYWY=" href="javascript:void(0)" data-i18n="getDoc">获取资料</a>
-      <button class="btn-pwd btn-locked" data-pwd-b64="Mmg2Rw=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-    </div>
-  </div>
-</div><div class="card" data-name="你将起身歌唱 你将起身歌唱-记忆.pdf">
-  <div class="art"><img src="assets/cover-nijiangqishenggechang.webp" alt="你将起身歌唱" loading="lazy"></div>
+</div><div class="card" data-name="你将起身歌唱 你将起身歌唱-记忆.pdf" data-star="0">
+  <div class="art"><img src="assets/cover-nijiangqishenggechang.webp" alt="你将起身歌唱" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">光锥·5星</div>
     <h3 class="card-title">你将起身歌唱</h3>
@@ -437,8 +589,22 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="VWZhTQ=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div><div class="card" data-name="放个短假 放个短假-欢愉.pdf">
-  <div class="art"><img src="assets/cover-fanggeduanjia.webp" alt="放个短假" loading="lazy"></div>
+</div><div class="card" data-name="向着地平线的终点 向着地平线的终点-巡猎.pdf" data-star="1">
+  <div class="art"><img src="assets/cover-xiangzhedipingxian.webp" alt="向着地平线的终点" loading="lazy" decoding="async"></div>
+  <div class="card-body">
+    <div class="card-kind">光锥·4星</div>
+    <h3 class="card-title">向着地平线的终点</h3>
+    <div class="card-meta">
+      <span>向着地平线的终点-巡猎.pdf</span>
+      <span>3.2 MB · 2026-08-18</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main btn-locked" data-share-url="aHR0cHM6Ly9wYW4ucXVhcmsuY24vcy9mNmYwODRkMGZlYWY=" href="javascript:void(0)" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd btn-locked" data-pwd-b64="Mmg2Rw=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div><div class="card" data-name="放个短假 放个短假-欢愉.pdf" data-star="1">
+  <div class="art"><img src="assets/cover-fanggeduanjia.webp" alt="放个短假" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">光锥·4星</div>
     <h3 class="card-title">放个短假</h3>
@@ -456,10 +622,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
-    <button class="btn-unlock" data-gid="原神-7.1-角色" data-i18n="btnUnlock">解锁</button>
+    <div class="lock-btn-row">
+      <button class="btn-preview" data-gid="原神-7.1-角色" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
+      <button class="btn-unlock" data-gid="原神-7.1-角色" data-i18n="btnUnlock">解锁</button>
+    </div>
   </div>
-</div><div class="cards"><div class="card" data-name="沃雅妮莎 沃雅妮莎.pdf">
-  <div class="art"><img src="assets/cover-woyanisha.webp" alt="沃雅妮莎" loading="lazy"></div>
+</div><div class="cards"><div class="card" data-name="沃雅妮莎 沃雅妮莎.pdf" data-star="2">
+  <div class="art"><img src="assets/cover-woyanisha.webp" alt="沃雅妮莎" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">角色</div>
     <h3 class="card-title">沃雅妮莎</h3>
@@ -472,8 +641,8 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="RmNFZA=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div><div class="card" data-name="薇斯纳 薇斯纳V4.pdf">
-  <div class="art"><img src="assets/cover-weisina.webp" alt="薇斯纳" loading="lazy"></div>
+</div><div class="card" data-name="薇斯纳 薇斯纳V4.pdf" data-star="2">
+  <div class="art"><img src="assets/cover-weisina.webp" alt="薇斯纳" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">角色</div>
     <h3 class="card-title">薇斯纳</h3>
@@ -490,10 +659,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
-    <button class="btn-unlock" data-gid="原神-7.1-武器" data-i18n="btnUnlock">解锁</button>
+    <div class="lock-btn-row">
+      <button class="btn-preview" data-gid="原神-7.1-武器" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
+      <button class="btn-unlock" data-gid="原神-7.1-武器" data-i18n="btnUnlock">解锁</button>
+    </div>
   </div>
-</div><div class="cards"><div class="card" data-name="蝶变-单手剑 蝶变.pdf">
-  <div class="art"><img src="assets/icon-diebian.webp" alt="蝶变-单手剑" loading="lazy"></div>
+</div><div class="cards"><div class="card" data-name="蝶变-单手剑 蝶变.pdf" data-star="2">
+  <div class="art"><img src="assets/icon-diebian.webp" alt="蝶变-单手剑" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">武器</div>
     <h3 class="card-title">蝶变-单手剑</h3>
@@ -506,8 +678,8 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="d0daYg=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div><div class="card" data-name="漩流颂歌-法器 漩流颂歌-法器.pdf">
-  <div class="art"><img src="assets/cover-xuanliusonge.webp" alt="漩流颂歌-法器" loading="lazy"></div>
+</div><div class="card" data-name="漩流颂歌-法器 漩流颂歌-法器.pdf" data-star="2">
+  <div class="art"><img src="assets/cover-xuanliusonge.webp" alt="漩流颂歌-法器" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">武器</div>
     <h3 class="card-title">漩流颂歌-法器</h3>
@@ -525,10 +697,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
-    <button class="btn-unlock" data-gid="异环-1.3-角色" data-i18n="btnUnlock">解锁</button>
+    <div class="lock-btn-row">
+      <button class="btn-preview" data-gid="异环-1.3-角色" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
+      <button class="btn-unlock" data-gid="异环-1.3-角色" data-i18n="btnUnlock">解锁</button>
+    </div>
   </div>
-</div><div class="cards"><div class="card" data-name="灵可 灵可V3.pdf">
-  <div class="art"><img src="assets/cover-lingke-new.webp" alt="灵可" loading="lazy"></div>
+</div><div class="cards"><div class="card" data-name="灵可 灵可V3.pdf" data-star="2">
+  <div class="art"><img src="assets/cover-lingke-new.webp" alt="灵可" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">角色</div>
     <h3 class="card-title">灵可</h3>
@@ -541,8 +716,8 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="VnBtTQ=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div><div class="card" data-name="残虹 残虹V3.pdf">
-  <div class="art"><img src="assets/cover-canhong.webp" alt="残虹" loading="lazy"></div>
+</div><div class="card" data-name="残虹 残虹V3.pdf" data-star="2">
+  <div class="art"><img src="assets/cover-canhong.webp" alt="残虹" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">角色</div>
     <h3 class="card-title">残虹</h3>
@@ -559,10 +734,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
-    <button class="btn-unlock" data-gid="异环-1.3-武器" data-i18n="btnUnlock">解锁</button>
+    <div class="lock-btn-row">
+      <button class="btn-preview" data-gid="异环-1.3-武器" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
+      <button class="btn-unlock" data-gid="异环-1.3-武器" data-i18n="btnUnlock">解锁</button>
+    </div>
   </div>
-</div><div class="cards"><div class="card" data-name="远行者之声 远行者之声-等离子.pdf">
-  <div class="art"><img src="assets/cover-yuanxingzhe.webp" alt="远行者之声" loading="lazy"></div>
+</div><div class="cards"><div class="card" data-name="远行者之声 远行者之声-等离子.pdf" data-star="2">
+  <div class="art"><img src="assets/cover-yuanxingzhe.webp" alt="远行者之声" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">武器</div>
     <h3 class="card-title">远行者之声</h3>
@@ -575,8 +753,8 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="S2VuZA=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div><div class="card" data-name="噬心诡刃 噬心诡刃-气体.pdf">
-  <div class="art"><img src="assets/cover-shixin.webp" alt="噬心诡刃" loading="lazy"></div>
+</div><div class="card" data-name="噬心诡刃 噬心诡刃-气体.pdf" data-star="2">
+  <div class="art"><img src="assets/cover-shixin.webp" alt="噬心诡刃" loading="lazy" decoding="async"></div>
   <div class="card-body">
     <div class="card-kind">武器</div>
     <h3 class="card-title">噬心诡刃</h3>
@@ -592,6 +770,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 </div></div></div></div></div>
     </section>
 
+    <!-- ===== ARCHIVE ===== -->
     <section class="section-panel hidden" id="sec-archive">
       <div class="section-head">
         <h2 data-i18n="archiveTitle">二游遗产名录</h2>
@@ -612,10 +791,14 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     </div>
   </footer>
 
-  <!-- ===== Bottom Navigation ===== -->
+  <!-- ===== Bottom Navigation (4 tabs: home, preview, archive, settings) ===== -->
   <nav id="bnav">
     <div class="bnav-inner">
-      <button class="bnav-item active" data-tab="preview">
+      <button class="bnav-item active" data-tab="home">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="bnav-label" data-i18n="navHome">首页</span>
+      </button>
+      <button class="bnav-item" data-tab="preview">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
         <span class="bnav-label" data-i18n="navPreview">前瞻</span>
       </button>
@@ -662,6 +845,15 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
         <button class="opt-btn" data-val="write" data-i18n="fontWrite">手写体</button>
       </div>
     </div>
+
+    <div class="setting-group">
+      <div class="setting-label" data-i18n="efontLabel">英文字体</div>
+      <div class="setting-options" data-setting="efont">
+        <button class="opt-btn" data-val="hs" data-i18n="efontHs">衡水体</button>
+        <button class="opt-btn" data-val="italic" data-i18n="efontItalic">斜体</button>
+        <button class="opt-btn active" data-val="sans" data-i18n="efontSans">黑体</button>
+      </div>
+    </div>
   </div>
 
   <!-- ===== Password Modal ===== -->
@@ -677,60 +869,108 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     </div>
   </div>
 
+  <!-- ===== Preview Modal ===== -->
+  <div id="preview-overlay">
+    <div id="preview-modal">
+      <div class="preview-header">
+        <h3 id="preview-title" data-i18n="previewModalTitle">资料预览</h3>
+        <button class="preview-close" id="preview-close">&times;</button>
+      </div>
+      <div class="preview-grid" id="preview-grid"></div>
+    </div>
+  </div>
+
 <script>
 /* ===== site data ===== */
 var SITE_TOTAL = 14;
 var SITE_SYNCED = "2026-08-18 23:15";
+var PREVIEW_DATA = {"崩坏星穹铁道-4.5-角色": [{"name": "砂金•戏浪", "kind": "角色", "cover": "assets/cover-sandin.webp"}, {"name": "知更鸟•晴歌", "kind": "角色", "cover": "assets/cover-zhigengniao.webp"}], "崩坏星穹铁道-4.5-光锥": [{"name": "向浪花掷下盛夏", "kind": "光锥·5星", "cover": "assets/cover-xianglanghua.webp"}, {"name": "你将起身歌唱", "kind": "光锥·5星", "cover": "assets/cover-nijiangqishenggechang.webp"}, {"name": "向着地平线的终点", "kind": "光锥·4星", "cover": "assets/cover-xiangzhedipingxian.webp"}, {"name": "放个短假", "kind": "光锥·4星", "cover": "assets/cover-fanggeduanjia.webp"}], "原神-7.1-角色": [{"name": "沃雅妮莎", "kind": "角色", "cover": "assets/cover-woyanisha.webp"}, {"name": "薇斯纳", "kind": "角色", "cover": "assets/cover-weisina.webp"}], "原神-7.1-武器": [{"name": "蝶变-单手剑", "kind": "武器", "cover": "assets/icon-diebian.webp"}, {"name": "漩流颂歌-法器", "kind": "武器", "cover": "assets/cover-xuanliusonge.webp"}], "异环-1.3-角色": [{"name": "灵可", "kind": "角色", "cover": "assets/cover-lingke-new.webp"}, {"name": "残虹", "kind": "角色", "cover": "assets/cover-canhong.webp"}], "异环-1.3-武器": [{"name": "远行者之声", "kind": "武器", "cover": "assets/cover-yuanxingzhe.webp"}, {"name": "噬心诡刃", "kind": "武器", "cover": "assets/cover-shixin.webp"}]};
 
 /* ===== i18n ===== */
 var LANG = {
   zh: {
     siteName:"二游", siteNameEm:"情报铺",
     tagline:"版本情报 · 角色资料 · 武器档案",
-    mastNote:'小铺专营各大二游版本情报，角色、武器资料随版本持续上新。每份资料有独立获取入口，<b>解锁对应资料库后即可查看网盘链接和提取码</b>。',
-    allLabel:"全部资料 · 总链接", pwdLabel:"提取码",
+    mastnote:'小铺专营各大二游版本情报，角色、武器资料随版本持续上新。每份资料有独立获取入口，<b>解锁对应资料库后即可查看网盘链接和提取码</b>。',
     searchPh:"搜索资料名，例如：薇斯纳、单手剑…",
-    lockMsg:"资料已加密，输入密码解锁", btnUnlock:"解锁",
+    lockMsg:"资料已加密，输入密码解锁", btnUnlock:"解锁", btnPreview:"预览",
     pwdTitle:"输入密码解锁资料库", pwdHint:"请联系店主获取对应资料库密码",
     pwdInputPh:"请输入密码", pwdError:"密码错误，请重试",
     pwdCancel:"取消", pwdConfirm:"确认",
+    previewModalTitle:"资料预览",
+    homeTitle:"首页",
     previewTitle:"前瞻", previewDesc:"各游戏最新版本情报",
     archiveTitle:"二游遗产名录", archiveDesc:"历史版本情报归档，按版本号分类",
-    navPreview:"前瞻", navArchive:"遗产名录", navSettings:"设置",
+    navHome:"首页", navPreview:"前瞻", navArchive:"遗产名录", navSettings:"设置",
     noResult:"没有找到匹配的资料，换个关键词试试。",
     noArchive:"暂无历史版本，所有情报均为最新版本。",
     noArchiveSub:"当游戏更新新版本后，旧版本情报会自动归档到这里。",
     noCover:"暂无封面", getDoc:"获取资料", ver:"版本",
     settingsTitle:"设置",
-    langLabel:"语言 / Language", themeLabel:"主题色", fontLabel:"中文字体",
+    langLabel:"语言 / Language", themeLabel:"主题色",
+    fontLabel:"中文字体", efontLabel:"英文字体",
     themePink:"粉白", themeDark:"暗夜", themeMint:"薄荷", themeLavender:"薰衣草", themeCream:"奶油",
     fontCute:"可爱体", fontHei:"黑体", fontWrite:"手写体",
+    efontHs:"衡水体", efontItalic:"斜体", efontSans:"黑体",
     copied:"已复制",
+    letterTitle:"致各位旅行者的一封信",
+    letterBody:'<p>你好呀，欢迎来到二游情报铺。</p><p>这里是店主的小铺子，专营各大二次元游戏的版本情报——角色立绘、武器档案、光锥资料，按版本整理归档，方便各位旅行者按需取用。</p><p>每份资料都经过店主精心整理，有独立的获取入口。购买后店主会发给你对应的资料库密码和网盘链接，解锁即可查看下载。不用担心打包购买的问题——你需要什么就买什么，绝不捆绑。</p><p>资料会随游戏版本持续更新，旧版本的情报也会妥善归档到「二游遗产名录」中。情报常新，欢迎常来。</p>',
+    letterSign:"—— 二游情报铺 · 店主敬上",
+    aboutTitle:"关于本站", aboutVer:"当前版本", aboutTotal:"收录资料",
+    aboutSync:"最后同步", aboutGames:"收录游戏",
+    changelogTitle:"更新日志",
+    clV1Title:"「初晴」正式版发布",
+    clV1_1:"首页改版：致客信 + 站点信息 + 更新日志",
+    clV1_2:"底部导航新增首页入口",
+    clV1_3:"新增 3 种英文字体：衡水体、斜体、黑体",
+    clV1_4:"五星角色/武器自动排列在四星之前",
+    clV1_5:"加密资料库新增预览按钮，可查看角色/物品高清图片",
+    clV1_6:"全站图片压缩优化，加载速度大幅提升",
+    clV1_7:"修复字体设置偶发无响应问题",
+    clV1_8:"收录游戏：崩坏：星穹铁道、原神、异环",
     footerSig:"—— 二游情报铺 · 情报常新，欢迎常来 ——",
     footerMeta:"共收录 %total% 份资料 · 同步于 %synced%"
   },
   en: {
     siteName:"Game", siteNameEm:"Intel Shop",
     tagline:"Version Intel · Character Files · Weapon Archives",
-    mastNote:'This shop specializes in game version intel, with character and weapon files updated each version. <b>Unlock a library to view the download link and extraction code</b>.',
-    allLabel:"All Files · Master Link", pwdLabel:"Code",
+    mastnote:'This shop specializes in game version intel, with character and weapon files updated each version. <b>Unlock a library to view the download link and extraction code</b>.',
     searchPh:"Search files, e.g. character name…",
-    lockMsg:"Locked — enter password to unlock", btnUnlock:"Unlock",
+    lockMsg:"Locked — enter password to unlock", btnUnlock:"Unlock", btnPreview:"Preview",
     pwdTitle:"Enter password to unlock", pwdHint:"Contact the shop owner for the password",
     pwdInputPh:"Enter password", pwdError:"Wrong password, try again",
     pwdCancel:"Cancel", pwdConfirm:"Confirm",
+    previewModalTitle:"Library Preview",
+    homeTitle:"Home",
     previewTitle:"Preview", previewDesc:"Latest version intel for each game",
-    archiveTitle:"Legacy Archive", archiveDesc:"Historical version intel, sorted by version number",
-    navPreview:"Preview", navArchive:"Archive", navSettings:"Settings",
+    archiveTitle:"Legacy Archive", archiveDesc:"Historical version intel, sorted by version",
+    navHome:"Home", navPreview:"Preview", navArchive:"Archive", navSettings:"Settings",
     noResult:"No matching files found. Try a different keyword.",
     noArchive:"No legacy versions yet — all intel is up to date.",
-    noArchiveSub:"When a new version is released, older intel will be archived here automatically.",
+    noArchiveSub:"When a new version is released, older intel will be archived here.",
     noCover:"No Cover", getDoc:"Get File", ver:"Ver.",
     settingsTitle:"Settings",
-    langLabel:"Language / 语言", themeLabel:"Theme", fontLabel:"Chinese Font",
+    langLabel:"Language / 语言", themeLabel:"Theme",
+    fontLabel:"Chinese Font", efontLabel:"English Font",
     themePink:"Pink", themeDark:"Dark", themeMint:"Mint", themeLavender:"Lavender", themeCream:"Cream",
-    fontCute:"Cute", fontHei:"Sans", fontWrite:"Handwriting",
+    fontCute:"Cute", fontHei:"Sans", fontWrite:"Handwrite",
+    efontHs:"Hengshui", efontItalic:"Italic", efontSans:"Sans",
     copied:"Copied",
+    letterTitle:"A Letter to Our Travelers",
+    letterBody:'<p>Hello there, welcome to the Game Intel Shop.</p><p>This is a small shop specializing in version intel for popular games — character illustrations, weapon archives, and cone files, organized by version for easy browsing.</p><p>Each document is carefully curated with its own access point. After purchase, the shop owner will send you the library password and download link. No bundling — you only buy what you need.</p><p>Intel is updated with each game version, and older versions are properly archived in the Legacy Archive. Fresh intel, always welcome.</p>',
+    letterSign:"—— Game Intel Shop · The Owner",
+    aboutTitle:"About This Site", aboutVer:"Version", aboutTotal:"Total Files",
+    aboutSync:"Last Synced", aboutGames:"Games Covered",
+    changelogTitle:"Changelog",
+    clV1Title:'"初晴" Official Release',
+    clV1_1:"Home page redesign: welcome letter + site info + changelog",
+    clV1_2:"Added Home tab to bottom navigation",
+    clV1_3:"Added 3 English fonts: Hengshui, Italic, Sans",
+    clV1_4:"5-star characters/weapons now sort before 4-star",
+    clV1_5:"Added Preview button for locked libraries",
+    clV1_6:"Image compression for faster loading",
+    clV1_7:"Fixed font settings unresponsiveness",
+    clV1_8:"Games: Honkai Star Rail, Genshin Impact, Ethereal Ring",
     footerSig:"—— Game Intel Shop · Always fresh intel ——",
     footerMeta:"Total %total% files · Synced %synced%"
   }
@@ -738,16 +978,17 @@ var LANG = {
 
 /* ===== persistence ===== */
 function loadPref() {
-  try { return JSON.parse(localStorage.getItem("erp2_prefs")) || {}; }
+  try { return JSON.parse(localStorage.getItem("erp3_prefs")) || {}; }
   catch(e) { return {}; }
 }
 function savePref(p) {
-  try { localStorage.setItem("erp2_prefs", JSON.stringify(p)); } catch(e) {}
+  try { localStorage.setItem("erp3_prefs", JSON.stringify(p)); } catch(e) {}
 }
 var prefs = loadPref();
 if (!prefs.lang) prefs.lang = "zh";
 if (!prefs.theme) prefs.theme = "pink";
 if (!prefs.cfont) prefs.cfont = "cute";
+if (!prefs.efont) prefs.efont = "sans";
 
 /* ===== apply helpers ===== */
 function applyTheme(t) {
@@ -755,10 +996,15 @@ function applyTheme(t) {
   prefs.theme = t; savePref(prefs);
   setActive("theme", t);
 }
-function applyFont(f) {
+function applyCFont(f) {
   document.body.setAttribute("data-cfont", f);
   prefs.cfont = f; savePref(prefs);
   setActive("cfont", f);
+}
+function applyEFont(f) {
+  document.body.setAttribute("data-efont", f);
+  prefs.efont = f; savePref(prefs);
+  setActive("efont", f);
 }
 function applyLang(lang) {
   var dict = LANG[lang];
@@ -767,17 +1013,14 @@ function applyLang(lang) {
   prefs.lang = lang; savePref(prefs);
   setActive("lang", lang);
   function tpl(s) { return s.replace(/%total%/g, SITE_TOTAL).replace(/%synced%/g, SITE_SYNCED); }
-  // text nodes
   document.querySelectorAll("[data-i18n]").forEach(function(el) {
     var key = el.getAttribute("data-i18n");
     if (dict[key] !== undefined) el.textContent = tpl(dict[key]);
   });
-  // html nodes
   document.querySelectorAll("[data-i18n-html]").forEach(function(el) {
     var key = el.getAttribute("data-i18n-html");
     if (dict[key] !== undefined) el.innerHTML = tpl(dict[key]);
   });
-  // placeholders
   document.querySelectorAll("[data-i18n-ph]").forEach(function(el) {
     var key = el.getAttribute("data-i18n-ph");
     if (dict[key] !== undefined) el.placeholder = dict[key];
@@ -791,7 +1034,8 @@ function setActive(setting, val) {
 
 /* ===== init prefs ===== */
 applyTheme(prefs.theme);
-applyFont(prefs.cfont);
+applyCFont(prefs.cfont);
+applyEFont(prefs.efont);
 applyLang(prefs.lang);
 
 /* ===== setting button clicks ===== */
@@ -801,7 +1045,8 @@ document.querySelectorAll(".setting-options").forEach(function(group) {
     btn.addEventListener("click", function() {
       var val = btn.getAttribute("data-val");
       if (setting === "theme") applyTheme(val);
-      else if (setting === "cfont") applyFont(val);
+      else if (setting === "cfont") applyCFont(val);
+      else if (setting === "efont") applyEFont(val);
       else if (setting === "lang") applyLang(val);
     });
   });
@@ -813,23 +1058,26 @@ function toggleSettings(open) {
   settingsOpen = typeof open === "boolean" ? open : !settingsOpen;
   document.getElementById("settings-overlay").classList.toggle("open", settingsOpen);
   document.getElementById("settings-panel").classList.toggle("open", settingsOpen);
-  // highlight settings tab
-  document.querySelectorAll(".bnav-item").forEach(function(b) {
-    if (b.getAttribute("data-tab") === "settings") b.classList.toggle("active", settingsOpen);
-  });
+  if (settingsOpen) {
+    document.querySelectorAll(".bnav-item").forEach(function(b) {
+      b.classList.toggle("active", b.getAttribute("data-tab") === "settings");
+    });
+  }
 }
 document.getElementById("settings-overlay").addEventListener("click", function() { toggleSettings(false); });
 
 function showTab(which) {
   toggleSettings(false);
-  var sp = document.getElementById("sec-preview");
-  var sa = document.getElementById("sec-archive");
-  sp.classList.toggle("hidden", which !== "preview");
-  sa.classList.toggle("hidden", which !== "archive");
+  var tabs = ["home", "preview", "archive"];
+  tabs.forEach(function(t) {
+    var el = document.getElementById("sec-" + t);
+    if (el) el.classList.toggle("hidden", t !== which);
+  });
   document.querySelectorAll(".bnav-item").forEach(function(b) {
     var t = b.getAttribute("data-tab");
     b.classList.toggle("active", t === which);
   });
+  window.scrollTo({top:0, behavior:"smooth"});
 }
 
 document.querySelectorAll(".bnav-item").forEach(function(btn) {
@@ -883,7 +1131,13 @@ q.addEventListener("input", function() {
   });
   document.getElementById("empty").style.display = (kw && !any) ? "block" : "none";
   if (kw) {
-    document.querySelectorAll(".section-panel").forEach(function(p) { p.classList.remove("hidden"); });
+    // show both preview and archive when searching
+    document.getElementById("sec-home").classList.add("hidden");
+    document.getElementById("sec-preview").classList.remove("hidden");
+    document.getElementById("sec-archive").classList.remove("hidden");
+    document.querySelectorAll(".bnav-item").forEach(function(b) { b.classList.remove("active"); });
+  } else {
+    showTab("home");
   }
 });
 
@@ -898,46 +1152,33 @@ function simpleHash(str) {
 }
 
 function loadUnlocks() {
-  try { return JSON.parse(localStorage.getItem("erp2_unlocks")) || {}; }
+  try { return JSON.parse(localStorage.getItem("erp3_unlocks")) || {}; }
   catch(e) { return {}; }
 }
 function saveUnlocks(u) {
-  try { localStorage.setItem("erp2_unlocks", JSON.stringify(u)); } catch(e) {}
+  try { localStorage.setItem("erp3_unlocks", JSON.stringify(u)); } catch(e) {}
 }
 var unlocks = loadUnlocks();
-
-function isUnlocked(gid) {
-  var overlay = document.querySelector('.lock-overlay[data-gid="'+gid+'"]');
-  if (!overlay) return false;
-  var hash = overlay.getAttribute("data-pwhash");
-  return unlocks[gid] === hash;
-}
 
 function unlockGroup(gid) {
   var group = document.querySelector('.group[data-gid="'+gid+'"]');
   if (group) {
     group.classList.add("unlocked");
     group.classList.remove("group-locked");
-    // decode base64 share info
     group.querySelectorAll(".btn-locked").forEach(function(btn) {
-      if (btn.hasAttribute("data-share-url")) {
+      if (btn.hasAttribute("data-share_url")) {
         var url = atob(btn.getAttribute("data-share_url"));
-        btn.href = url;
-        btn.target = "_blank";
-        btn.rel = "noopener";
+        btn.href = url; btn.target = "_blank"; btn.rel = "noopener";
         btn.removeAttribute("data-share_url");
         btn.classList.remove("btn-locked");
       }
       if (btn.hasAttribute("data-pwd-b64")) {
         var pwd = atob(btn.getAttribute("data-pwd-b64"));
         btn.setAttribute("data-pwd", pwd);
-        // update display text
-        var span = btn.querySelector("span[data-i18n]");
         var dict = LANG[prefs.lang] || LANG.zh;
-        btn.innerHTML = (span ? '<span data-i18n="pwdLabel">'+dict.pwdLabel+'</span>' : '') + ' ' + pwd + ' <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+        btn.innerHTML = '<span data-i18n="pwdLabel">'+dict.pwdLabel+'</span> ' + pwd + ' <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
         btn.removeAttribute("data-pwd-b64");
         btn.classList.remove("btn-locked");
-        // re-attach copy handler
         btn.addEventListener("click", function() { copyPwd(btn); });
       }
     });
@@ -948,9 +1189,7 @@ function restoreUnlocks() {
   document.querySelectorAll(".lock-overlay").forEach(function(overlay) {
     var gid = overlay.getAttribute("data-gid");
     var hash = overlay.getAttribute("data-pwhash");
-    if (unlocks[gid] === hash) {
-      unlockGroup(gid);
-    }
+    if (unlocks[gid] === hash) unlockGroup(gid);
   });
 }
 restoreUnlocks();
@@ -977,11 +1216,8 @@ function closePwdModal() {
 }
 
 document.querySelectorAll(".btn-unlock").forEach(function(btn) {
-  btn.addEventListener("click", function() {
-    openPwdModal(btn.getAttribute("data-gid"));
-  });
+  btn.addEventListener("click", function() { openPwdModal(btn.getAttribute("data-gid")); });
 });
-
 pwdOverlay.addEventListener("click", closePwdModal);
 document.querySelector(".pwd-cancel").addEventListener("click", closePwdModal);
 
@@ -990,8 +1226,7 @@ function tryUnlock() {
   var overlay = document.querySelector('.lock-overlay[data-gid="'+activeGid+'"]');
   if (!overlay) return;
   var expectedHash = overlay.getAttribute("data-pwhash");
-  var input = pwdInput.value;
-  if (simpleHash(input) === expectedHash) {
+  if (simpleHash(pwdInput.value) === expectedHash) {
     unlocks[activeGid] = expectedHash;
     saveUnlocks(unlocks);
     unlockGroup(activeGid);
@@ -1002,11 +1237,40 @@ function tryUnlock() {
     pwdInput.focus();
   }
 }
-
 document.getElementById("pwd-confirm").addEventListener("click", tryUnlock);
 pwdInput.addEventListener("keydown", function(ev) {
   if (ev.key === "Enter") tryUnlock();
   pwdError.classList.remove("show");
+});
+
+/* ===== preview modal ===== */
+var prevOverlay = document.getElementById("preview-overlay");
+var prevGrid = document.getElementById("preview-grid");
+var prevTitle = document.getElementById("preview-title");
+
+function openPreview(gid) {
+  var items = PREVIEW_DATA[gid] || [];
+  if (!items.length) return;
+  var dict = LANG[prefs.lang] || LANG.zh;
+  prevTitle.textContent = dict.previewModalTitle;
+  prevGrid.innerHTML = items.map(function(it) {
+    var img = it.cover
+      ? '<div class="pimg"><img src="'+it.cover+'" alt="'+it.name+'" loading="lazy"></div>'
+      : '<div class="pimg" style="display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink-faint)">'+(dict.noCover||'No Cover')+'</div>';
+    return '<div class="preview-item">'+img+'<div class="pinfo"><div class="pname">'+it.name+'</div><div class="pkind">'+it.kind+'</div></div></div>';
+  }).join("");
+  prevOverlay.classList.add("open");
+}
+function closePreview() {
+  prevOverlay.classList.remove("open");
+}
+
+document.querySelectorAll(".btn-preview").forEach(function(btn) {
+  btn.addEventListener("click", function() { openPreview(btn.getAttribute("data-gid")); });
+});
+document.getElementById("preview-close").addEventListener("click", closePreview);
+prevOverlay.addEventListener("click", function(ev) {
+  if (ev.target === prevOverlay) closePreview();
 });
 </script>
 </body>
