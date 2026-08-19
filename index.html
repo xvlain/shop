@@ -466,12 +466,24 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   background:var(--accent-pale); border:1px solid var(--accent-soft);
   border-radius:6px; padding:3px 10px;
 }
+.device-bar .dev-code.dev-loading {
+  color:var(--ink-faint); background:var(--bg);
+  animation:pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
 .device-bar .dev-copy {
   background:var(--accent); color:#fff; border:none; border-radius:6px;
   padding:5px 14px; font-size:12px; font-weight:700; cursor:pointer;
   font-family:inherit; transition:background .15s;
 }
 .device-bar .dev-copy:hover { background:var(--accent-deep); }
+.device-bar .dev-retry {
+  background:transparent; color:var(--accent-deep); border:1px solid var(--accent-soft);
+  border-radius:6px; padding:5px 12px; font-size:12px; font-weight:700;
+  cursor:pointer; font-family:inherit; transition:all .15s; display:none;
+}
+.device-bar .dev-retry:hover { background:var(--accent-pale); }
+.device-bar .dev-retry.show { display:inline-block; }
 .device-bar .dev-loading { color:var(--ink-faint); font-style:italic; }
 
 /* ===== redeem card (home bottom) ===== */
@@ -647,6 +659,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
         <span class="dev-label" data-i18n="devLabel">设备码</span>
         <span class="dev-code dev-loading" id="dev-code" data-i18n="devLoading">获取中...</span>
         <button class="dev-copy" id="dev-copy" style="display:none" data-i18n="devCopy">复制</button>
+        <button class="dev-retry" id="dev-retry" data-i18n="devRetry">重试</button>
       </div>
 
       <!-- Redeem Card -->
@@ -1135,7 +1148,7 @@ var LANG = {
     clV1_6:"全站图片压缩优化，加载速度大幅提升",
     clV1_7:"修复字体设置偶发无响应问题",
     clV1_8:"收录游戏：崩坏：星穹铁道、原神、异环",
-    devLabel:"设备码", devLoading:"获取中...", devCopy:"复制",
+    devLabel:"设备码", devLoading:"获取中...", devCopy:"复制", devRetry:"重试",
     redeemTitle:"兑换资料库", redeemDesc:"输入商品码和兑换码，获取资料库密码",
     redeemBtn:"立即兑换", redeemModalTitle:"兑换资料库密码",
     redeemDevLabel:"设备码（自动获取）", redeemProdLabel:"商品码（从锁定界面复制）",
@@ -1186,7 +1199,7 @@ var LANG = {
     clV1_6:"Image compression for faster loading",
     clV1_7:"Fixed font settings unresponsiveness",
     clV1_8:"Games: Honkai Star Rail, Genshin Impact, Ethereal Ring",
-    devLabel:"Device ID", devLoading:"Loading...", devCopy:"Copy",
+    devLabel:"Device ID", devLoading:"Loading...", devCopy:"Copy", devRetry:"Retry",
     redeemTitle:"Redeem Library", redeemDesc:"Enter product code and redemption code to get your password",
     redeemBtn:"Redeem Now", redeemModalTitle:"Redeem Library Password",
     redeemDevLabel:"Device Code (auto)", redeemProdLabel:"Product Code (from lock screen)",
@@ -1522,7 +1535,25 @@ function assignDeviceCode() {
     showDeviceCode(DEVICE_CODE);
     return;
   }
+  var devCodeEl = document.getElementById("dev-code");
+  var devRetryBtn = document.getElementById("dev-retry");
+  var devCopyBtn = document.getElementById("dev-copy");
+
+  // Show loading state
+  devCodeEl.textContent = "连接中...";
+  devCodeEl.classList.add("dev-loading");
+  devRetryBtn.classList.remove("show");
+
   var fp = getFingerprint();
+  var timedOut = false;
+
+  // 6-second timeout: if still loading, show retry button
+  var timer = setTimeout(function() {
+    timedOut = true;
+    devCodeEl.textContent = "连接较慢";
+    devRetryBtn.classList.add("show");
+  }, 6000);
+
   fetch(WORKER_URL + "/api/device/assign", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -1530,18 +1561,24 @@ function assignDeviceCode() {
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
+    if (timedOut) return; // already gave up
+    clearTimeout(timer);
     if (data.ok && data.device_code) {
       DEVICE_CODE = data.device_code;
       localStorage.setItem("erp3_device_code", DEVICE_CODE);
       showDeviceCode(DEVICE_CODE);
     } else {
-      document.getElementById("dev-code").textContent = "获取失败";
-      document.getElementById("dev-code").classList.remove("dev-loading");
+      devCodeEl.textContent = "获取失败";
+      devCodeEl.classList.remove("dev-loading");
+      devRetryBtn.classList.add("show");
     }
   })
   .catch(function(e) {
-    document.getElementById("dev-code").textContent = "网络错误";
-    document.getElementById("dev-code").classList.remove("dev-loading");
+    if (timedOut) return;
+    clearTimeout(timer);
+    devCodeEl.textContent = "网络错误";
+    devCodeEl.classList.remove("dev-loading");
+    devRetryBtn.classList.add("show");
   });
 }
 
@@ -1550,10 +1587,16 @@ function showDeviceCode(code) {
   el.textContent = code;
   el.classList.remove("dev-loading");
   document.getElementById("dev-copy").style.display = "";
+  document.getElementById("dev-retry").classList.remove("show");
 }
 
 // init device code
 assignDeviceCode();
+
+// retry button
+document.getElementById("dev-retry").addEventListener("click", function() {
+  assignDeviceCode();
+});
 
 document.getElementById("dev-copy").addEventListener("click", function() {
   if (DEVICE_CODE) copyText(DEVICE_CODE, this);
