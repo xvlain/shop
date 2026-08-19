@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理员面板 - 二游情报铺</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f5f5f5;
+  padding: 20px;
+}
+.container { max-width: 1200px; margin: 0 auto; }
+.header {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.header h1 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 8px;
+}
+.header p { color: #666; font-size: 14px; }
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.stat-card .label {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 8px;
+}
+.stat-card .value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #333;
+}
+.section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.section h2 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+}
+.codes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+.code-item {
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.code-item:hover {
+  background: #e8f5e9;
+  border-color: #4caf50;
+}
+.code-item.copied {
+  background: #4caf50;
+  color: #fff;
+  border-color: #4caf50;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th {
+  background: #f9f9f9;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  color: #666;
+  border-bottom: 2px solid #e0e0e0;
+}
+td {
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333;
+}
+tr:hover td { background: #fafafa; }
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-success { background: #e8f5e9; color: #2e7d32; }
+.badge-info { background: #e3f2fd; color: #1976d2; }
+.login-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.login-box {
+  background: #fff;
+  padding: 40px;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 90%;
+}
+.login-box h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.login-box button:hover { background: #43a047; }
+.login-error {
+  color: #f44336;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+.hidden { display: none; }
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}
+</style>
+</head>
+<body>
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <h2>管理员登录</h2>
+    <div class="login-error hidden" id="loginError">密码错误</div>
+    <input type="password" id="loginPassword" placeholder="请输入管理员密码">
+    <button onclick="checkPassword()">登录</button>
+  </div>
+</div>
+
+<div class="container hidden" id="mainContent">
+  <div class="header">
+    <h1>管理员面板 - 二游情报铺</h1>
+    <p>管理兑换码和查看兑换记录</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="label">可用兑换码</div>
+      <div class="value" id="statAvailable">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">已使用兑换码</div>
+      <div class="value" id="statUsed">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">总兑换码数</div>
+      <div class="value" id="statTotal">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">兑换记录数</div>
+      <div class="value" id="statRedemptions">-</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>可用兑换码 <span style="font-size:14px;color:#999;">(点击复制)</span></h2>
+    <div class="codes-grid" id="codesGrid">
+      <div class="loading">加载中...</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>兑换记录</h2>
+    <table id="redemptionsTable">
+      <thead>
+        <tr>
+          <th>设备码</th>
+          <th>商品</th>
+          <th>兑换码</th>
+          <th>密码</th>
+          <th>时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="5" class="loading">加载中...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const SB_URL = "https://xajqidptrsnbavqxraws.supabase.co";
+const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhanFpZHB0cnNuYmF2cXhyYXdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjI0ODAsImV4cCI6MjEwMjY5ODQ4MH0.MsdG-uCbLv3C8w43grFPcybaas-RT20nKPyNLV8afM0";
+const ADMIN_PASSWORD = "admin2026";
+
+function checkPassword() {
+  const pwd = document.getElementById("loginPassword").value;
+  if (pwd === ADMIN_PASSWORD) {
+    document.getElementById("loginOverlay").classList.add("hidden");
+    document.getElementById("mainContent").classList.remove("hidden");
+    loadDashboard();
+  } else {
+    document.getElementById("loginError").classList.remove("hidden");
+  }
+}
+
+document.getElementById("loginPassword").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") checkPassword();
+});
+
+async function sbQuery(table, params = "") {
+  const url = `${SB_URL}/rest/v1/${table}${params}`;
+  const res = await fetch(url, {
+    headers: {
+      "apikey": SB_KEY,
+      "Authorization": `Bearer ${SB_KEY}`
+    }
+  });
+  return await res.json();
+}
+
+async function loadDashboard() {
+  try {
+    const [unused, used, redemptions] = await Promise.all([
+      sbQuery("redemption_codes", "?select=code&used=eq.false&order=code"),
+      sbQuery("redemption_codes", "?select=code&used=eq.true&order=code"),
+      sbQuery("redemptions", "?select=*&order=redeemed_at.desc")
+    ]);
+
+    document.getElementById("statAvailable").textContent = unused.length;
+    document.getElementById("statUsed").textContent = used.length;
+    document.getElementById("statTotal").textContent = unused.length + used.length;
+    document.getElementById("statRedemptions").textContent = redemptions.length;
+
+    const codesGrid = document.getElementById("codesGrid");
+    if (unused.length === 0) {
+      codesGrid.innerHTML = '<div class="loading">暂无可用兑换码</div>';
+    } else {
+      codesGrid.innerHTML = unused.map(c => 
+        `<div class="code-item" onclick="copyCode(this, '${c.code}')">${c.code}</div>`
+      ).join("");
+    }
+
+    const tbody = document.querySelector("#redemptionsTable tbody");
+    if (redemptions.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="loading">暂无兑换记录</td></tr>';
+    } else {
+      tbody.innerHTML = redemptions.map(r => {
+        const date = new Date(r.redeemed_at).toLocaleString("zh-CN");
+        return `<tr>
+          <td>${r.device_code}</td>
+          <td><span class="badge badge-info">${r.product_code}</span></td>
+          <td style="font-family:monospace;">${r.redemption_code}</td>
+          <td style="font-family:monospace;">${r.password}</td>
+          <td>${date}</td>
+        </tr>`;
+      }).join("");
+    }
+  } catch (err) {
+    console.error("加载失败:", err);
+    alert("加载数据失败，请检查网络连接");
+  }
+}
+
+function copyCode(el, code) {
+  navigator.clipboard.writeText(code).then(() => {
+    el.classList.add("copied");
+    const original = el.textContent;
+    el.textContent = "已复制";
+    setTimeout(() => {
+      el.classList.remove("copied");
+      el.textContent = original;
+    }, 1000);
+  });
+}
+</script>
+</body>
+</html>
