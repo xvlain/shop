@@ -1498,6 +1498,18 @@ prevOverlay.addEventListener("click", function(ev) {
   if (ev.target === prevOverlay) closePreview();
 });
 
+/* ===== Product code -> gid mapping ===== */
+var PRODUCT_TO_GID = {
+  "HSR45CHAR": "崩坏星穹铁道-4.5-角色",
+  "HSR45LC":   "崩坏星穹铁道-4.5-光锥",
+  "GI71CHAR":  "原神-7.1-角色",
+  "GI71WPN":   "原神-7.1-武器",
+  "ER13CHAR":  "异环-1.3-角色",
+  "ER13WPN":   "异环-1.3-武器",
+  "ZZZ32CHAR": "绝区零-3.2-代理人",
+  "ZZZ32WPN":  "绝区零-3.2-音擎"
+};
+
 /* ===== Supabase config ===== */
 var SB_URL = "https://xajqidptrsnbavqxraws.supabase.co";
 var SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhanFpZHB0cnNuYmF2cXhyYXdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjI0ODAsImV4cCI6MjEwMjY5ODQ4MH0.MsdG-uCbLv3C8w43grFPcybaas-RT20nKPyNLV8afM0";
@@ -1622,6 +1634,22 @@ if (redeemBtn) {
             localStorage.setItem("erp3_redemptions", JSON.stringify(hist));
             loadHistory();
           } catch(e) {}
+        }
+        // Auto-unlock: save password, switch to preview, unlock group
+        var gid = PRODUCT_TO_GID[product];
+        if (gid) {
+          var overlay = document.querySelector('.lock-overlay[data-gid="' + gid + '"]');
+          if (overlay) {
+            var expectedHash = overlay.getAttribute("data-pwhash");
+            unlocks[gid] = expectedHash;
+            saveUnlocks(unlocks);
+            setTimeout(function() {
+              showTab("preview");
+              unlockGroup(gid);
+              var groupEl = document.querySelector('.group[data-gid="' + gid + '"]');
+              if (groupEl) groupEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            }, 300);
+          }
         }
       } else {
         redeemResult.className = "redeem-result error";
