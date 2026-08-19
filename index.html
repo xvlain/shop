@@ -1402,10 +1402,10 @@ function unlockGroup(gid) {
     group.classList.add("unlocked");
     group.classList.remove("group-locked");
     group.querySelectorAll(".btn-locked").forEach(function(btn) {
-      if (btn.hasAttribute("data-share_url")) {
-        var url = atob(btn.getAttribute("data-share_url"));
+      if (btn.hasAttribute("data-share-url")) {
+        var url = atob(btn.getAttribute("data-share-url"));
         btn.href = url; btn.target = "_blank"; btn.rel = "noopener";
-        btn.removeAttribute("data-share_url");
+        btn.removeAttribute("data-share-url");
         btn.classList.remove("btn-locked");
       }
       if (btn.hasAttribute("data-pwd-b64")) {
@@ -1738,10 +1738,10 @@ redeemConfirmBtn.addEventListener("click", function() {
             group.classList.remove("group-locked");
             // Reveal share URLs and passwords
             group.querySelectorAll(".btn-locked").forEach(function(btn) {
-              if (btn.hasAttribute("data-share_url")) {
-                var url = atob(btn.getAttribute("data-share_url"));
+              if (btn.hasAttribute("data-share-url")) {
+                var url = atob(btn.getAttribute("data-share-url"));
                 btn.href = url; btn.target = "_blank"; btn.rel = "noopener";
-                btn.removeAttribute("data-share_url");
+                btn.removeAttribute("data-share-url");
                 btn.classList.remove("btn-locked");
               }
               if (btn.hasAttribute("data-pwd-b64")) {
@@ -1810,10 +1810,10 @@ document.getElementById("redeem-pwd-copy").addEventListener("click", function() 
           group.classList.add("unlocked");
           group.classList.remove("group-locked");
           group.querySelectorAll(".btn-locked").forEach(function(btn) {
-            if (btn.hasAttribute("data-share_url")) {
-              var url = atob(btn.getAttribute("data-share_url"));
+            if (btn.hasAttribute("data-share-url")) {
+              var url = atob(btn.getAttribute("data-share-url"));
               btn.href = url; btn.target = "_blank"; btn.rel = "noopener";
-              btn.removeAttribute("data-share_url");
+              btn.removeAttribute("data-share-url");
               btn.classList.remove("btn-locked");
             }
             if (btn.hasAttribute("data-pwd-b64")) {
