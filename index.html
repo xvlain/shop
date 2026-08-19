@@ -485,7 +485,17 @@ body::before {
 .redeem-result .pwd-display {
   font-family:Consolas,monospace; font-size:20px; font-weight:700;
   letter-spacing:.1em; margin-top:8px; color:var(--accent-deep);
+  display:flex; align-items:center; justify-content:center; gap:10px;
 }
+.pwd-copy-btn {
+  display:inline-flex; align-items:center; gap:4px;
+  padding:6px 14px; border-radius:8px;
+  background:var(--accent); color:#fff; font-size:13px;
+  font-weight:700; border:none; cursor:pointer; font-family:inherit;
+  transition:background .15s;
+}
+.pwd-copy-btn:hover { background:var(--accent-deep); }
+.pwd-copy-btn.copied { background:#50b878; }
 .redeem-history {
   margin-top:24px; max-width:360px; margin-left:auto; margin-right:auto;
 }
@@ -987,7 +997,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
           </div>
           <div class="redeem-field">
             <label data-i18n="redemptionLabel">兑换码</label>
-            <input type="text" id="redeem-code" placeholder="XXXX-XXXX" data-i18n-ph="redemptionPh" maxlength="9" autocomplete="off">
+            <input type="text" id="redeem-code" placeholder="XXXX-XXXX" data-i18n-ph="redemptionPh" maxlength="9" autocomplete="off" inputmode="text" spellcheck="false" autocorrect="off" autocapitalize="off">
           </div>
           <button class="redeem-btn" id="redeem-btn" data-i18n="redeemBtn">立即兑换</button>
         </div>
@@ -1622,7 +1632,18 @@ if (redeemBtn) {
         redeemResult.className = "redeem-result success";
         var isAlready = res.already_redeemed;
         var label = isAlready ? dict.alreadyRedeemed : dict.redeemSuccess;
-        redeemResult.innerHTML = label + '<div class="pwd-display">' + pwd + '</div>';
+        var copyLabel = (prefs.lang === "en") ? "Copy" : "复制";
+        var copiedLabel = (prefs.lang === "en") ? "Copied!" : "已复制";
+        redeemResult.innerHTML = label + '<div class="pwd-display"><span class="pwd-text">' + pwd + '</span><button class="pwd-copy-btn" data-copy-pwd="' + pwd + '">' + copyLabel + '</button></div>';
+        redeemResult.querySelector(".pwd-copy-btn").addEventListener("click", function() {
+          var p = this.getAttribute("data-copy-pwd");
+          if (navigator.clipboard) navigator.clipboard.writeText(p);
+          else { var t=document.createElement("textarea"); t.value=p; t.style.position="fixed"; t.style.opacity="0"; document.body.appendChild(t); t.select(); try{document.execCommand("copy");}catch(e){} document.body.removeChild(t); }
+          this.textContent = copiedLabel;
+          this.classList.add("copied");
+          var btn = this;
+          setTimeout(function() { btn.textContent = copyLabel; btn.classList.remove("copied"); }, 1500);
+        });
         // Save to history
         if (!isAlready) {
           try {
