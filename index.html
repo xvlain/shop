@@ -1568,8 +1568,9 @@ function assignDeviceCode() {
   .then(function(data) {
     if (timedOut) return; // already gave up
     clearTimeout(timer);
-    if (data.ok && data.device_code) {
-      DEVICE_CODE = data.device_code;
+    var res = Array.isArray(data) ? data[0] : data;
+    if (res && res.ok && res.device_code) {
+      DEVICE_CODE = res.device_code;
       localStorage.setItem("erp3_device_code", DEVICE_CODE);
       showDeviceCode(DEVICE_CODE);
     } else {
@@ -1693,10 +1694,11 @@ redeemConfirmBtn.addEventListener("click", function() {
   .then(function(r) { return r.json(); })
   .then(function(data) {
     redeemConfirmBtn.disabled = false;
-    if (data.ok) {
-      redeemMsg.textContent = data.already_redeemed ? "该商品已兑换过，密码如下：" : "兑换成功！";
+    var res = Array.isArray(data) ? data[0] : data;
+    if (res && res.ok) {
+      redeemMsg.textContent = res.already_redeemed ? "该商品已兑换过，密码如下：" : "兑换成功！";
       redeemMsg.className = "redeem-msg success";
-      redeemPwd.textContent = data.password;
+      redeemPwd.textContent = res.password;
       redeemResult.classList.add("show");
 
       // Auto-unlock the group if possible
@@ -1711,7 +1713,7 @@ redeemConfirmBtn.addEventListener("click", function() {
       var gid = productMap[productCode];
       if (gid) {
         // Store unlock with the password
-        unlocks[gid] = data.password;
+        unlocks[gid] = res.password;
         saveUnlocks(unlocks);
         // Try to unlock (won't fully work since the overlay checks pwhash, but we mark it)
         var overlay = document.querySelector('.lock-overlay[data-gid="' + gid + '"]');
@@ -1721,7 +1723,7 @@ redeemConfirmBtn.addEventListener("click", function() {
         // Save worker unlock to localStorage
         var wu = {};
         try { wu = JSON.parse(localStorage.getItem("erp3_worker_unlocks") || "{}"); } catch(e) {}
-        wu[gid] = data.password;
+        wu[gid] = res.password;
         localStorage.setItem("erp3_worker_unlocks", JSON.stringify(wu));
           var group = document.querySelector('.group[data-gid="' + gid + '"]');
           if (group) {
@@ -1759,7 +1761,7 @@ redeemConfirmBtn.addEventListener("click", function() {
         "code_in_use_retry": "兑换码正在被使用，请稍后重试",
         "all codes required": "请填写完整信息"
       };
-      redeemMsg.textContent = errMap[data.error] || ("错误：" + data.error);
+      redeemMsg.textContent = errMap[res.error] || ("错误：" + (res.error || JSON.stringify(res)));
       redeemMsg.className = "redeem-msg error";
     }
   })
