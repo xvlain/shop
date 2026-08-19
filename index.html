@@ -440,6 +440,16 @@ footer {
 }
 footer .f-row { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
+footer .footer-icon {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  margin-bottom:12px;
+}
+footer .footer-icon img {
+  width:36px; height:36px; border-radius:8px; object-fit:cover;
+}
+footer .footer-icon span {
+  font-size:16px; font-weight:800; color:var(--accent-deep); letter-spacing:.06em;
+}
 
 @media (max-width:560px) {
   .cards { grid-template-columns:repeat(2,1fr); gap:10px; }
@@ -452,6 +462,9 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   .letter-body { font-size:14px; }
 }
 </style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#e87aa0">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
 </head>
 <body data-theme="pink" data-cfont="cute" data-efont="sans">
 
@@ -460,7 +473,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <div class="brand">
         <h1><span data-i18n="siteName">二游</span><em data-i18n="siteNameEm">情报铺</em></h1>
         <span class="sub" data-i18n="tagline">版本情报 · 角色资料 · 武器档案</span>
-        <span class="ver-tag">v1.0.0</span>
+        <span class="ver-tag">v1.1.0</span>
       </div>
       <p class="mast-note" data-i18n-html="mastnote">小铺专营各大二游版本情报，角色、武器资料随版本持续上新。每份资料有独立获取入口，<b>解锁对应资料库后即可查看网盘链接和提取码</b>。</p>
       <div class="search"><input id="q" type="search" data-i18n-ph="searchPh" placeholder="搜索资料名，例如：薇斯纳、单手剑…"></div>
@@ -483,14 +496,27 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 
       <div class="about-card">
         <h3 data-i18n="aboutTitle">关于本站</h3>
-        <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.0.0 「初晴」</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.1.0 「兑换系统」</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutTotal">收录资料</span><span class="about-val font-mono">19 份</span></div>
-        <div class="about-row"><span class="about-label" data-i18n="aboutSync">最后同步</span><span class="about-val font-mono">2026-08-19 17:52</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutSync">最后同步</span><span class="about-val font-mono">2026-08-19 17:53</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutGames">收录游戏</span><span class="about-val">崩坏：星穹铁道、原神、异环、绝区零</span></div>
       </div>
 
       <div class="about-card">
         <h3 data-i18n="changelogTitle">更新日志</h3>
+        <div class="cl-entry">
+          <span class="cl-ver">v1.1.0</span>
+          <span class="cl-date">2026-08-19</span>
+          <h4>「兑换系统」上线</h4>
+          <ul>
+            <li>新增兑换码系统：输入商品码 + 兑换码即可获取资料库密码</li>
+            <li>首页新增设备码显示和兑换入口</li>
+            <li>加密资料库支持兑换后自动解锁</li>
+            <li>新增 PWA 支持：添加到主屏幕即可离线使用</li>
+            <li>修复解锁后"获取资料"按钮无法跳转的问题</li>
+            <li>收录游戏：崩坏：星穹铁道、原神、异环、绝区零</li>
+          </ul>
+        </div>
         <div class="cl-entry">
           <span class="cl-ver">v1.0.0</span>
           <span class="cl-date">2026-08-19</span>
@@ -873,9 +899,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 
   <footer>
     <div class="wrap">
+      <div class="footer-icon">
+        <img src="assets/icon-footer.png" alt="二游情报铺">
+        <span>二游情报铺</span>
+      </div>
       <div class="f-row">
         <span class="sig" data-i18n-html="footerSig">—— 二游情报铺 · 情报常新，欢迎常来 ——</span>
-        <span data-i18n-html="footerMeta">共收录 19 份资料 · 同步于 2026-08-19 17:52</span>
+        <span data-i18n-html="footerMeta">共收录 19 份资料 · 同步于 2026-08-19 17:53</span>
       </div>
     </div>
   </footer>
@@ -972,7 +1002,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 <script>
 /* ===== site data ===== */
 var SITE_TOTAL = 19;
-var SITE_SYNCED = "2026-08-19 17:52";
+var SITE_SYNCED = "2026-08-19 17:53";
 var PREVIEW_DATA = {"崩坏星穹铁道-4.5-角色": [{"name": "砂金•戏浪", "kind": "角色", "cover": "assets/cover-sandin.webp"}, {"name": "知更鸟•晴歌", "kind": "角色", "cover": "assets/cover-zhigengniao.webp"}], "崩坏星穹铁道-4.5-光锥": [{"name": "向浪花掷下盛夏", "kind": "光锥·5星", "cover": "assets/cover-xianglanghua.webp"}, {"name": "你将起身歌唱", "kind": "光锥·5星", "cover": "assets/cover-nijiangqishenggechang.webp"}, {"name": "向着地平线的终点", "kind": "光锥·4星", "cover": "assets/cover-xiangzhedipingxian.webp"}, {"name": "放个短假", "kind": "光锥·4星", "cover": "assets/cover-fanggeduanjia.webp"}], "原神-7.1-角色": [{"name": "沃雅妮莎", "kind": "角色", "cover": "assets/cover-woyanisha.webp"}, {"name": "薇斯纳", "kind": "角色", "cover": "assets/cover-weisina.webp"}], "原神-7.1-武器": [{"name": "蝶变-单手剑", "kind": "武器", "cover": "assets/icon-diebian.webp"}, {"name": "漩流颂歌-法器", "kind": "武器", "cover": "assets/cover-xuanliusonge.webp"}], "异环-1.3-角色": [{"name": "灵可", "kind": "角色", "cover": "assets/cover-lingke-new.webp"}, {"name": "残虹", "kind": "角色", "cover": "assets/cover-canhong.webp"}], "异环-1.3-武器": [{"name": "远行者之声", "kind": "武器", "cover": "assets/cover-yuanxingzhe.webp"}, {"name": "噬心诡刃", "kind": "武器", "cover": "assets/cover-shixin.webp"}], "绝区零-3.2-代理人": [{"name": "珂蕾妲", "kind": "角色", "cover": "assets/cover-keleida.webp"}, {"name": "洛克茜", "kind": "角色", "cover": ""}, {"name": "克拉蕾", "kind": "角色", "cover": ""}], "绝区零-3.2-音擎": [{"name": "…-击破", "kind": "音擎", "cover": "assets/cover-jipo.webp"}, {"name": "腥红渴望", "kind": "音擎", "cover": "assets/cover-xinghong.webp"}]};
 
 /* ===== i18n ===== */
@@ -1017,6 +1047,13 @@ var LANG = {
     clV1_6:"全站图片压缩优化，加载速度大幅提升",
     clV1_7:"修复字体设置偶发无响应问题",
     clV1_8:"收录游戏：崩坏：星穹铁道、原神、异环",
+    clV11Title:"「兑换系统」上线",
+    clV11_1:"新增兑换码系统：输入商品码 + 兑换码即可获取资料库密码",
+    clV11_2:"首页新增设备码显示和兑换入口",
+    clV11_3:"加密资料库支持兑换后自动解锁",
+    clV11_4:"新增 PWA 支持：添加到主屏幕即可离线使用",
+    clV11_5:"修复解锁后"获取资料"按钮无法跳转的问题",
+    clV11_6:"收录游戏：崩坏：星穹铁道、原神、异环、绝区零",
     footerSig:"—— 二游情报铺 · 情报常新，欢迎常来 ——",
     footerMeta:"共收录 %total% 份资料 · 同步于 %synced%"
   },
@@ -1060,6 +1097,13 @@ var LANG = {
     clV1_6:"Image compression for faster loading",
     clV1_7:"Fixed font settings unresponsiveness",
     clV1_8:"Games: Honkai Star Rail, Genshin Impact, Ethereal Ring",
+    clV11Title:"Redemption System Launch",
+    clV11_1:"New redemption code system: enter product + redemption code to get library password",
+    clV11_2:"Added device code display and redeem entry on home page",
+    clV11_3:"Encrypted libraries auto-unlock after redemption",
+    clV11_4:"PWA support: add to home screen for offline use",
+    clV11_5:"Fixed 'Get File' button not working after unlock",
+    clV11_6:"Games: Honkai Star Rail, Genshin Impact, Ethereal Ring, Zenless Zone Zero",
     footerSig:"—— Game Intel Shop · Always fresh intel ——",
     footerMeta:"Total %total% files · Synced %synced%"
   }
@@ -1361,6 +1405,10 @@ document.getElementById("preview-close").addEventListener("click", closePreview)
 prevOverlay.addEventListener("click", function(ev) {
   if (ev.target === prevOverlay) closePreview();
 });
+/* ===== PWA Service Worker ===== */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
 </script>
 </body>
 </html>
