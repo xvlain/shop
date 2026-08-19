@@ -451,152 +451,6 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   .preview-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
   .letter-body { font-size:14px; }
 }
-
-/* ===== device code bar ===== */
-.device-bar {
-  background:var(--panel); border:1.5px solid var(--line);
-  border-radius:12px; padding:12px 16px; margin-top:18px;
-  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-  font-size:13px;
-}
-.device-bar .dev-label { color:var(--ink-dim); font-weight:700; }
-.device-bar .dev-code {
-  font-family:"SF Mono",Consolas,monospace; font-size:14px;
-  color:var(--accent-deep); font-weight:700; letter-spacing:.05em;
-  background:var(--accent-pale); border:1px solid var(--accent-soft);
-  border-radius:6px; padding:3px 10px;
-}
-.device-bar .dev-code.dev-loading {
-  color:var(--ink-faint); background:var(--bg);
-  animation:pulse 1.2s ease-in-out infinite;
-}
-@keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
-.device-bar .dev-copy {
-  background:var(--accent); color:#fff; border:none; border-radius:6px;
-  padding:5px 14px; font-size:12px; font-weight:700; cursor:pointer;
-  font-family:inherit; transition:background .15s;
-}
-.device-bar .dev-copy:hover { background:var(--accent-deep); }
-.device-bar .dev-retry {
-  background:transparent; color:var(--accent-deep); border:1px solid var(--accent-soft);
-  border-radius:6px; padding:5px 12px; font-size:12px; font-weight:700;
-  cursor:pointer; font-family:inherit; transition:all .15s; display:none;
-}
-.device-bar .dev-retry:hover { background:var(--accent-pale); }
-.device-bar .dev-retry.show { display:inline-block; }
-.device-bar .dev-loading { color:var(--ink-faint); font-style:italic; }
-
-/* ===== redeem card (home bottom) ===== */
-.redeem-card {
-  background:var(--panel); border:1.5px solid var(--line);
-  border-radius:16px; padding:22px 24px; margin-top:18px;
-  text-align:center;
-}
-.redeem-card h3 {
-  font-size:16px; font-weight:800; color:var(--accent-deep);
-  margin-bottom:6px; letter-spacing:.06em;
-}
-.redeem-card .redeem-desc {
-  font-size:13px; color:var(--ink-dim); margin-bottom:16px; line-height:1.6;
-}
-.btn-redeem-open {
-  padding:10px 32px; border-radius:999px;
-  background:var(--accent); color:#fff; font-size:14px;
-  font-weight:700; border:none; cursor:pointer; font-family:inherit;
-  transition:background .15s;
-}
-.btn-redeem-open:hover { background:var(--accent-deep); }
-
-/* ===== redeem modal ===== */
-#redeem-overlay {
-  position:fixed; inset:0; z-index:320;
-  background:rgba(0,0,0,.5);
-  opacity:0; pointer-events:none; transition:opacity .3s;
-  display:flex; align-items:center; justify-content:center;
-}
-#redeem-overlay.open { opacity:1; pointer-events:auto; }
-#redeem-modal {
-  background:var(--panel); border-radius:18px;
-  width:min(380px,92vw); padding:28px 24px 24px;
-  box-shadow:0 12px 40px rgba(0,0,0,.2);
-  transform:scale(.92); transition:transform .3s cubic-bezier(.4,0,.2,1);
-  display:flex; flex-direction:column; gap:12px;
-}
-#redeem-overlay.open #redeem-modal { transform:scale(1); }
-.redeem-title {
-  font-size:18px; font-weight:800; color:var(--accent-deep); text-align:center;
-}
-.redeem-step { display:flex; flex-direction:column; gap:6px; }
-.redeem-step label {
-  font-size:12.5px; color:var(--ink-dim); font-weight:700; letter-spacing:.08em;
-}
-.redeem-step input, .redeem-step .redeem-auto-fill {
-  width:100%; padding:10px 14px;
-  border:1.5px solid var(--line); border-radius:10px;
-  background:var(--bg); color:var(--ink); font-size:14px;
-  font-family:"SF Mono",Consolas,monospace; outline:none; text-align:center;
-  letter-spacing:.08em; transition:border-color .2s;
-}
-.redeem-step input:focus { border-color:var(--accent); }
-.redeem-step input[readonly] {
-  background:var(--accent-pale); color:var(--accent-deep); cursor:default;
-}
-.redeem-msg {
-  font-size:13px; text-align:center; min-height:20px;
-  padding:6px 0; border-radius:8px;
-}
-.redeem-msg.error { color:#e05050; }
-.redeem-msg.success { color:#50b878; }
-.redeem-msg.loading { color:var(--ink-faint); }
-.redeem-result {
-  background:var(--accent-pale); border:1.5px solid var(--accent-soft);
-  border-radius:10px; padding:12px 16px; text-align:center;
-  display:none; flex-direction:column; gap:6px;
-}
-.redeem-result.show { display:flex; }
-.redeem-result .result-label { font-size:12px; color:var(--ink-dim); }
-.redeem-result .result-pwd {
-  font-family:"SF Mono",Consolas,monospace; font-size:18px;
-  color:var(--accent-deep); font-weight:700; letter-spacing:.12em;
-  word-break:break-all;
-}
-.redeem-result .result-copy {
-  margin-top:4px; padding:8px 20px; border-radius:999px;
-  background:var(--accent); color:#fff; font-size:13px;
-  font-weight:700; border:none; cursor:pointer; font-family:inherit;
-  transition:background .15s; align-self:center;
-}
-.redeem-result .result-copy:hover { background:var(--accent-deep); }
-.redeem-btns { display:flex; gap:10px; margin-top:4px; }
-.redeem-btns button {
-  flex:1; padding:10px; border-radius:10px; font-size:14px;
-  font-weight:700; cursor:pointer; font-family:inherit; border:none;
-  transition:background .15s;
-}
-.redeem-cancel { background:var(--bg); color:var(--ink-dim); border:1.5px solid var(--line); }
-.redeem-cancel:hover { background:var(--accent-pale); }
-.redeem-confirm { background:var(--accent); color:#fff; }
-.redeem-confirm:hover { background:var(--accent-deep); }
-.redeem-confirm:disabled { opacity:.5; cursor:not-allowed; }
-
-/* ===== product code on lock overlay ===== */
-.product-code-row {
-  display:flex; align-items:center; gap:6px; margin-top:2px;
-}
-.product-code-row .pc-label {
-  font-size:11px; color:var(--ink-faint);
-}
-.product-code-row .pc-val {
-  font-family:"SF Mono",Consolas,monospace; font-size:12px;
-  color:var(--accent-deep); font-weight:700; letter-spacing:.05em;
-}
-.product-code-row .pc-copy {
-  background:var(--accent-pale); border:1px solid var(--accent-soft);
-  border-radius:5px; padding:2px 8px; font-size:10px;
-  color:var(--accent-deep); cursor:pointer; font-family:inherit;
-  font-weight:700; transition:all .15s;
-}
-.product-code-row .pc-copy:hover { background:var(--accent); color:#fff; }
 </style>
 </head>
 <body data-theme="pink" data-cfont="cute" data-efont="sans">
@@ -630,9 +484,9 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <div class="about-card">
         <h3 data-i18n="aboutTitle">关于本站</h3>
         <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.0.0 「初晴」</span></div>
-        <div class="about-row"><span class="about-label" data-i18n="aboutTotal">收录资料</span><span class="about-val font-mono">14 份</span></div>
-        <div class="about-row"><span class="about-label" data-i18n="aboutSync">最后同步</span><span class="about-val font-mono">2026-08-18 23:15</span></div>
-        <div class="about-row"><span class="about-label" data-i18n="aboutGames">收录游戏</span><span class="about-val">崩坏：星穹铁道、原神、异环</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutTotal">收录资料</span><span class="about-val font-mono">19 份</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutSync">最后同步</span><span class="about-val font-mono">2026-08-19 17:52</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutGames">收录游戏</span><span class="about-val">崩坏：星穹铁道、原神、异环、绝区零</span></div>
       </div>
 
       <div class="about-card">
@@ -653,21 +507,6 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
           </ul>
         </div>
       </div>
-
-      <!-- Device Code Bar -->
-      <div class="device-bar" id="device-bar">
-        <span class="dev-label" data-i18n="devLabel">设备码</span>
-        <span class="dev-code dev-loading" id="dev-code" data-i18n="devLoading">获取中...</span>
-        <button class="dev-copy" id="dev-copy" style="display:none" data-i18n="devCopy">复制</button>
-        <button class="dev-retry" id="dev-retry" data-i18n="devRetry">重试</button>
-      </div>
-
-      <!-- Redeem Card -->
-      <div class="redeem-card">
-        <h3 data-i18n="redeemTitle">兑换资料库</h3>
-        <p class="redeem-desc" data-i18n="redeemDesc">输入商品码和兑换码，获取资料库密码</p>
-        <button class="btn-redeem-open" id="btn-open-redeem" data-i18n="redeemBtn">立即兑换</button>
-      </div>
     </section>
 
     <!-- ===== PREVIEW ===== -->
@@ -676,18 +515,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
         <h2 data-i18n="previewTitle">前瞻</h2>
         <span class="desc" data-i18n="previewDesc">各游戏最新版本情报</span>
       </div>
-      <div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">4.5</span><div class="game-block" style="--ac:#6f8cff"><div class="game-head"><h2>崩坏：星穹铁道</h2></div><div class="group group-locked" data-gid="崩坏星穹铁道-4.5-角色"><div class="group-label"><i style="background:#6f8cff"></i>角色</div><div class="lock-overlay" data-gid="崩坏星穹铁道-4.5-角色" data-product-code="HSR45CHAR" data-pwhash="cf70986e56a26358">
+      <div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">4.5</span><div class="game-block" style="--ac:#6f8cff"><div class="game-head"><h2>崩坏：星穹铁道</h2></div><div class="group group-locked" data-gid="崩坏星穹铁道-4.5-角色"><div class="group-label"><i style="background:#6f8cff"></i>角色</div><div class="lock-overlay" data-gid="崩坏星穹铁道-4.5-角色" data-pwhash="cf70986e56a26358">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
     <div class="lock-btn-row">
       <button class="btn-preview" data-gid="崩坏星穹铁道-4.5-角色" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
       <button class="btn-unlock" data-gid="崩坏星穹铁道-4.5-角色" data-i18n="btnUnlock">解锁</button>
-    </div>
-    <div class="product-code-row">
-      <span class="pc-label">商品码</span>
-      <span class="pc-val">HSR45CHAR</span>
-      <button class="pc-copy" onclick="copyText('HSR45CHAR',this)">复制</button>
     </div>
   </div>
 </div><div class="cards"><div class="card" data-name="砂金•戏浪 砂金•戏浪V4.pdf" data-star="2">
@@ -718,18 +552,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="VUJqTQ=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div></div><div class="group group-locked" data-gid="崩坏星穹铁道-4.5-光锥"><div class="group-label"><i style="background:#6f8cff"></i>光锥</div><div class="lock-overlay" data-gid="崩坏星穹铁道-4.5-光锥" data-product-code="HSR45LC" data-pwhash="77865194829ae1aa">
+</div></div></div><div class="group group-locked" data-gid="崩坏星穹铁道-4.5-光锥"><div class="group-label"><i style="background:#6f8cff"></i>光锥</div><div class="lock-overlay" data-gid="崩坏星穹铁道-4.5-光锥" data-pwhash="77865194829ae1aa">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
     <div class="lock-btn-row">
       <button class="btn-preview" data-gid="崩坏星穹铁道-4.5-光锥" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
       <button class="btn-unlock" data-gid="崩坏星穹铁道-4.5-光锥" data-i18n="btnUnlock">解锁</button>
-    </div>
-    <div class="product-code-row">
-      <span class="pc-label">商品码</span>
-      <span class="pc-val">HSR45LC</span>
-      <button class="pc-copy" onclick="copyText('HSR45LC',this)">复制</button>
     </div>
   </div>
 </div><div class="cards"><div class="card" data-name="向浪花掷下盛夏 向浪花掷下盛夏-欢愉.pdf" data-star="0">
@@ -789,18 +618,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     </div>
   </div>
 </div></div></div></div></div>
-<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">7.1</span><div class="game-block" style="--ac:#e8b04b"><div class="game-head"><h2>原神</h2></div><div class="group group-locked" data-gid="原神-7.1-角色"><div class="group-label"><i style="background:#e8b04b"></i>角色</div><div class="lock-overlay" data-gid="原神-7.1-角色" data-product-code="GI71CHAR" data-pwhash="e4cade21aaeed6e7">
+<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">7.1</span><div class="game-block" style="--ac:#e8b04b"><div class="game-head"><h2>原神</h2></div><div class="group group-locked" data-gid="原神-7.1-角色"><div class="group-label"><i style="background:#e8b04b"></i>角色</div><div class="lock-overlay" data-gid="原神-7.1-角色" data-pwhash="e4cade21aaeed6e7">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
     <div class="lock-btn-row">
       <button class="btn-preview" data-gid="原神-7.1-角色" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
       <button class="btn-unlock" data-gid="原神-7.1-角色" data-i18n="btnUnlock">解锁</button>
-    </div>
-    <div class="product-code-row">
-      <span class="pc-label">商品码</span>
-      <span class="pc-val">GI71CHAR</span>
-      <button class="pc-copy" onclick="copyText('GI71CHAR',this)">复制</button>
     </div>
   </div>
 </div><div class="cards"><div class="card" data-name="沃雅妮莎 沃雅妮莎.pdf" data-star="2">
@@ -831,18 +655,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="cmo0aQ=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div></div><div class="group group-locked" data-gid="原神-7.1-武器"><div class="group-label"><i style="background:#e8b04b"></i>武器</div><div class="lock-overlay" data-gid="原神-7.1-武器" data-product-code="GI71WPN" data-pwhash="3f9ff70c4361b906">
+</div></div></div><div class="group group-locked" data-gid="原神-7.1-武器"><div class="group-label"><i style="background:#e8b04b"></i>武器</div><div class="lock-overlay" data-gid="原神-7.1-武器" data-pwhash="3f9ff70c4361b906">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
     <div class="lock-btn-row">
       <button class="btn-preview" data-gid="原神-7.1-武器" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
       <button class="btn-unlock" data-gid="原神-7.1-武器" data-i18n="btnUnlock">解锁</button>
-    </div>
-    <div class="product-code-row">
-      <span class="pc-label">商品码</span>
-      <span class="pc-val">GI71WPN</span>
-      <button class="pc-copy" onclick="copyText('GI71WPN',this)">复制</button>
     </div>
   </div>
 </div><div class="cards"><div class="card" data-name="蝶变-单手剑 蝶变.pdf" data-star="2">
@@ -874,18 +693,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     </div>
   </div>
 </div></div></div></div></div>
-<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">1.3</span><div class="game-block" style="--ac:#5fd68b"><div class="game-head"><h2>异环</h2></div><div class="group group-locked" data-gid="异环-1.3-角色"><div class="group-label"><i style="background:#5fd68b"></i>角色</div><div class="lock-overlay" data-gid="异环-1.3-角色" data-product-code="ER13CHAR" data-pwhash="b61b135a7ef3a49d">
+<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">1.3</span><div class="game-block" style="--ac:#5fd68b"><div class="game-head"><h2>异环</h2></div><div class="group group-locked" data-gid="异环-1.3-角色"><div class="group-label"><i style="background:#5fd68b"></i>角色</div><div class="lock-overlay" data-gid="异环-1.3-角色" data-pwhash="b61b135a7ef3a49d">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
     <div class="lock-btn-row">
       <button class="btn-preview" data-gid="异环-1.3-角色" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
       <button class="btn-unlock" data-gid="异环-1.3-角色" data-i18n="btnUnlock">解锁</button>
-    </div>
-    <div class="product-code-row">
-      <span class="pc-label">商品码</span>
-      <span class="pc-val">ER13CHAR</span>
-      <button class="pc-copy" onclick="copyText('ER13CHAR',this)">复制</button>
     </div>
   </div>
 </div><div class="cards"><div class="card" data-name="灵可 灵可V3.pdf" data-star="2">
@@ -916,18 +730,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="OGJGRw=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div></div><div class="group group-locked" data-gid="异环-1.3-武器"><div class="group-label"><i style="background:#5fd68b"></i>武器</div><div class="lock-overlay" data-gid="异环-1.3-武器" data-product-code="ER13WPN" data-pwhash="79efac1b4f4f3341">
+</div></div></div><div class="group group-locked" data-gid="异环-1.3-武器"><div class="group-label"><i style="background:#5fd68b"></i>武器</div><div class="lock-overlay" data-gid="异环-1.3-武器" data-pwhash="79efac1b4f4f3341">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
     <div class="lock-btn-row">
       <button class="btn-preview" data-gid="异环-1.3-武器" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
       <button class="btn-unlock" data-gid="异环-1.3-武器" data-i18n="btnUnlock">解锁</button>
-    </div>
-    <div class="product-code-row">
-      <span class="pc-label">商品码</span>
-      <span class="pc-val">ER13WPN</span>
-      <button class="pc-copy" onclick="copyText('ER13WPN',this)">复制</button>
     </div>
   </div>
 </div><div class="cards"><div class="card" data-name="远行者之声 远行者之声-等离子.pdf" data-star="2">
@@ -959,6 +768,95 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     </div>
   </div>
 </div></div></div></div></div>
+<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">3.2</span><div class="game-block" style="--ac:#e8637a"><div class="game-head"><h2>绝区零</h2></div><div class="group group-locked" data-gid="绝区零-3.2-代理人"><div class="group-label"><i style="background:#e8637a"></i>代理人</div><div class="lock-overlay" data-gid="绝区零-3.2-代理人" data-pwhash="1d12cdf2dc0d80dd">
+  <div class="lock-inner">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
+    <div class="lock-btn-row">
+      <button class="btn-preview" data-gid="绝区零-3.2-代理人" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
+      <button class="btn-unlock" data-gid="绝区零-3.2-代理人" data-i18n="btnUnlock">解锁</button>
+    </div>
+  </div>
+</div><div class="cards"><div class="card" data-name="珂蕾妲 珂蕾妲V4.pdf" data-star="2">
+  <div class="art"><img src="assets/cover-keleida.webp" alt="珂蕾妲" loading="lazy" decoding="async"></div>
+  <div class="card-body">
+    <div class="card-kind">角色</div>
+    <h3 class="card-title">珂蕾妲</h3>
+    <div class="card-meta">
+      <span>珂蕾妲V4.pdf</span>
+      <span>7.9 MB · 2026-08-19</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main btn-locked" data-share-url="aHR0cHM6Ly9wYW4ucXVhcmsuY24vcy8yMWMyOTFlNmQ0MTE=" href="javascript:void(0)" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd btn-locked" data-pwd-b64="bmFpRA=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div><div class="card" data-name="洛克茜 洛克茜V4.pdf" data-star="2">
+  <div class="art art-ph"><span data-i18n="noCover">暂无封面</span></div>
+  <div class="card-body">
+    <div class="card-kind">角色</div>
+    <h3 class="card-title">洛克茜</h3>
+    <div class="card-meta">
+      <span>洛克茜V4.pdf</span>
+      <span>3.0 MB · 2026-08-19</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main btn-locked" data-share-url="aHR0cHM6Ly9wYW4ucXVhcmsuY24vcy81NDQ0ZDM3ZGRkZTE=" href="javascript:void(0)" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd btn-locked" data-pwd-b64="cG01UA=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div><div class="card" data-name="克拉蕾 克拉蕾V4.pdf" data-star="2">
+  <div class="art art-ph"><span data-i18n="noCover">暂无封面</span></div>
+  <div class="card-body">
+    <div class="card-kind">角色</div>
+    <h3 class="card-title">克拉蕾</h3>
+    <div class="card-meta">
+      <span>克拉蕾V4.pdf</span>
+      <span>3.3 MB · 2026-08-19</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main btn-locked" data-share-url="aHR0cHM6Ly9wYW4ucXVhcmsuY24vcy8xNDJmYmYwMGFjYjE=" href="javascript:void(0)" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd btn-locked" data-pwd-b64="OWJodA=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div></div></div><div class="group group-locked" data-gid="绝区零-3.2-音擎"><div class="group-label"><i style="background:#e8637a"></i>音擎</div><div class="lock-overlay" data-gid="绝区零-3.2-音擎" data-pwhash="f8f050a944929ac4">
+  <div class="lock-inner">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <span data-i18n="lockMsg">资料已加密，输入密码解锁</span>
+    <div class="lock-btn-row">
+      <button class="btn-preview" data-gid="绝区零-3.2-音擎" data-i18n="btnPreview"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 预览</button>
+      <button class="btn-unlock" data-gid="绝区零-3.2-音擎" data-i18n="btnUnlock">解锁</button>
+    </div>
+  </div>
+</div><div class="cards"><div class="card" data-name="…-击破 未知-击破.pdf" data-star="2">
+  <div class="art"><img src="assets/cover-jipo.webp" alt="…-击破" loading="lazy" decoding="async"></div>
+  <div class="card-body">
+    <div class="card-kind">音擎</div>
+    <h3 class="card-title">…-击破</h3>
+    <div class="card-meta">
+      <span>未知-击破.pdf</span>
+      <span>843 KB · 2026-08-19</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main btn-locked" data-share-url="aHR0cHM6Ly9wYW4ucXVhcmsuY24vcy9hOWUwYmYxMmY5OTM=" href="javascript:void(0)" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd btn-locked" data-pwd-b64="TFBxVQ=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div><div class="card" data-name="腥红渴望 腥红渴望V4-锋御.pdf" data-star="2">
+  <div class="art"><img src="assets/cover-xinghong.webp" alt="腥红渴望" loading="lazy" decoding="async"></div>
+  <div class="card-body">
+    <div class="card-kind">音擎</div>
+    <h3 class="card-title">腥红渴望</h3>
+    <div class="card-meta">
+      <span>腥红渴望V4-锋御.pdf</span>
+      <span>768 KB · 2026-08-19</span>
+    </div>
+    <div class="card-actions">
+      <a class="btn-main btn-locked" data-share-url="aHR0cHM6Ly9wYW4ucXVhcmsuY24vcy9hYWI3NTliZGY2N2E=" href="javascript:void(0)" data-i18n="getDoc">获取资料</a>
+      <button class="btn-pwd btn-locked" data-pwd-b64="V2dwVQ=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+  </div>
+</div></div></div></div></div>
     </section>
 
     <!-- ===== ARCHIVE ===== -->
@@ -977,7 +875,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     <div class="wrap">
       <div class="f-row">
         <span class="sig" data-i18n-html="footerSig">—— 二游情报铺 · 情报常新，欢迎常来 ——</span>
-        <span data-i18n-html="footerMeta">共收录 14 份资料 · 同步于 2026-08-18 23:15</span>
+        <span data-i18n-html="footerMeta">共收录 19 份资料 · 同步于 2026-08-19 17:52</span>
       </div>
     </div>
   </footer>
@@ -1071,40 +969,11 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     </div>
   </div>
 
-  <!-- ===== Redeem Modal ===== -->
-  <div id="redeem-overlay">
-    <div id="redeem-modal">
-      <div class="redeem-title" data-i18n="redeemModalTitle">兑换资料库密码</div>
-      <div class="redeem-step">
-        <label data-i18n="redeemDevLabel">设备码（自动获取）</label>
-        <input type="text" id="redeem-device" readonly>
-      </div>
-      <div class="redeem-step">
-        <label data-i18n="redeemProdLabel">商品码（从锁定界面复制）</label>
-        <input type="text" id="redeem-product" placeholder="例如 HSR45CHAR" data-i18n-ph="redeemProdPh">
-      </div>
-      <div class="redeem-step">
-        <label data-i18n="redeemRedLabel">兑换码（由店主提供）</label>
-        <input type="text" id="redeem-code" placeholder="例如 ABCD-EFGH" data-i18n-ph="redeemRedPh">
-      </div>
-      <div class="redeem-msg" id="redeem-msg"></div>
-      <div class="redeem-result" id="redeem-result">
-        <span class="result-label" data-i18n="redeemResultLabel">你的资料库密码</span>
-        <span class="result-pwd" id="redeem-pwd"></span>
-        <button class="result-copy" id="redeem-pwd-copy" data-i18n="redeemCopyPwd">复制密码</button>
-      </div>
-      <div class="redeem-btns">
-        <button class="redeem-cancel" id="redeem-cancel" data-i18n="redeemCancel">关闭</button>
-        <button class="redeem-confirm" id="redeem-confirm" data-i18n="redeemConfirm">兑换</button>
-      </div>
-    </div>
-  </div>
-
 <script>
 /* ===== site data ===== */
-var SITE_TOTAL = 14;
-var SITE_SYNCED = "2026-08-18 23:15";
-var PREVIEW_DATA = {"崩坏星穹铁道-4.5-角色": [{"name": "砂金•戏浪", "kind": "角色", "cover": "assets/cover-sandin.webp"}, {"name": "知更鸟•晴歌", "kind": "角色", "cover": "assets/cover-zhigengniao.webp"}], "崩坏星穹铁道-4.5-光锥": [{"name": "向浪花掷下盛夏", "kind": "光锥·5星", "cover": "assets/cover-xianglanghua.webp"}, {"name": "你将起身歌唱", "kind": "光锥·5星", "cover": "assets/cover-nijiangqishenggechang.webp"}, {"name": "向着地平线的终点", "kind": "光锥·4星", "cover": "assets/cover-xiangzhedipingxian.webp"}, {"name": "放个短假", "kind": "光锥·4星", "cover": "assets/cover-fanggeduanjia.webp"}], "原神-7.1-角色": [{"name": "沃雅妮莎", "kind": "角色", "cover": "assets/cover-woyanisha.webp"}, {"name": "薇斯纳", "kind": "角色", "cover": "assets/cover-weisina.webp"}], "原神-7.1-武器": [{"name": "蝶变-单手剑", "kind": "武器", "cover": "assets/icon-diebian.webp"}, {"name": "漩流颂歌-法器", "kind": "武器", "cover": "assets/cover-xuanliusonge.webp"}], "异环-1.3-角色": [{"name": "灵可", "kind": "角色", "cover": "assets/cover-lingke-new.webp"}, {"name": "残虹", "kind": "角色", "cover": "assets/cover-canhong.webp"}], "异环-1.3-武器": [{"name": "远行者之声", "kind": "武器", "cover": "assets/cover-yuanxingzhe.webp"}, {"name": "噬心诡刃", "kind": "武器", "cover": "assets/cover-shixin.webp"}]};
+var SITE_TOTAL = 19;
+var SITE_SYNCED = "2026-08-19 17:52";
+var PREVIEW_DATA = {"崩坏星穹铁道-4.5-角色": [{"name": "砂金•戏浪", "kind": "角色", "cover": "assets/cover-sandin.webp"}, {"name": "知更鸟•晴歌", "kind": "角色", "cover": "assets/cover-zhigengniao.webp"}], "崩坏星穹铁道-4.5-光锥": [{"name": "向浪花掷下盛夏", "kind": "光锥·5星", "cover": "assets/cover-xianglanghua.webp"}, {"name": "你将起身歌唱", "kind": "光锥·5星", "cover": "assets/cover-nijiangqishenggechang.webp"}, {"name": "向着地平线的终点", "kind": "光锥·4星", "cover": "assets/cover-xiangzhedipingxian.webp"}, {"name": "放个短假", "kind": "光锥·4星", "cover": "assets/cover-fanggeduanjia.webp"}], "原神-7.1-角色": [{"name": "沃雅妮莎", "kind": "角色", "cover": "assets/cover-woyanisha.webp"}, {"name": "薇斯纳", "kind": "角色", "cover": "assets/cover-weisina.webp"}], "原神-7.1-武器": [{"name": "蝶变-单手剑", "kind": "武器", "cover": "assets/icon-diebian.webp"}, {"name": "漩流颂歌-法器", "kind": "武器", "cover": "assets/cover-xuanliusonge.webp"}], "异环-1.3-角色": [{"name": "灵可", "kind": "角色", "cover": "assets/cover-lingke-new.webp"}, {"name": "残虹", "kind": "角色", "cover": "assets/cover-canhong.webp"}], "异环-1.3-武器": [{"name": "远行者之声", "kind": "武器", "cover": "assets/cover-yuanxingzhe.webp"}, {"name": "噬心诡刃", "kind": "武器", "cover": "assets/cover-shixin.webp"}], "绝区零-3.2-代理人": [{"name": "珂蕾妲", "kind": "角色", "cover": "assets/cover-keleida.webp"}, {"name": "洛克茜", "kind": "角色", "cover": ""}, {"name": "克拉蕾", "kind": "角色", "cover": ""}], "绝区零-3.2-音擎": [{"name": "…-击破", "kind": "音擎", "cover": "assets/cover-jipo.webp"}, {"name": "腥红渴望", "kind": "音擎", "cover": "assets/cover-xinghong.webp"}]};
 
 /* ===== i18n ===== */
 var LANG = {
@@ -1148,14 +1017,6 @@ var LANG = {
     clV1_6:"全站图片压缩优化，加载速度大幅提升",
     clV1_7:"修复字体设置偶发无响应问题",
     clV1_8:"收录游戏：崩坏：星穹铁道、原神、异环",
-    devLabel:"设备码", devLoading:"获取中...", devCopy:"复制", devRetry:"重试",
-    redeemTitle:"兑换资料库", redeemDesc:"输入商品码和兑换码，获取资料库密码",
-    redeemBtn:"立即兑换", redeemModalTitle:"兑换资料库密码",
-    redeemDevLabel:"设备码（自动获取）", redeemProdLabel:"商品码（从锁定界面复制）",
-    redeemRedLabel:"兑换码（由店主提供）", redeemProdPh:"例如 HSR45CHAR",
-    redeemRedPh:"例如 ABCD-EFGH", redeemResultLabel:"你的资料库密码",
-    redeemCopyPwd:"复制密码", redeemCancel:"关闭", redeemConfirm:"兑换",
-    pwdLabel:"提取码",
     footerSig:"—— 二游情报铺 · 情报常新，欢迎常来 ——",
     footerMeta:"共收录 %total% 份资料 · 同步于 %synced%"
   },
@@ -1199,14 +1060,6 @@ var LANG = {
     clV1_6:"Image compression for faster loading",
     clV1_7:"Fixed font settings unresponsiveness",
     clV1_8:"Games: Honkai Star Rail, Genshin Impact, Ethereal Ring",
-    devLabel:"Device ID", devLoading:"Loading...", devCopy:"Copy", devRetry:"Retry",
-    redeemTitle:"Redeem Library", redeemDesc:"Enter product code and redemption code to get your password",
-    redeemBtn:"Redeem Now", redeemModalTitle:"Redeem Library Password",
-    redeemDevLabel:"Device Code (auto)", redeemProdLabel:"Product Code (from lock screen)",
-    redeemRedLabel:"Redemption Code (from shop)", redeemProdPh:"e.g. HSR45CHAR",
-    redeemRedPh:"e.g. ABCD-EFGH", redeemResultLabel:"Your library password",
-    redeemCopyPwd:"Copy Password", redeemCancel:"Close", redeemConfirm:"Redeem",
-    pwdLabel:"Extract Code",
     footerSig:"—— Game Intel Shop · Always fresh intel ——",
     footerMeta:"Total %total% files · Synced %synced%"
   }
@@ -1402,10 +1255,10 @@ function unlockGroup(gid) {
     group.classList.add("unlocked");
     group.classList.remove("group-locked");
     group.querySelectorAll(".btn-locked").forEach(function(btn) {
-      if (btn.hasAttribute("data-share-url")) {
-        var url = atob(btn.getAttribute("data-share-url"));
+      if (btn.hasAttribute("data-share_url")) {
+        var url = atob(btn.getAttribute("data-share_url"));
         btn.href = url; btn.target = "_blank"; btn.rel = "noopener";
-        btn.removeAttribute("data-share-url");
+        btn.removeAttribute("data-share_url");
         btn.classList.remove("btn-locked");
       }
       if (btn.hasAttribute("data-pwd-b64")) {
@@ -1508,328 +1361,6 @@ document.getElementById("preview-close").addEventListener("click", closePreview)
 prevOverlay.addEventListener("click", function(ev) {
   if (ev.target === prevOverlay) closePreview();
 });
-
-/* ===== Supabase API ===== */
-var SUPABASE_URL = "https://xajqidptrsnbavqxraws.supabase.co";
-var SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhanFpZHB0cnNuYmF2cXhyYXdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjI0ODAsImV4cCI6MjEwMjY5ODQ4MH0.MsdG-uCbLv3C8w43grFPcybaas-RT20nKPyNLV8afM0";
-var DEVICE_CODE = localStorage.getItem("erp3_device_code") || "";
-
-function getFingerprint() {
-  var parts = [
-    navigator.userAgent,
-    navigator.language,
-    screen.width + "x" + screen.height,
-    new Date().getTimezoneOffset(),
-    navigator.hardwareConcurrency || 0
-  ];
-  var raw = parts.join("|");
-  // simple hash
-  var h = 0;
-  for (var i = 0; i < raw.length; i++) {
-    h = ((h << 5) - h + raw.charCodeAt(i)) | 0;
-  }
-  return "fp-" + (h >>> 0).toString(16).padStart(8, "0");
-}
-
-function assignDeviceCode() {
-  if (DEVICE_CODE) {
-    showDeviceCode(DEVICE_CODE);
-    return;
-  }
-  var devCodeEl = document.getElementById("dev-code");
-  var devRetryBtn = document.getElementById("dev-retry");
-  var devCopyBtn = document.getElementById("dev-copy");
-
-  // Show loading state
-  devCodeEl.textContent = "连接中...";
-  devCodeEl.classList.add("dev-loading");
-  devRetryBtn.classList.remove("show");
-
-  var fp = getFingerprint();
-  var timedOut = false;
-
-  // 6-second timeout: if still loading, show retry button
-  var timer = setTimeout(function() {
-    timedOut = true;
-    devCodeEl.textContent = "连接较慢";
-    devRetryBtn.classList.add("show");
-  }, 6000);
-
-  fetch(SUPABASE_URL + "/rest/v1/rpc/claim_device_code", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": SUPABASE_KEY,
-      "Authorization": "Bearer " + SUPABASE_KEY
-    },
-    body: JSON.stringify({ fp: fp })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (timedOut) return; // already gave up
-    clearTimeout(timer);
-    var res = Array.isArray(data) ? data[0] : data;
-    if (res && res.ok && res.device_code) {
-      DEVICE_CODE = res.device_code;
-      localStorage.setItem("erp3_device_code", DEVICE_CODE);
-      showDeviceCode(DEVICE_CODE);
-    } else {
-      devCodeEl.textContent = "获取失败";
-      devCodeEl.classList.remove("dev-loading");
-      devRetryBtn.classList.add("show");
-    }
-  })
-  .catch(function(e) {
-    if (timedOut) return;
-    clearTimeout(timer);
-    devCodeEl.textContent = "网络错误";
-    devCodeEl.classList.remove("dev-loading");
-    devRetryBtn.classList.add("show");
-  });
-}
-
-function showDeviceCode(code) {
-  var el = document.getElementById("dev-code");
-  el.textContent = code;
-  el.classList.remove("dev-loading");
-  document.getElementById("dev-copy").style.display = "";
-  document.getElementById("dev-retry").classList.remove("show");
-}
-
-// init device code
-assignDeviceCode();
-
-// retry button
-document.getElementById("dev-retry").addEventListener("click", function() {
-  assignDeviceCode();
-});
-
-document.getElementById("dev-copy").addEventListener("click", function() {
-  if (DEVICE_CODE) copyText(DEVICE_CODE, this);
-});
-
-/* ===== copy helper ===== */
-function copyText(text, btn) {
-  var dict = LANG[prefs.lang] || LANG.zh;
-  var done = function() {
-    var old = btn.textContent;
-    btn.textContent = dict.copied || "已复制";
-    setTimeout(function() { btn.textContent = old; }, 1400);
-  };
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(done).catch(function() { fbCopy(text); done(); });
-  } else { fbCopy(text); done(); }
-}
-
-// Attach copy handlers for product code buttons
-document.querySelectorAll(".pc-copy").forEach(function(btn) {
-  // onclick is already set in HTML
-});
-
-/* ===== Redeem Modal ===== */
-var redeemOverlay = document.getElementById("redeem-overlay");
-var redeemMsg = document.getElementById("redeem-msg");
-var redeemResult = document.getElementById("redeem-result");
-var redeemPwd = document.getElementById("redeem-pwd");
-var redeemConfirmBtn = document.getElementById("redeem-confirm");
-
-function openRedeem() {
-  document.getElementById("redeem-device").value = DEVICE_CODE || "未获取";
-  document.getElementById("redeem-product").value = "";
-  document.getElementById("redeem-code").value = "";
-  redeemMsg.textContent = "";
-  redeemMsg.className = "redeem-msg";
-  redeemResult.classList.remove("show");
-  redeemConfirmBtn.disabled = false;
-  redeemOverlay.classList.add("open");
-}
-
-function closeRedeem() {
-  redeemOverlay.classList.remove("open");
-}
-
-document.getElementById("btn-open-redeem").addEventListener("click", openRedeem);
-document.getElementById("redeem-cancel").addEventListener("click", closeRedeem);
-redeemOverlay.addEventListener("click", function(ev) {
-  if (ev.target === redeemOverlay) closeRedeem();
-});
-
-redeemConfirmBtn.addEventListener("click", function() {
-  var productCode = document.getElementById("redeem-product").value.trim().toUpperCase();
-  var redemptionCode = document.getElementById("redeem-code").value.trim().toUpperCase();
-
-  if (!DEVICE_CODE) {
-    redeemMsg.textContent = "设备码未获取，请稍后重试";
-    redeemMsg.className = "redeem-msg error";
-    return;
-  }
-  if (!productCode) {
-    redeemMsg.textContent = "请输入商品码";
-    redeemMsg.className = "redeem-msg error";
-    return;
-  }
-  if (!redemptionCode) {
-    redeemMsg.textContent = "请输入兑换码";
-    redeemMsg.className = "redeem-msg error";
-    return;
-  }
-
-  redeemMsg.textContent = "兑换中...";
-  redeemMsg.className = "redeem-msg loading";
-  redeemConfirmBtn.disabled = true;
-
-  fetch(SUPABASE_URL + "/rest/v1/rpc/do_redeem", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": SUPABASE_KEY,
-      "Authorization": "Bearer " + SUPABASE_KEY
-    },
-    body: JSON.stringify({
-      p_device: DEVICE_CODE,
-      p_product: productCode,
-      p_redemption: redemptionCode
-    })
-  })
-  .then(function(r) { return r.text(); })
-  .then(function(text) {
-    redeemConfirmBtn.disabled = false;
-    var data;
-    try { data = JSON.parse(text); } catch(e) {
-      redeemMsg.textContent = "解析错误: " + text.substring(0, 100);
-      redeemMsg.className = "redeem-msg error";
-      return;
-    }
-    var res = Array.isArray(data) ? data[0] : data;
-    if (res && res.ok) {
-      redeemMsg.textContent = res.already_redeemed ? "该商品已兑换过，密码如下：" : "兑换成功！";
-      redeemMsg.className = "redeem-msg success";
-      redeemPwd.textContent = res.password;
-      redeemResult.classList.add("show");
-
-      // Auto-unlock the group if possible
-      var productMap = {
-        "HSR45CHAR": "崩坏星穹铁道-4.5-角色",
-        "HSR45LC": "崩坏星穹铁道-4.5-光锥",
-        "GI71CHAR": "原神-7.1-角色",
-        "GI71WPN": "原神-7.1-武器",
-        "ER13CHAR": "异环-1.3-角色",
-        "ER13WPN": "异环-1.3-武器"
-      };
-      var gid = productMap[productCode];
-      try {
-      if (gid) {
-        // Store unlock with the password
-        unlocks[gid] = res.password;
-        saveUnlocks(unlocks);
-        // Try to unlock (won't fully work since the overlay checks pwhash, but we mark it)
-        var overlay = document.querySelector('.lock-overlay[data-gid="' + gid + '"]');
-        if (overlay) {
-          // Mark as worker-unlocked
-          overlay.setAttribute("data-worker-unlocked", "1");
-        // Save worker unlock to localStorage
-        var wu = {};
-        try { wu = JSON.parse(localStorage.getItem("erp3_worker_unlocks") || "{}"); } catch(e) {}
-        wu[gid] = res.password;
-        localStorage.setItem("erp3_worker_unlocks", JSON.stringify(wu));
-          var group = document.querySelector('.group[data-gid="' + gid + '"]');
-          if (group) {
-            group.classList.add("unlocked");
-            group.classList.remove("group-locked");
-            // Reveal share URLs and passwords
-            group.querySelectorAll(".btn-locked").forEach(function(btn) {
-              if (btn.hasAttribute("data-share-url")) {
-                var url = atob(btn.getAttribute("data-share-url"));
-                btn.href = url; btn.target = "_blank"; btn.rel = "noopener";
-                btn.removeAttribute("data-share-url");
-                btn.classList.remove("btn-locked");
-              }
-              if (btn.hasAttribute("data-pwd-b64")) {
-                var pwd = atob(btn.getAttribute("data-pwd-b64"));
-                btn.setAttribute("data-pwd", pwd);
-                var d = LANG[prefs.lang] || LANG.zh;
-                btn.innerHTML = '<span data-i18n="pwdLabel">' + (d.pwdLabel || "提取码") + '</span> ' + pwd + ' <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
-                btn.removeAttribute("data-pwd-b64");
-                btn.classList.remove("btn-locked");
-                btn.addEventListener("click", function() { copyPwd(btn); });
-              }
-            });
-          }
-        }
-      }
-      } catch(unlockErr) { /* auto-unlock error, password already shown */ }
-    } else {
-      var errMap = {
-        "invalid_device_code": "设备码无效",
-        "device_not_assigned": "设备码未激活",
-        "invalid_redemption_code": "兑换码无效",
-        "invalid_or_used_redemption_code": "兑换码无效或已被使用",
-        "redemption_code_already_used": "兑换码已被使用",
-        "invalid_product_code": "商品码无效",
-        "code_in_use_retry": "兑换码正在被使用，请稍后重试",
-        "all codes required": "请填写完整信息"
-      };
-      redeemMsg.textContent = errMap[res.error] || ("错误：" + (res.error || JSON.stringify(res)));
-      redeemMsg.className = "redeem-msg error";
-    }
-  })
-  .catch(function(e) {
-    redeemConfirmBtn.disabled = false;
-    redeemMsg.textContent = "网络错误，请检查连接后重试";
-    redeemMsg.className = "redeem-msg error";
-  });
-});
-
-document.getElementById("redeem-pwd-copy").addEventListener("click", function() {
-  copyText(redeemPwd.textContent, this);
-});
-
-/* ===== Worker-based unlock restore ===== */
-(function() {
-  // Check for worker-unlocked groups in localStorage
-  var workerUnlocks = {};
-  try { workerUnlocks = JSON.parse(localStorage.getItem("erp3_worker_unlocks")) || {}; } catch(e) {}
-
-  // On page load, check if we have redeemed passwords for any group
-  if (DEVICE_CODE) {
-    // For each known product, check if we've redeemed it
-    var productGidMap = {
-      "HSR45CHAR": "崩坏星穹铁道-4.5-角色",
-      "HSR45LC": "崩坏星穹铁道-4.5-光锥",
-      "GI71CHAR": "原神-7.1-角色",
-      "GI71WPN": "原神-7.1-武器",
-      "ER13CHAR": "异环-1.3-角色",
-      "ER13WPN": "异环-1.3-武器"
-    };
-    Object.keys(productGidMap).forEach(function(pc) {
-      var gid = productGidMap[pc];
-      if (workerUnlocks[gid]) {
-        // Restore unlock
-        var group = document.querySelector('.group[data-gid="' + gid + '"]');
-        if (group) {
-          group.classList.add("unlocked");
-          group.classList.remove("group-locked");
-          group.querySelectorAll(".btn-locked").forEach(function(btn) {
-            if (btn.hasAttribute("data-share-url")) {
-              var url = atob(btn.getAttribute("data-share-url"));
-              btn.href = url; btn.target = "_blank"; btn.rel = "noopener";
-              btn.removeAttribute("data-share-url");
-              btn.classList.remove("btn-locked");
-            }
-            if (btn.hasAttribute("data-pwd-b64")) {
-              var pwd = atob(btn.getAttribute("data-pwd-b64"));
-              btn.setAttribute("data-pwd", pwd);
-              btn.innerHTML = '<span data-i18n="pwdLabel">提取码</span> ' + pwd + ' <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
-              btn.removeAttribute("data-pwd-b64");
-              btn.classList.remove("btn-locked");
-              btn.addEventListener("click", function() { copyPwd(btn); });
-            }
-          });
-        }
-      }
-    });
-  }
-})();
 </script>
 </body>
 </html>
