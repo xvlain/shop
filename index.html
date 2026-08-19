@@ -1691,9 +1691,15 @@ redeemConfirmBtn.addEventListener("click", function() {
       p_redemption: redemptionCode
     })
   })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
+  .then(function(r) { return r.text(); })
+  .then(function(text) {
     redeemConfirmBtn.disabled = false;
+    var data;
+    try { data = JSON.parse(text); } catch(e) {
+      redeemMsg.textContent = "解析错误: " + text.substring(0, 100);
+      redeemMsg.className = "redeem-msg error";
+      return;
+    }
     var res = Array.isArray(data) ? data[0] : data;
     if (res && res.ok) {
       redeemMsg.textContent = res.already_redeemed ? "该商品已兑换过，密码如下：" : "兑换成功！";
@@ -1711,6 +1717,7 @@ redeemConfirmBtn.addEventListener("click", function() {
         "ER13WPN": "异环-1.3-武器"
       };
       var gid = productMap[productCode];
+      try {
       if (gid) {
         // Store unlock with the password
         unlocks[gid] = res.password;
@@ -1750,6 +1757,7 @@ redeemConfirmBtn.addEventListener("click", function() {
           }
         }
       }
+      } catch(unlockErr) { /* auto-unlock error, password already shown */ }
     } else {
       var errMap = {
         "invalid_device_code": "设备码无效",
