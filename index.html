@@ -7,6 +7,9 @@
 <meta name="googlebot" content="noindex, nofollow">
 <title>二游情报铺</title>
 <meta name="description" content="">
+<meta name="theme-color" content="#e87aa0">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -433,6 +436,83 @@ body::before {
 .empty-sub { font-size:13px; margin-top:8px; }
 .empty-tip { display:none; color:var(--ink-faint); padding:30px 0; text-align:center; }
 
+
+/* ===== redeem section ===== */
+.redeem-card {
+  background:var(--panel); border:1.5px solid var(--line);
+  border-radius:16px; padding:28px 24px; margin-top:20px;
+  box-shadow:0 2px 16px color-mix(in srgb, var(--accent) 6%, transparent);
+}
+.redeem-title {
+  font-size:20px; font-weight:800; color:var(--accent-deep);
+  margin-bottom:8px; text-align:center;
+}
+.redeem-desc {
+  font-size:13.5px; color:var(--ink-dim); text-align:center;
+  margin-bottom:20px; line-height:1.8;
+}
+.redeem-form { display:flex; flex-direction:column; gap:14px; max-width:360px; margin:0 auto; }
+.redeem-field { display:flex; flex-direction:column; gap:4px; }
+.redeem-field label { font-size:12.5px; color:var(--ink-dim); font-weight:700; letter-spacing:.1em; }
+.redeem-field input, .redeem-field select {
+  width:100%; background:var(--bg); border:1.5px solid var(--line);
+  border-radius:10px; color:var(--ink); padding:11px 14px;
+  font-size:14px; outline:none; font-family:inherit; transition:border-color .2s;
+}
+.redeem-field input:focus, .redeem-field select:focus { border-color:var(--accent); }
+.redeem-field input::placeholder { color:var(--ink-faint); }
+.redeem-btn {
+  margin-top:8px; padding:12px; border-radius:10px; border:none;
+  background:var(--accent); color:#fff; font-size:15px;
+  font-weight:700; cursor:pointer; font-family:inherit;
+  transition:background .15s;
+}
+.redeem-btn:hover { background:var(--accent-deep); }
+.redeem-btn:disabled { opacity:.5; cursor:not-allowed; }
+.redeem-result {
+  margin-top:16px; padding:16px; border-radius:12px;
+  text-align:center; font-size:14px; line-height:1.8;
+  display:none;
+}
+.redeem-result.success {
+  display:block; background:var(--accent-pale);
+  border:1.5px solid var(--accent-soft); color:var(--accent-deep);
+}
+.redeem-result.error {
+  display:block; background:#fff0f0;
+  border:1.5px solid #ffcccc; color:#cc4444;
+}
+.redeem-result .pwd-display {
+  font-family:Consolas,monospace; font-size:20px; font-weight:700;
+  letter-spacing:.1em; margin-top:8px; color:var(--accent-deep);
+}
+.redeem-history {
+  margin-top:24px; max-width:360px; margin-left:auto; margin-right:auto;
+}
+.redeem-history h4 {
+  font-size:14px; color:var(--ink-dim); font-weight:700;
+  margin-bottom:10px; letter-spacing:.1em;
+}
+.redeem-history-item {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:8px 0; border-bottom:1px solid var(--line);
+  font-size:13px;
+}
+.redeem-history-item:last-child { border-bottom:none; }
+.redeem-history-item .rh-name { color:var(--ink); font-weight:600; }
+.redeem-history-item .rh-pwd { color:var(--accent-deep); font-family:Consolas,monospace; font-weight:700; cursor:pointer; }
+.device-code-display {
+  text-align:center; margin-bottom:16px; padding:10px;
+  background:var(--accent-pale); border-radius:10px;
+  font-size:12.5px; color:var(--ink-dim);
+}
+.device-code-display b { color:var(--accent-deep); font-family:Consolas,monospace; font-size:14px; }
+
+.footer-icon {
+  display:block; margin:0 auto 12px; width:48px; height:48px;
+  border-radius:50%; object-fit:cover;
+}
+
 /* ===== footer ===== */
 footer {
   border-top:1.5px solid var(--line); margin-top:48px;
@@ -460,7 +540,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <div class="brand">
         <h1><span data-i18n="siteName">二游</span><em data-i18n="siteNameEm">情报铺</em></h1>
         <span class="sub" data-i18n="tagline">版本情报 · 角色资料 · 武器档案</span>
-        <span class="ver-tag">v1.0.0</span>
+        <span class="ver-tag">v1.1.0</span>
       </div>
       <p class="mast-note" data-i18n-html="mastnote">小铺专营各大二游版本情报，角色、武器资料随版本持续上新。每份资料有独立获取入口，<b>解锁对应资料库后即可查看网盘链接和提取码</b>。</p>
       <div class="search"><input id="q" type="search" data-i18n-ph="searchPh" placeholder="搜索资料名，例如：薇斯纳、单手剑…"></div>
@@ -483,7 +563,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 
       <div class="about-card">
         <h3 data-i18n="aboutTitle">关于本站</h3>
-        <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.0.0 「初晴」</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.1.0 「兑换系统」</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutTotal">收录资料</span><span class="about-val font-mono">19 份</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutSync">最后同步</span><span class="about-val font-mono">2026-08-19 17:52</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutGames">收录游戏</span><span class="about-val">崩坏：星穹铁道、原神、异环、绝区零</span></div>
@@ -492,9 +572,19 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <div class="about-card">
         <h3 data-i18n="changelogTitle">更新日志</h3>
         <div class="cl-entry">
-          <span class="cl-ver">v1.0.0</span>
+          <span class="cl-ver">v1.1.0</span>
           <span class="cl-date">2026-08-19</span>
-          <h4 data-i18n="clV1Title">「初晴」正式版发布</h4>
+          <h4>「兑换系统」上线</h4>
+          <ul>
+            <li>新增兑换系统：输入商品码+兑换码即可获取资料库密码</li>
+            <li>支持添加到主屏幕（PWA），像 APP 一样使用</li>
+            <li>新增绝区零 3.2 情报</li>
+          </ul>
+        </div>
+        <div class="cl-entry">
+          <span class="cl-ver">v1.1.0</span>
+          <span class="cl-date">2026-08-19</span>
+          <h4 data-i18n="clV1Title">「兑换系统」正式版发布</h4>
           <ul>
             <li data-i18n="clV1_1">首页改版：致客信 + 站点信息 + 更新日志</li>
             <li data-i18n="clV1_2">底部导航新增首页入口</li>
@@ -503,7 +593,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
             <li data-i18n="clV1_5">加密资料库新增预览按钮，可查看角色/物品高清图片</li>
             <li data-i18n="clV1_6">全站图片压缩优化，加载速度大幅提升</li>
             <li data-i18n="clV1_7">修复字体设置偶发无响应问题</li>
-            <li data-i18n="clV1_8">收录游戏：崩坏：星穹铁道、原神、异环</li>
+            <li data-i18n="clV1_8">收录游戏：崩坏：星穹铁道、原神、异环、绝区零</li>
           </ul>
         </div>
       </div>
@@ -868,11 +958,53 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <div class="empty-archive"><p data-i18n="noArchive">暂无历史版本，所有情报均为最新版本。</p><p class="empty-sub" data-i18n="noArchiveSub">当游戏更新新版本后，旧版本情报会自动归档到这里。</p></div>
     </section>
 
+    <!-- ===== REDEEM ===== -->
+    <section class="section-panel hidden" id="sec-redeem">
+      <div class="section-head">
+        <h2 data-i18n="redeemTitle">兑换</h2>
+        <span class="desc" data-i18n="redeemDesc">使用兑换码解锁资料库密码</span>
+      </div>
+      <div class="redeem-card">
+        <div class="redeem-title" data-i18n="redeemCardTitle">解锁资料库</div>
+        <div class="redeem-desc" data-i18n="redeemCardDesc">输入商品码和兑换码，即可获取对应资料库的密码。</div>
+        <div class="device-code-display">
+          <span data-i18n="deviceCodeLabel">你的设备码：</span> <b id="my-device-code">—</b>
+        </div>
+        <div class="redeem-form">
+          <div class="redeem-field">
+            <label data-i18n="productLabel">商品码</label>
+            <select id="redeem-product">
+              <option value="GI71WPN">原神7.1武器库</option>
+<option value="GI71CHAR">原神7.1角色库</option>
+<option value="ER13WPN">异环1.3武器库</option>
+<option value="ER13CHAR">异环1.3角色库</option>
+<option value="HSR45LC">星铁4.5光锥库</option>
+<option value="HSR45CHAR">星铁4.5角色库</option>
+<option value="ZZZ32CHAR">绝区零3.2代理人库</option>
+<option value="ZZZ32WPN">绝区零3.2音擎库</option>
+
+            </select>
+          </div>
+          <div class="redeem-field">
+            <label data-i18n="redemptionLabel">兑换码</label>
+            <input type="text" id="redeem-code" placeholder="XXXX-XXXX" data-i18n-ph="redemptionPh" maxlength="9" autocomplete="off">
+          </div>
+          <button class="redeem-btn" id="redeem-btn" data-i18n="redeemBtn">立即兑换</button>
+        </div>
+        <div class="redeem-result" id="redeem-result"></div>
+        <div class="redeem-history" id="redeem-history" style="display:none">
+          <h4 data-i18n="historyTitle">兑换记录</h4>
+          <div id="redeem-history-list"></div>
+        </div>
+      </div>
+    </section>
+
     <p class="empty-tip" id="empty" data-i18n="noResult">没有找到匹配的资料，换个关键词试试。</p>
   </main>
 
   <footer>
     <div class="wrap">
+      <img src="assets/icon-footer.png" alt="二游情报铺" class="footer-icon">
       <div class="f-row">
         <span class="sig" data-i18n-html="footerSig">—— 二游情报铺 · 情报常新，欢迎常来 ——</span>
         <span data-i18n-html="footerMeta">共收录 19 份资料 · 同步于 2026-08-19 17:52</span>
@@ -894,6 +1026,10 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="bnav-item" data-tab="archive">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
         <span class="bnav-label" data-i18n="navArchive">遗产名录</span>
+      </button>
+      <button class="bnav-item" data-tab="redeem">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4h-4z"/></svg>
+        <span class="bnav-label" data-i18n="navRedeem">兑换</span>
       </button>
       <button class="bnav-item" data-tab="settings">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -1008,7 +1144,7 @@ var LANG = {
     aboutTitle:"关于本站", aboutVer:"当前版本", aboutTotal:"收录资料",
     aboutSync:"最后同步", aboutGames:"收录游戏",
     changelogTitle:"更新日志",
-    clV1Title:"「初晴」正式版发布",
+    clV1Title:"「兑换系统」正式版发布",
     clV1_1:"首页改版：致客信 + 站点信息 + 更新日志",
     clV1_2:"底部导航新增首页入口",
     clV1_3:"新增 3 种英文字体：衡水体、斜体、黑体",
@@ -1016,7 +1152,7 @@ var LANG = {
     clV1_5:"加密资料库新增预览按钮，可查看角色/物品高清图片",
     clV1_6:"全站图片压缩优化，加载速度大幅提升",
     clV1_7:"修复字体设置偶发无响应问题",
-    clV1_8:"收录游戏：崩坏：星穹铁道、原神、异环",
+    clV1_8:"收录游戏：崩坏：星穹铁道、原神、异环、绝区零",
     footerSig:"—— 二游情报铺 · 情报常新，欢迎常来 ——",
     footerMeta:"共收录 %total% 份资料 · 同步于 %synced%"
   },
@@ -1051,7 +1187,7 @@ var LANG = {
     aboutTitle:"About This Site", aboutVer:"Version", aboutTotal:"Total Files",
     aboutSync:"Last Synced", aboutGames:"Games Covered",
     changelogTitle:"Changelog",
-    clV1Title:'"初晴" Official Release',
+    clV1Title:'"兑换系统" Official Release',
     clV1_1:"Home page redesign: welcome letter + site info + changelog",
     clV1_2:"Added Home tab to bottom navigation",
     clV1_3:"Added 3 English fonts: Hengshui, Italic, Sans",
@@ -1059,7 +1195,7 @@ var LANG = {
     clV1_5:"Added Preview button for locked libraries",
     clV1_6:"Image compression for faster loading",
     clV1_7:"Fixed font settings unresponsiveness",
-    clV1_8:"Games: Honkai Star Rail, Genshin Impact, Ethereal Ring",
+    clV1_8:"Games: Honkai Star Rail, Genshin Impact, Ethereal Ring, Zenless Zone Zero",
     footerSig:"—— Game Intel Shop · Always fresh intel ——",
     footerMeta:"Total %total% files · Synced %synced%"
   }
@@ -1157,7 +1293,7 @@ document.getElementById("settings-overlay").addEventListener("click", function()
 
 function showTab(which) {
   toggleSettings(false);
-  var tabs = ["home", "preview", "archive"];
+  var tabs = ["home", "preview", "archive", "redeem"];
   tabs.forEach(function(t) {
     var el = document.getElementById("sec-" + t);
     if (el) el.classList.toggle("hidden", t !== which);
@@ -1361,6 +1497,153 @@ document.getElementById("preview-close").addEventListener("click", closePreview)
 prevOverlay.addEventListener("click", function(ev) {
   if (ev.target === prevOverlay) closePreview();
 });
+
+/* ===== Supabase config ===== */
+var SB_URL = "https://xajqidptrsnbavqxraws.supabase.co";
+var SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhanFpZHB0cnNuYmF2cXhyYXdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxMjI0ODAsImV4cCI6MjEwMjY5ODQ4MH0.MsdG-uCbLv3C8w43grFPcybaas-RT20nKPyNLV8afM0";
+
+function sbRpc(fn, args) {
+  return fetch(SB_URL + "/rest/v1/rpc/" + fn, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "apikey": SB_KEY, "Authorization": "Bearer " + SB_KEY },
+    body: JSON.stringify(args)
+  }).then(function(r) { return r.json(); });
+}
+
+/* ===== device code ===== */
+function getFingerprint() {
+  var s = screen.width + "x" + screen.height + "|" + navigator.language + "|" + (new Date()).getTimezoneOffset();
+  var h = 0;
+  for (var i = 0; i < s.length; i++) { h = ((h << 5) - h + s.charCodeAt(i)) | 0; }
+  return "fp_" + (h >>> 0).toString(16) + "_" + navigator.userAgent.length;
+}
+
+var myDeviceCode = null;
+function claimDevice() {
+  var fp = getFingerprint();
+  sbRpc("claim_device_code", { fp: fp }).then(function(res) {
+    if (res && res.ok) {
+      myDeviceCode = res.device_code;
+      var el = document.getElementById("my-device-code");
+      if (el) el.textContent = res.device_code;
+      // Save to localStorage
+      try { localStorage.setItem("erp3_device", myDeviceCode); } catch(e) {}
+    } else {
+      var el = document.getElementById("my-device-code");
+      if (el) el.textContent = "ERROR";
+    }
+  }).catch(function(err) {
+    console.error("claim device failed:", err);
+    var el = document.getElementById("my-device-code");
+    if (el) el.textContent = "ERROR";
+  });
+}
+
+// Restore device code from localStorage
+try {
+  var saved = localStorage.getItem("erp3_device");
+  if (saved) {
+    myDeviceCode = saved;
+    var el = document.getElementById("my-device-code");
+    if (el) el.textContent = saved;
+  } else {
+    claimDevice();
+  }
+} catch(e) { claimDevice(); }
+
+/* ===== redemption logic ===== */
+var redeemBtn = document.getElementById("redeem-btn");
+var redeemResult = document.getElementById("redeem-result");
+var redeemHistory = document.getElementById("redeem-history");
+var redeemHistoryList = document.getElementById("redeem-history-list");
+
+// Load saved redemptions from localStorage
+function loadHistory() {
+  try {
+    var hist = JSON.parse(localStorage.getItem("erp3_redemptions") || "[]");
+    if (hist.length) {
+      redeemHistory.style.display = "block";
+      redeemHistoryList.innerHTML = hist.map(function(h) {
+        return '<div class="redeem-history-item"><span class="rh-name">' + h.name + '</span><span class="rh-pwd" data-pwd="' + h.pwd + '" title="点击复制">' + h.pwd + '</span></div>';
+      }).join("");
+      // Add click-to-copy on history passwords
+      redeemHistoryList.querySelectorAll(".rh-pwd").forEach(function(el) {
+        el.addEventListener("click", function() {
+          var pwd = el.getAttribute("data-pwd");
+          if (navigator.clipboard) navigator.clipboard.writeText(pwd);
+          el.style.color = "#50b878";
+          setTimeout(function() { el.style.color = ""; }, 1000);
+        });
+      });
+    }
+  } catch(e) {}
+}
+loadHistory();
+
+if (redeemBtn) {
+  redeemBtn.addEventListener("click", function() {
+    if (!myDeviceCode) {
+      redeemResult.className = "redeem-result error";
+      var dict = LANG[prefs.lang] || LANG.zh;
+      redeemResult.textContent = dict.deviceError;
+      return;
+    }
+    var product = document.getElementById("redeem-product").value;
+    var code = document.getElementById("redeem-code").value.trim().toUpperCase();
+    if (!code || code.length < 9) {
+      redeemResult.className = "redeem-result error";
+      redeemResult.textContent = "请输入有效的兑换码";
+      return;
+    }
+    redeemBtn.disabled = true;
+    var dict = LANG[prefs.lang] || LANG.zh;
+    redeemBtn.textContent = dict.redeeming;
+    redeemResult.className = "redeem-result";
+    redeemResult.textContent = "";
+
+    sbRpc("do_redeem", { p_device: myDeviceCode, p_product: product, p_redemption: code })
+    .then(function(res) {
+      redeemBtn.disabled = false;
+      redeemBtn.textContent = dict.redeemBtn;
+      if (res && res.ok) {
+        var pwd = res.password;
+        redeemResult.className = "redeem-result success";
+        var isAlready = res.already_redeemed;
+        var label = isAlready ? dict.alreadyRedeemed : dict.redeemSuccess;
+        redeemResult.innerHTML = label + '<div class="pwd-display">' + pwd + '</div>';
+        // Save to history
+        if (!isAlready) {
+          try {
+            var hist = JSON.parse(localStorage.getItem("erp3_redemptions") || "[]");
+            var sel = document.getElementById("redeem-product");
+            var name = sel.options[sel.selectedIndex].text;
+            hist.unshift({ name: name, pwd: pwd });
+            if (hist.length > 10) hist = hist.slice(0, 10);
+            localStorage.setItem("erp3_redemptions", JSON.stringify(hist));
+            loadHistory();
+          } catch(e) {}
+        }
+      } else {
+        redeemResult.className = "redeem-result error";
+        redeemResult.textContent = dict.redeemError + (res && res.error ? " (" + res.error + ")" : "");
+      }
+    })
+    .catch(function(err) {
+      redeemBtn.disabled = false;
+      redeemBtn.textContent = dict.redeemBtn;
+      redeemResult.className = "redeem-result error";
+      redeemResult.textContent = dict.redeemError;
+      console.error("redeem failed:", err);
+    });
+  });
+}
+
+/* ===== Service Worker ===== */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/shop/sw.js").catch(function(err) {
+    console.warn("SW registration failed:", err);
+  });
+}
 </script>
 </body>
 </html>
