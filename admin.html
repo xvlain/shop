@@ -210,6 +210,8 @@ td.dim { color:var(--ink-dim); font-size:12px; }
 <div id="view-workspace">
   <div class="stats-bar" id="stats-bar">
     <div class="stat-card"><div class="num" id="st-unused">-</div><div class="label">可用兑换码</div></div>
+    <div class="stat-card"><div class="num" id="st-char">-</div><div class="label">角色库码</div></div>
+    <div class="stat-card"><div class="num" id="st-weapon">-</div><div class="label">武器库码</div></div>
     <div class="stat-card"><div class="num" id="st-used">-</div><div class="label">已用兑换码</div></div>
     <div class="stat-card"><div class="num" id="st-redeem">-</div><div class="label">兑换记录</div></div>
     <div class="stat-card"><div class="num" id="st-dev-free">-</div><div class="label">空闲设备码</div></div>
@@ -225,6 +227,9 @@ td.dim { color:var(--ink-dim); font-size:12px; }
   <div class="content">
     <div class="panel active" id="p-unused">
       <div class="code-toolbar">
+        <button class="btn-sm active" id="btn-filter-all" data-pool="">全部</button>
+        <button class="btn-sm" id="btn-filter-char" data-pool="character">角色库</button>
+        <button class="btn-sm" id="btn-filter-weapon" data-pool="weapon">武器库</button>
         <button class="btn-sm" id="btn-copy-all-unused">复制全部</button>
         <span style="font-size:12px;color:var(--ink-dim)" id="unused-count"></span>
       </div>
@@ -234,7 +239,7 @@ td.dim { color:var(--ink-dim); font-size:12px; }
       <div class="table-wrap"><table><thead><tr><th>兑换码</th><th>使用时间</th><th>设备码</th><th>商品</th></tr></thead><tbody id="used-tbody"><tr><td colspan="4" class="loading"><div class="spinner"></div></td></tr></tbody></table></div>
     </div>
     <div class="panel" id="p-records">
-      <div class="table-wrap"><table><thead><tr><th>#</th><th>时间</th><th>设备码</th><th>商品码</th><th>兑换码</th><th>密码</th></tr></thead><tbody id="records-tbody"><tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr></tbody></table></div>
+      <div class="table-wrap"><table><thead><tr><th>#</th><th>时间</th><th>设备码</th><th>资料库</th><th>类型</th><th>兑换码</th></tr></thead><tbody id="records-tbody"><tr><td colspan="6" class="loading"><div class="spinner"></div></td></tr></tbody></table></div>
     </div>
     <div class="panel" id="p-devices">
       <div class="code-toolbar"><span style="font-size:12px;color:var(--ink-dim)" id="dev-summary"></span></div>
@@ -243,6 +248,11 @@ td.dim { color:var(--ink-dim); font-size:12px; }
     <div class="panel" id="p-generate">
       <div class="gen-form">
         <h3 style="font-size:15px;margin-bottom:14px;color:var(--accent-deep)">生成新兑换码</h3>
+        <label>类型</label>
+        <select id="gen-pool" style="width:100%;padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font-size:14px;font-family:var(--font);outline:none;margin-bottom:12px">
+          <option value="character">角色库</option>
+          <option value="weapon" selected>武器库</option>
+        </select>
         <label>数量（1-500）</label><input type="number" id="gen-count" value="50" min="1" max="500">
         <button class="btn-sm success" id="btn-gen-codes" style="width:100%;padding:10px;font-size:14px;">生成兑换码</button>
         <div class="gen-result" id="gen-result"></div>
@@ -355,6 +365,8 @@ function loadStats() {
   rpc("admin_stats", { p_secret: SECRET }).then(function(r) {
     if (!r || !r.ok) return;
     document.getElementById("st-unused").textContent = r.unused_codes;
+    document.getElementById("st-char").textContent = r.char_unused || 0;
+    document.getElementById("st-weapon").textContent = r.weapon_unused || 0;
     document.getElementById("st-used").textContent = r.used_codes;
     document.getElementById("st-redeem").textContent = r.total_redemptions;
     document.getElementById("st-dev-free").textContent = r.free_devices;
@@ -362,17 +374,40 @@ function loadStats() {
   });
 }
 
+var unusedByPool = { character: [], weapon: [] };
+var currentPoolFilter = "";
+
 function loadUnused() {
-  return rpc("admin_unused_codes", { p_secret: SECRET }).then(function(r) {
-    if (!r || !r.ok) return;
-    unusedCodes = r.codes || [];
-    document.getElementById("unused-count").textContent = "共 " + unusedCodes.length + " 个可用";
-    var grid = document.getElementById("unused-grid");
-    if (!unusedCodes.length) { grid.innerHTML = '<div style="color:var(--ink-faint);padding:16px">暂无可用兑换码</div>'; return; }
-    grid.innerHTML = unusedCodes.map(function(c) { return '<div class="code-chip" data-code="' + c + '">' + c + '</div>'; }).join("");
-    grid.querySelectorAll(".code-chip").forEach(function(ch) { ch.addEventListener("click", function() { copyText(ch.getAttribute("data-code")); }); });
+  return Promise.all([
+    rpc("admin_unused_codes", { p_secret: SECRET }),
+    rpc("admin_unused_codes", { p_secret: SECRET, p_pool: "character" }),
+    rpc("admin_unused_codes", { p_secret: SECRET, p_pool: "weapon" })
+  ]).then(function(results) {
+    if (results[0] && results[0].ok) unusedCodes = results[0].codes || [];
+    if (results[1] && results[1].ok) unusedByPool.character = results[1].codes || [];
+    if (results[2] && results[2].ok) unusedByPool.weapon = results[2].codes || [];
+    renderUnusedGrid();
   });
 }
+
+function renderUnusedGrid() {
+  var codes = currentPoolFilter ? (unusedByPool[currentPoolFilter] || []) : unusedCodes;
+  var poolLabel = currentPoolFilter === "character" ? "角色库" : (currentPoolFilter === "weapon" ? "武器库" : "全部");
+  document.getElementById("unused-count").textContent = poolLabel + " " + codes.length + " 个可用";
+  var grid = document.getElementById("unused-grid");
+  if (!codes.length) { grid.innerHTML = '<div style="color:var(--ink-faint);padding:16px">暂无可用兑换码</div>'; return; }
+  grid.innerHTML = codes.map(function(c) { return '<div class="code-chip" data-code="' + c + '">' + c + '</div>'; }).join("");
+  grid.querySelectorAll(".code-chip").forEach(function(ch) { ch.addEventListener("click", function() { copyText(ch.getAttribute("data-code")); }); });
+}
+
+// Pool filter buttons
+document.querySelectorAll("#p-unused .code-toolbar .btn-sm[data-pool]").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    currentPoolFilter = btn.getAttribute("data-pool");
+    document.querySelectorAll("#p-unused .code-toolbar .btn-sm[data-pool]").forEach(function(b) { b.classList.toggle("active", b === btn); });
+    renderUnusedGrid();
+  });
+});
 
 document.getElementById("btn-copy-all-unused").addEventListener("click", function() {
   rpc("admin_unused_codes", { p_secret: SECRET }).then(function(r) { if (r && r.ok) copyText((r.codes || []).join("\n")); });
@@ -391,10 +426,14 @@ function loadUsed() {
 function loadRecords() {
   rpc("admin_redemptions", { p_secret: SECRET }).then(function(r) {
     var tb = document.getElementById("records-tbody");
-    if (!r || !r.ok) { tb.innerHTML = '<tr><td colspan="6" style="color:var(--danger)">加载失败</td></tr>'; return; }
+    if (!r || !r.ok) { tb.innerHTML = '<tr><td colspan="6" style="color:var(--danger)">加载失败: ' + (r && r.error || '未知错误') + '</td></tr>'; return; }
     var recs = r.redemptions || [];
     if (!recs.length) { tb.innerHTML = '<tr><td colspan="6" style="color:var(--ink-faint);text-align:center;padding:20px">暂无</td></tr>'; return; }
-    tb.innerHTML = recs.map(function(r) { return '<tr><td>' + r.id + '</td><td class="dim">' + fmtTime(r.redeemed_at) + '</td><td class="mono">' + r.device_code + '</td><td>' + r.product_code + '</td><td class="mono">' + r.redemption_code + '</td><td class="mono" style="color:var(--accent-deep);cursor:pointer" onclick="copyText(\'' + r.password + '\')">' + r.password + '</td></tr>'; }).join("");
+    tb.innerHTML = recs.map(function(r) {
+      var poolLabel = r.pool === 'character' ? '角色' : (r.pool === 'weapon' ? '武器' : '-');
+      var gidLabel = r.gid || '-';
+      return '<tr><td>' + r.id + '</td><td class="dim">' + fmtTime(r.redeemed_at) + '</td><td class="mono">' + r.device_code + '</td><td>' + gidLabel + '</td><td>' + poolLabel + '</td><td class="mono">' + r.redemption_code + '</td></tr>';
+    }).join("");
   });
 }
 
@@ -415,14 +454,16 @@ function loadDevices() {
 // Generate codes
 document.getElementById("btn-gen-codes").addEventListener("click", function() {
   var count = parseInt(document.getElementById("gen-count").value) || 50;
+  var pool = document.getElementById("gen-pool").value;
   if (count < 1 || count > 500) { toast("1-500"); return; }
   var btn = this; btn.disabled = true; btn.textContent = "生成中…";
-  rpc("admin_generate_codes", { p_secret: SECRET, p_count: count }).then(function(r) {
+  rpc("admin_generate_codes", { p_secret: SECRET, p_count: count, p_pool: pool }).then(function(r) {
     btn.disabled = false; btn.textContent = "生成兑换码";
     if (!r || !r.ok) { toast("失败"); return; }
     var codes = r.codes || [];
+    var poolLabel = pool === 'character' ? '角色库' : '武器库';
     var res = document.getElementById("gen-result"); res.classList.add("show");
-    res.innerHTML = '<div style="margin-bottom:8px;font-weight:700;color:var(--success)">生成 ' + codes.length + ' 个</div><div style="font-family:Consolas,monospace;font-size:12px;line-height:1.8;white-space:pre-wrap;user-select:all">' + codes.join(" ") + '</div>';
+    res.innerHTML = '<div style="margin-bottom:8px;font-weight:700;color:var(--success)">生成 ' + codes.length + ' 个 ' + poolLabel + ' 兑换码</div><div style="font-family:Consolas,monospace;font-size:12px;line-height:1.8;white-space:pre-wrap;user-select:all">' + codes.join(" ") + '</div>';
     loadStats(); loadUnused();
   });
 });
@@ -468,13 +509,17 @@ function renderOrderCard(o) {
   var groupOpts = allGroups.map(function(g) { return '<option value="' + g.id + '"' + (o.group_id === g.id ? ' selected' : '') + '>' + (g.name || '拼团 #' + g.id) + '</option>'; }).join("");
   var pmOpts = [['cash','现金'],['crypto','电子货币']].map(function(p) { return '<option value="' + p[0] + '"' + (o.payment_method === p[0] ? ' selected' : '') + '>' + p[1] + '</option>'; }).join("");
 
-  // unused codes for assignment
+  // unused codes for assignment - filter by pool based on product name
   var assignRows = (o.items || []).filter(function(it) { return it.line_total > 0; }).map(function(it) {
     var assigned = (o.codes || []).find(function(c) { return c.product_code === it.product_code; });
     if (assigned) {
       return '<div class="code-assign-row"><span style="font-size:12px;flex:1">' + it.product_name + ': <b>' + assigned.redemption_code + '</b></span></div>';
     }
-    return '<div class="code-assign-row"><span style="font-size:12px;width:100px">' + it.product_name + '</span><select data-order="' + o.id + '" data-product="' + it.product_code + '" class="code-select"><option value="">选择兑换码…</option>' + unusedCodes.map(function(c) { return '<option value="' + c + '">' + c + '</option>'; }).join("") + '</select></div>';
+    // Determine pool from product name
+    var pool = (it.product_name.indexOf('角色') > -1 || it.product_name.indexOf('代理人') > -1) ? 'character' : 'weapon';
+    var poolCodes = unusedByPool[pool] || unusedCodes;
+    var poolLabel = pool === 'character' ? '角色' : '武器';
+    return '<div class="code-assign-row"><span style="font-size:12px;width:100px">' + it.product_name + '</span><select data-order="' + o.id + '" data-product="' + it.product_code + '" class="code-select"><option value="">选择' + poolLabel + '库兑换码…</option>' + poolCodes.map(function(c) { return '<option value="' + c + '">' + c + '</option>'; }).join("") + '</select></div>';
   }).join("");
 
   return '<div class="order-card" data-order-id="' + o.id + '">' +
@@ -542,13 +587,14 @@ function bindOrderEvents() {
   document.querySelectorAll(".btn-complete").forEach(function(btn) {
     btn.addEventListener("click", function(e) {
       e.stopPropagation();
-      if (!confirm("确认完成此订单？将生成发票并发送兑换码到用户邮箱。")) return;
-      rpc("admin_complete_order", { p_secret: SECRET, p_order_id: parseInt(btn.getAttribute("data-order")) }).then(function(r) {
-        if (r && r.ok) { toast("订单已完成"); Promise.all([loadUnused(), loadOrders()]).then(renderOrders); loadStats(); }
+      if (!confirm("确认完成此订单？系统将自动分配兑换码并发送发票到用户邮箱。")) return;
+      rpc("admin_auto_assign_and_complete", { p_secret: SECRET, p_order_id: parseInt(btn.getAttribute("data-order")) }).then(function(r) {
+        if (r && r.ok) { toast("订单已完成（自动分配兑换码）"); Promise.all([loadUnused(), loadOrders()]).then(renderOrders); loadStats(); }
         else {
           var err = (r && r.error) || "";
-          if (err === "not_all_codes_assigned") toast("请先为所有商品分配兑换码");
+          if (err === "no_available_codes") toast("没有足够的可用兑换码（" + (r && r.pool || "") + "），请先生成");
           else if (err === "unauthorized") toast("密码已过期，请刷新页面重新登录");
+          else if (err === "already_completed") toast("订单已完成");
           else toast("确认失败: " + err || JSON.stringify(r));
         }
       }).catch(function(err) { toast("网络错误，请重试"); console.error(err); });
