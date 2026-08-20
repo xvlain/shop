@@ -1850,7 +1850,7 @@ document.getElementById("cart-submit").addEventListener("click", function() {
   sbRpc("shop_submit_order", { p_device: myDeviceCode, p_items: items }).then(function(res) {
     btn.disabled = false; btn.textContent = "提交订单";
     if (res && res.ok) { toast("订单已提交！等待店主处理"); cart = []; updateCartUI(); document.getElementById("cart-overlay").classList.remove("open"); renderShop(); }
-    else { toast("提交失败: " + (res && res.error || "未知错误")); }
+    else { toast("提交失败: " + (res && (res.error || res.message) || JSON.stringify(res))); }
   });
 });
 
