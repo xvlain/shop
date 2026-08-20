@@ -1843,6 +1843,7 @@ function renderShop() {
   if (!shopProducts.length) { el.innerHTML = '<div style="text-align:center;color:var(--ink-faint);padding:30px">暂无商品</div>'; return; }
   var groups = {};
   shopProducts.forEach(function(p) {
+    if (!p.price || p.price <= 0) return;
     if (!groups[p.game_name]) groups[p.game_name] = [];
     groups[p.game_name].push(p);
   });
