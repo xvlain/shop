@@ -1838,7 +1838,13 @@ function renderCart() {
   cart.forEach(function(item) {
     var lineTotal = item.price * item.quantity;
     var isWpnFree = cart.some(function(c) { return c.game_group === item.game_group && c.category === "character"; }) && item.category === "weapon";
-    html += '<div class="cart-item"><span class="ci-name">' + item.name + ' ×' + item.quantity + '</span><span class="ci-price">' + (isWpnFree ? '0' : lineTotal) + '元</span><button class="ci-remove" data-code="' + item.product_code + '">&times;</button></div>';
+    var priceHtml = '';
+    if (isWpnFree) {
+      priceHtml = '<span style="text-decoration:line-through;color:var(--ink-faint);font-size:12px;margin-right:4px">' + lineTotal + '元</span><span class="ci-price">0元</span><span style="font-size:11px;color:var(--success);margin-left:4px">优惠' + lineTotal + '元</span>';
+    } else {
+      priceHtml = '<span class="ci-price">' + lineTotal + '元</span>';
+    }
+    html += '<div class="cart-item"><span class="ci-name">' + item.name + ' ×' + item.quantity + '</span>' + priceHtml + '<button class="ci-remove" data-code="' + item.product_code + '">&times;</button></div>';
   });
   el.innerHTML = html;
   totalEl.style.display = "flex"; submitEl.style.display = "block";
