@@ -531,8 +531,6 @@ body::before {
 .sidebar-item svg { width:20px; height:20px; flex-shrink:0; }
 .sidebar-close { position:absolute; top:16px; right:16px; background:none; border:none; cursor:pointer; color:var(--ink-dim); font-size:22px; line-height:1; }
 .sidebar-badge { background:var(--accent); color:#fff; font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; margin-left:auto; }
-.cart-float { position:fixed; bottom:76px; right:18px; z-index:90; background:var(--accent); color:#fff; border:none; border-radius:50%; width:48px; height:48px; display:none; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 16px rgba(232,122,160,.3); font-size:13px; font-weight:700; font-family:inherit; }
-.cart-float.show { display:flex; }
 
 /* ===== shop section ===== */
 .shop-intro { text-align:center; padding:20px 0 10px; color:var(--ink-dim); font-size:14px; line-height:1.8; }
@@ -552,7 +550,7 @@ body::before {
 .shop-note { margin-top:16px; padding:14px 18px; background:var(--accent-pale); border-radius:10px; font-size:13px; color:var(--ink-dim); line-height:1.8; }
 .shop-note b { color:var(--accent-deep); }
 
-/* ===== cart panel (full-screen overlay) ===== */
+/* ===== cart overlay ===== */
 .cart-overlay { position:fixed; inset:0; z-index:250; background:var(--bg); transform:translateY(100%); transition:transform .35s cubic-bezier(.4,0,.2,1); overflow-y:auto; padding:24px 22px; padding-bottom:100px; }
 .cart-overlay.open { transform:translateY(0); }
 .cart-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; padding-bottom:12px; border-bottom:1.5px solid var(--line); }
@@ -617,8 +615,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     <h3>菜单</h3>
     <button class="sidebar-item" data-sidebar="cart" id="sb-cart">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-      购物车
-      <span class="sidebar-badge" id="cart-badge" style="display:none">0</span>
+      购物车 <span class="sidebar-badge" id="cart-badge" style="display:none">0</span>
     </button>
     <button class="sidebar-item" data-sidebar="redeem" id="sb-redeem">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4h-4z"/></svg>
@@ -626,22 +623,15 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     </button>
     <button class="sidebar-item" data-sidebar="inbox" id="sb-inbox">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      邮箱
-      <span class="sidebar-badge" id="inbox-badge" style="display:none">0</span>
+      邮箱 <span class="sidebar-badge" id="inbox-badge" style="display:none">0</span>
     </button>
   </div>
 
   <!-- Cart Overlay -->
   <div class="cart-overlay" id="cart-overlay">
-    <div class="cart-header">
-      <h2>购物车</h2>
-      <button class="cart-close" id="cart-close">&times;</button>
-    </div>
+    <div class="cart-header"><h2>购物车</h2><button class="cart-close" id="cart-close">&times;</button></div>
     <div id="cart-items"></div>
-    <div class="cart-total" id="cart-total" style="display:none">
-      <span class="ct-label">合计</span>
-      <span class="ct-amount" id="cart-amount">0元</span>
-    </div>
+    <div class="cart-total" id="cart-total" style="display:none"><span class="ct-label">合计</span><span class="ct-amount" id="cart-amount">0元</span></div>
     <button class="cart-submit" id="cart-submit" style="display:none">提交订单</button>
   </div>
 
@@ -693,7 +683,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
         </div>
         <div class="cl-entry">
           <span class="cl-ver">v1.1.0</span>
-          <span class="cl-date">2026-08-19</span>
+          <span class="cl-date">2026-08-20</span>
           <h4 data-i18n="clV1Title">「兑换系统」正式版发布</h4>
           <ul>
             <li data-i18n="clV1_1">首页改版：致客信 + 站点信息 + 更新日志</li>
@@ -1838,7 +1828,7 @@ document.querySelectorAll(".sidebar-item").forEach(function(btn) {
 
 /* ===== Shop ===== */
 var shopProducts = [];
-var cart = []; // [{product_code, name, price, quantity, category, game_group}]
+var cart = [];
 
 function loadShopProducts() {
   sbRpc("shop_products", {}).then(function(res) {
@@ -1851,12 +1841,10 @@ function loadShopProducts() {
 function renderShop() {
   var el = document.getElementById("shop-products");
   if (!shopProducts.length) { el.innerHTML = '<div style="text-align:center;color:var(--ink-faint);padding:30px">暂无商品</div>'; return; }
-  // Group by game_name
   var groups = {};
   shopProducts.forEach(function(p) {
-    var key = p.game_name;
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(p);
+    if (!groups[p.game_name]) groups[p.game_name] = [];
+    groups[p.game_name].push(p);
   });
   var html = "";
   Object.keys(groups).forEach(function(game) {
@@ -1877,18 +1865,11 @@ function renderShop() {
     html += '</div>';
   });
   el.innerHTML = html;
-  // Bind qty events
   el.querySelectorAll(".qty-plus").forEach(function(btn) {
-    btn.addEventListener("click", function() {
-      var code = btn.getAttribute("data-code");
-      changeQty(code, 1);
-    });
+    btn.addEventListener("click", function() { changeQty(btn.getAttribute("data-code"), 1); });
   });
   el.querySelectorAll(".qty-minus").forEach(function(btn) {
-    btn.addEventListener("click", function() {
-      var code = btn.getAttribute("data-code");
-      changeQty(code, -1);
-    });
+    btn.addEventListener("click", function() { changeQty(btn.getAttribute("data-code"), -1); });
   });
 }
 
@@ -1907,14 +1888,10 @@ function changeQty(code, delta) {
 }
 
 function updateCartUI() {
-  // Badge
   var totalItems = cart.reduce(function(s, c) { return s + c.quantity; }, 0);
   var badge = document.getElementById("cart-badge");
   if (totalItems > 0) { badge.style.display = ""; badge.textContent = totalItems; }
   else { badge.style.display = "none"; }
-  // Float button
-  var floatBtn = document.getElementById("cart-float");
-  if (floatBtn) floatBtn.classList.toggle("show", totalItems > 0);
 }
 
 function calcCartTotal() {
@@ -1927,7 +1904,6 @@ function calcCartTotal() {
     if (item.category === "character") byGroup[item.game_group].hasChar = true;
     if (item.category === "weapon") { byGroup[item.game_group].hasWpn = true; byGroup[item.game_group].wpnTotal += lineTotal; }
   });
-  // Bundle discount: same game_group char+wpn → weapon free
   var discount = 0;
   Object.keys(byGroup).forEach(function(gg) {
     if (byGroup[gg].hasChar && byGroup[gg].hasWpn) discount += byGroup[gg].wpnTotal;
@@ -1936,14 +1912,12 @@ function calcCartTotal() {
 }
 
 function openCart() {
-  var overlay = document.getElementById("cart-overlay");
-  overlay.classList.add("open");
+  document.getElementById("cart-overlay").classList.add("open");
   renderCart();
 }
-function closeCartPanel() {
+document.getElementById("cart-close").addEventListener("click", function() {
   document.getElementById("cart-overlay").classList.remove("open");
-}
-document.getElementById("cart-close").addEventListener("click", closeCartPanel);
+});
 
 function renderCart() {
   var el = document.getElementById("cart-items");
@@ -1951,67 +1925,37 @@ function renderCart() {
   var submitEl = document.getElementById("cart-submit");
   if (!cart.length) {
     el.innerHTML = '<div class="cart-empty">购物车是空的<br><small>去商城选购情报吧</small></div>';
-    totalEl.style.display = "none";
-    submitEl.style.display = "none";
-    return;
+    totalEl.style.display = "none"; submitEl.style.display = "none"; return;
   }
   var calc = calcCartTotal();
   var html = "";
   cart.forEach(function(item) {
     var lineTotal = item.price * item.quantity;
-    var isWpnFree = false;
-    // Check bundle
-    var hasCharInGroup = cart.some(function(c) { return c.game_group === item.game_group && c.category === "character"; });
-    if (item.category === "weapon" && hasCharInGroup) isWpnFree = true;
-    html += '<div class="cart-item">' +
-      '<span class="ci-name">' + item.name + ' ×' + item.quantity + (isWpnFree ? '<span class="cart-bundle-tag">赠品</span>' : '') + '</span>' +
-      '<span class="ci-price">' + (isWpnFree ? '0' : lineTotal) + '元</span>' +
-      '<button class="ci-remove" data-code="' + item.product_code + '">&times;</button>' +
-    '</div>';
+    var isWpnFree = cart.some(function(c) { return c.game_group === item.game_group && c.category === "character"; }) && item.category === "weapon";
+    html += '<div class="cart-item"><span class="ci-name">' + item.name + ' ×' + item.quantity + (isWpnFree ? '<span class="cart-bundle-tag">赠品</span>' : '') + '</span><span class="ci-price">' + (isWpnFree ? '0' : lineTotal) + '元</span><button class="ci-remove" data-code="' + item.product_code + '">&times;</button></div>';
   });
   el.innerHTML = html;
-  totalEl.style.display = "flex";
-  submitEl.style.display = "block";
-  document.getElementById("cart-amount").textContent = calc.final + '元';
-  if (calc.discount > 0) {
-    document.getElementById("cart-amount").innerHTML = calc.final + '元 <small style="font-size:12px;color:var(--success);font-weight:400">（已减' + calc.discount + '元）</small>';
-  }
-  // Remove buttons
+  totalEl.style.display = "flex"; submitEl.style.display = "block";
+  var amtEl = document.getElementById("cart-amount");
+  amtEl.textContent = calc.final + '元';
+  if (calc.discount > 0) amtEl.innerHTML = calc.final + '元 <small style="font-size:12px;color:var(--success);font-weight:400">（已减' + calc.discount + '元）</small>';
   el.querySelectorAll(".ci-remove").forEach(function(btn) {
     btn.addEventListener("click", function() {
-      var code = btn.getAttribute("data-code");
-      cart = cart.filter(function(c) { return c.product_code !== code; });
-      updateCartUI();
-      renderCart();
-      renderShop();
+      cart = cart.filter(function(c) { return c.product_code !== btn.getAttribute("data-code"); });
+      updateCartUI(); renderCart(); renderShop();
     });
   });
 }
 
 document.getElementById("cart-submit").addEventListener("click", function() {
-  if (!cart.length) return;
-  if (!myDeviceCode) { toast("设备码未就绪，请稍后再试"); return; }
+  if (!cart.length || !myDeviceCode) return;
   if (!confirm("确认提交订单？提交后不可修改。")) return;
   var items = cart.map(function(c) { return { product_code: c.product_code, quantity: c.quantity }; });
-  var btn = this;
-  btn.disabled = true;
-  btn.textContent = "提交中…";
+  var btn = this; btn.disabled = true; btn.textContent = "提交中…";
   sbRpc("shop_submit_order", { p_device: myDeviceCode, p_items: items }).then(function(res) {
-    btn.disabled = false;
-    btn.textContent = "提交订单";
-    if (res && res.ok) {
-      toast("订单已提交！等待店主处理");
-      cart = [];
-      updateCartUI();
-      closeCartPanel();
-      renderShop();
-    } else {
-      toast("提交失败: " + (res && res.error || "未知错误"));
-    }
-  }).catch(function() {
-    btn.disabled = false;
-    btn.textContent = "提交订单";
-    toast("网络错误");
+    btn.disabled = false; btn.textContent = "提交订单";
+    if (res && res.ok) { toast("订单已提交！等待店主处理"); cart = []; updateCartUI(); document.getElementById("cart-overlay").classList.remove("open"); renderShop(); }
+    else { toast("提交失败: " + (res && res.error || "未知错误")); }
   });
 });
 
@@ -2019,32 +1963,24 @@ document.getElementById("cart-submit").addEventListener("click", function() {
 function loadInbox() {
   if (!myDeviceCode) return;
   var el = document.getElementById("inbox-list");
-  el.innerHTML = '<div class="loading" style="text-align:center;padding:30px;color:var(--ink-faint)">加载中…</div>';
+  el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--ink-faint)">加载中…</div>';
   sbRpc("shop_my_inbox", { p_device: myDeviceCode }).then(function(res) {
     if (!res || !res.ok) { el.innerHTML = '<div style="text-align:center;color:var(--ink-faint);padding:30px">加载失败</div>'; return; }
     var msgs = res.messages || [];
-    if (!msgs.length) { el.innerHTML = '<div class="empty-state" style="text-align:center;padding:40px;color:var(--ink-faint)">暂无消息<br><small style="font-size:13px">店主处理完订单后会在这里给你发发票和兑换码</small></div>'; return; }
+    if (!msgs.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-faint)">暂无消息<br><small>店主处理完订单后会在这里给你发发票和兑换码</small></div>'; return; }
     el.innerHTML = msgs.map(function(m) {
-      var unreadClass = m.is_read ? "" : " unread";
       var typeIcon = m.type === "invoice" ? "📄" : "🔑";
-      return '<div class="inbox-msg' + unreadClass + '">' +
-        '<div class="im-title">' + typeIcon + ' ' + m.title + '</div>' +
-        '<div class="im-date">' + fmtDate(m.created_at) + '</div>' +
-        '<div class="im-content">' + escapeHtml(m.content) + '</div>' +
-        '<button class="im-copy" data-content="' + escapeAttr(m.content) + '">复制内容</button>' +
-      '</div>';
+      var esc = function(s) { return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); };
+      return '<div class="inbox-msg' + (m.is_read ? "" : " unread") + '"><div class="im-title">' + typeIcon + ' ' + esc(m.title) + '</div><div class="im-date">' + new Date(m.created_at).toLocaleString("zh-CN") + '</div><div class="im-content">' + esc(m.content) + '</div><button class="im-copy" data-content="' + esc(m.content) + '">复制内容</button></div>';
     }).join("");
     el.querySelectorAll(".im-copy").forEach(function(btn) {
       btn.addEventListener("click", function() {
-        var content = btn.getAttribute("data-content");
-        if (navigator.clipboard) navigator.clipboard.writeText(content);
-        else { var t = document.createElement("textarea"); t.value = content; t.style.position = "fixed"; t.style.opacity = "0"; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); } catch(e) {} document.body.removeChild(t); }
-        btn.textContent = "已复制 ✓";
-        setTimeout(function() { btn.textContent = "复制内容"; }, 1500);
+        var c = btn.getAttribute("data-content");
+        if (navigator.clipboard) navigator.clipboard.writeText(c);
+        else { var t=document.createElement("textarea"); t.value=c; t.style.position="fixed"; t.style.opacity="0"; document.body.appendChild(t); t.select(); try{document.execCommand("copy");}catch(e){} document.body.removeChild(t); }
+        btn.textContent = "已复制 ✓"; setTimeout(function() { btn.textContent = "复制内容"; }, 1500);
       });
     });
-    // Update badge
-    updateInboxBadge();
   });
 }
 
@@ -2057,17 +1993,10 @@ function updateInboxBadge() {
   });
 }
 
-function fmtDate(iso) {
-  if (!iso) return "";
-  var d = new Date(iso), p = function(n) { return n < 10 ? "0" + n : n; };
-  return d.getFullYear() + "-" + p(d.getMonth()+1) + "-" + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes());
-}
-function escapeHtml(s) { return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function escapeAttr(s) { return s.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function toast(msg) { var t = document.createElement("div"); t.style.cssText = "position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#2d2a32;color:#fff;padding:10px 22px;border-radius:999px;font-size:13px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none"; t.textContent = msg; document.body.appendChild(t); setTimeout(function() { t.style.opacity = "1"; }, 10); setTimeout(function() { t.style.opacity = "0"; setTimeout(function() { document.body.removeChild(t); }, 300); }, 2000); }
 
-// Load shop and check inbox after device code is ready
-var _origClaimDevice = claimDevice;
+// Load shop and inbox after device code is ready
+var _origClaim = claimDevice;
 claimDevice = function() {
   var fp = getFingerprint();
   sbRpc("claim_device_code", { fp: fp }).then(function(res) {
@@ -2078,17 +2007,10 @@ claimDevice = function() {
       try { localStorage.setItem("erp3_device", myDeviceCode); } catch(e) {}
       loadShopProducts();
       updateInboxBadge();
-    } else {
-      var el = document.getElementById("my-device-code");
-      if (el) el.textContent = "ERROR";
     }
   });
 };
-// If device code already loaded from localStorage
-if (myDeviceCode) {
-  loadShopProducts();
-  updateInboxBadge();
-}
+if (myDeviceCode) { loadShopProducts(); updateInboxBadge(); }
 
 /* ===== Service Worker ===== */
 if ("serviceWorker" in navigator) {
