@@ -1061,7 +1061,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
         <div class="loading" style="padding:30px;text-align:center;color:var(--ink-faint)">加载中…</div>
       </div>
       <div class="shop-note">
-        <b>拼团优惠：</b>3单及以上成团，角色库 4元/个，武器库 1元/个。<br>
+        <b>拼团规则：</b>3单及以上成团后店主才会收到订单。<br>
         <b>打印服务：</b>0.5元/张（支持双面打印），请联系店主。<br>
         <b>支付方式：</b>目前仅支持现金交易。
       </div>
@@ -1802,19 +1802,10 @@ function updateCartUI() {
 
 function calcCartTotal() {
   var total = 0;
-  var byGroup = {};
   cart.forEach(function(item) {
-    var lineTotal = item.price * item.quantity;
-    total += lineTotal;
-    if (!byGroup[item.game_group]) byGroup[item.game_group] = { hasChar: false, hasWpn: false, wpnTotal: 0 };
-    if (item.category === "character") byGroup[item.game_group].hasChar = true;
-    if (item.category === "weapon") { byGroup[item.game_group].hasWpn = true; byGroup[item.game_group].wpnTotal += lineTotal; }
+    total += item.price * item.quantity;
   });
-  var discount = 0;
-  Object.keys(byGroup).forEach(function(gg) {
-    if (byGroup[gg].hasChar && byGroup[gg].hasWpn) discount += byGroup[gg].wpnTotal;
-  });
-  return { total: total, discount: discount, final: total - discount };
+  return { total: total };
 }
 
 function openCart() {
@@ -1837,19 +1828,12 @@ function renderCart() {
   var html = "";
   cart.forEach(function(item) {
     var lineTotal = item.price * item.quantity;
-    var isWpnFree = cart.some(function(c) { return c.game_group === item.game_group && c.category === "character"; }) && item.category === "weapon";
-    var priceHtml = '';
-    if (isWpnFree) {
-      priceHtml = '<span style="text-decoration:line-through;color:var(--ink-faint);font-size:12px;margin-right:4px">' + lineTotal + '元</span><span class="ci-price">0元</span><span style="font-size:11px;color:var(--success);margin-left:4px">优惠' + lineTotal + '元</span>';
-    } else {
-      priceHtml = '<span class="ci-price">' + lineTotal + '元</span>';
-    }
-    html += '<div class="cart-item"><span class="ci-name">' + item.name + ' ×' + item.quantity + '</span>' + priceHtml + '<button class="ci-remove" data-code="' + item.product_code + '">&times;</button></div>';
+    html += '<div class="cart-item"><span class="ci-name">' + item.name + ' ×' + item.quantity + '</span><span class="ci-price">' + lineTotal + '元</span><button class="ci-remove" data-code="' + item.product_code + '">&times;</button></div>';
   });
   el.innerHTML = html;
   totalEl.style.display = "flex"; submitEl.style.display = "block";
   var amtEl = document.getElementById("cart-amount");
-  amtEl.textContent = calc.final + '元';
+  amtEl.textContent = calc.total + '元';
   el.querySelectorAll(".ci-remove").forEach(function(btn) {
     btn.addEventListener("click", function() {
       cart = cart.filter(function(c) { return c.product_code !== btn.getAttribute("data-code"); });
