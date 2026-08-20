@@ -478,7 +478,7 @@ function renderOrderCard(o) {
   return '<div class="order-card" data-order-id="' + o.id + '">' +
     '<div class="order-head">' +
       '<div><span class="order-id">#' + o.id + '</span> <span class="order-device">' + o.device_code + '</span></div>' +
-      '<div style="display:flex;align-items:center;gap:8px"><span class="order-status ' + o.status + '">' + (o.status === "pending" ? "待处理" : "已完成") + '</span><span class="order-total">' + o.total_price + '元</span></div>' +
+      '<div style="display:flex;align-items:center;gap:8px"><span class="order-status ' + o.status + '">' + (o.status === "pending" ? "待处理" : "已完成") + '</span><span class="order-total">' + (o.total || o.total_price || 0) + '元</span></div>' +
     '</div>' +
     '<div class="order-meta">' +
       '<span>' + fmtTime(o.created_at) + '</span>' +
@@ -514,7 +514,7 @@ function renderGroupView(el) {
     allGroups.forEach(function(g) {
       var gOrders = allOrders.filter(function(o) { return o.group_id === g.id; });
       var orderList = gOrders.map(function(o) {
-        return '<div class="group-order-mini"><span>#' + o.id + ' ' + o.device_code + '</span><span>' + o.total_price + '元 <span class="order-status ' + o.status + '" style="font-size:10px">' + (o.status === "pending" ? "待处理" : "已完成") + '</span></span></div>';
+        return '<div class="group-order-mini"><span>#' + o.id + ' ' + o.device_code + '</span><span>' + (o.total || o.total_price || 0) + '元 <span class="order-status ' + o.status + '" style="font-size:10px">' + (o.status === "pending" ? "待处理" : "已完成") + '</span></span></div>';
       }).join("");
       groupsHtml += '<div class="group-card" data-group-id="' + g.id + '">' +
         '<div class="group-head"><div><span class="group-name">' + (g.name || '拼团 #' + g.id) + '</span>' +
@@ -543,7 +543,7 @@ function bindOrderEvents() {
       if (!confirm("确认完成此订单？将生成发票并发送兑换码到用户邮箱。")) return;
       rpc("admin_complete_order", { p_secret: SECRET, p_order_id: parseInt(btn.getAttribute("data-order")) }).then(function(r) {
         if (r && r.ok) { toast("订单已完成"); loadOrders().then(renderOrders); loadStats(); }
-        else { toast("失败: " + (r && r.error || "未知错误")); }
+        else { toast("失败: " + (r && (r.error || r.message) || JSON.stringify(r))); }
       });
     });
   });
