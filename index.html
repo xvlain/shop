@@ -1738,10 +1738,10 @@ var cart = [];
 
 function loadShopProducts() {
   sbRpc("shop_products", {}).then(function(res) {
-    if (!res || !res.ok) return;
+    if (!res || !res.ok) { console.error("shop_products failed:", res); document.getElementById("shop-products").innerHTML = '<div style="text-align:center;color:#c00;padding:30px">商品加载失败，请刷新重试</div>'; return; }
     shopProducts = res.products || [];
     renderShop();
-  });
+  }).catch(function(err) { console.error("shop_products error:", err); document.getElementById("shop-products").innerHTML = '<div style="text-align:center;color:#c00;padding:30px">网络错误，请检查网络后刷新</div>'; });
 }
 
 function renderShop() {
@@ -1907,6 +1907,7 @@ claimDevice = function() {
   });
 };
 if (myDeviceCode) { loadShopProducts(); updateInboxBadge(); restoreUnlocks(); }
+else { setTimeout(function() { if (!shopProducts.length) loadShopProducts(); }, 2000); }
 
 /* ===== Service Worker ===== */
 if ("serviceWorker" in navigator) {
