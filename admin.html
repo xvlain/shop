@@ -345,7 +345,9 @@ document.querySelectorAll("#ws-tabs .tab").forEach(function(btn) {
 
 // ===== Load All =====
 function loadAll() {
-  loadStats(); loadUnused(); loadUsed(); loadRecords(); loadDevices(); loadOrders(); loadGroups();
+  loadStats(); loadUsed(); loadRecords(); loadDevices();
+  // 先加载兑换码和订单，再渲染（确保下拉框有数据）
+  Promise.all([loadUnused(), loadOrders(), loadGroups()]).then(function() { renderOrders(); });
   document.getElementById("header-sub").textContent = "已登录 · " + new Date().toLocaleString("zh-CN");
 }
 
@@ -361,7 +363,7 @@ function loadStats() {
 }
 
 function loadUnused() {
-  rpc("admin_unused_codes", { p_secret: SECRET }).then(function(r) {
+  return rpc("admin_unused_codes", { p_secret: SECRET }).then(function(r) {
     if (!r || !r.ok) return;
     unusedCodes = r.codes || [];
     document.getElementById("unused-count").textContent = "共 " + unusedCodes.length + " 个可用";
@@ -542,9 +544,14 @@ function bindOrderEvents() {
       e.stopPropagation();
       if (!confirm("确认完成此订单？将生成发票并发送兑换码到用户邮箱。")) return;
       rpc("admin_complete_order", { p_secret: SECRET, p_order_id: parseInt(btn.getAttribute("data-order")) }).then(function(r) {
-        if (r && r.ok) { toast("订单已完成"); loadOrders().then(renderOrders); loadStats(); }
-        else { toast("失败: " + (r && (r.error || r.message) || JSON.stringify(r))); }
-      });
+        if (r && r.ok) { toast("订单已完成"); Promise.all([loadUnused(), loadOrders()]).then(renderOrders); loadStats(); }
+        else {
+          var err = (r && r.error) || "";
+          if (err === "not_all_codes_assigned") toast("请先为所有商品分配兑换码");
+          else if (err === "unauthorized") toast("密码已过期，请刷新页面重新登录");
+          else toast("确认失败: " + err || JSON.stringify(r));
+        }
+      }).catch(function(err) { toast("网络错误，请重试"); console.error(err); });
     });
   });
   // assign codes
@@ -555,11 +562,15 @@ function bindOrderEvents() {
       var selects = btn.closest(".order-body").querySelectorAll(".code-select");
       var codes = [];
       selects.forEach(function(s) { if (s.value) codes.push({ redemption_code: s.value, product_code: s.getAttribute("data-product") }); });
-      if (!codes.length) { toast("请先选择兑换码"); return; }
+      if (!codes.length) { toast("请先为每个商品选择兑换码"); return; }
       rpc("admin_assign_codes", { p_secret: SECRET, p_order_id: oid, p_codes: codes }).then(function(r) {
-        if (r && r.ok) { toast("兑换码已分配"); loadOrders().then(renderOrders); loadUnused(); }
-        else { toast("失败: " + (r && r.error || "")); }
-      });
+        if (r && r.ok) { toast("兑换码已分配"); Promise.all([loadUnused(), loadOrders()]).then(renderOrders); }
+        else {
+          var err = (r && r.error) || "";
+          if (err === "code_not_available") toast("兑换码已被使用，请换一个");
+          else toast("分配失败: " + err);
+        }
+      }).catch(function(err) { toast("网络错误，请重试"); console.error(err); });
     });
   });
   // save edits
