@@ -562,6 +562,9 @@ body::before {
 .cart-bundle-tag { font-size:11px; color:var(--success); font-weight:700; background:#e8f5e9; padding:2px 8px; border-radius:6px; margin-left:6px; }
 
 /* ===== inbox ===== */
+.inbox-toolbar { display:flex; gap:8px; margin-bottom:12px; }
+.inbox-toolbar .btn-mark-read { padding:7px 16px; border-radius:8px; border:1.5px solid var(--accent-soft); background:var(--accent-pale); color:var(--accent-deep); font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; }
+.inbox-toolbar .btn-mark-read:hover { background:var(--accent); color:#fff; }
 .inbox-msg { background:var(--panel); border:1.5px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:10px; }
 .inbox-msg.unread { border-color:var(--accent-soft); background:var(--accent-pale); }
 .inbox-msg .im-title { font-size:14px; font-weight:700; color:var(--accent-deep); margin-bottom:4px; }
@@ -569,6 +572,19 @@ body::before {
 .inbox-msg .im-content { margin-top:10px; padding:12px; background:var(--bg); border-radius:8px; font-size:13px; line-height:1.8; white-space:pre-wrap; font-family:Consolas,monospace; user-select:all; max-height:200px; overflow-y:auto; }
 .inbox-msg .im-copy { margin-top:8px; padding:6px 14px; border-radius:8px; border:1.5px solid var(--accent-soft); background:var(--accent-pale); color:var(--accent-deep); font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; }
 .inbox-msg .im-copy:hover { background:var(--accent); color:#fff; }
+/* red dot (no count) */
+.nav-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); display:none; position:absolute; top:-2px; right:-2px; }
+.nav-dot.show { display:block; }
+.top-hamburger { position:relative; }
+.top-hamburger .hamburger-dot { position:absolute; top:4px; right:4px; width:8px; height:8px; border-radius:50%; background:var(--accent); display:none; }
+.top-hamburger .hamburger-dot.show { display:block; }
+.bnav-item { position:relative; }
+.bnav-item .bnav-dot { position:absolute; top:4px; right:calc(50% - 18px); width:8px; height:8px; border-radius:50%; background:var(--accent); display:none; }
+.bnav-item .bnav-dot.show { display:block; }
+/* update dot for groups */
+.group-label { position:relative; }
+.group-update-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); display:none; margin-left:6px; flex-shrink:0; }
+.group-update-dot.show { display:inline-block; }
 
 .footer-icon {
   display:block; margin:0 auto 12px; width:48px; height:48px;
@@ -598,8 +614,9 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 <body data-theme="pink" data-cfont="cute" data-efont="sans">
 
   <!-- Sidebar (hamburger menu) -->
-  <button class="top-hamburger" id="btn-sidebar" aria-label="菜单">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  <button class="top-hamburger" id="btn-sidebar" aria-label="菜单" style="display:none">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="18"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <span class="hamburger-dot" id="hamburger-dot"></span>
   </button>
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
   <div class="sidebar" id="sidebar">
@@ -651,7 +668,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 
       <div class="about-card">
         <h3 data-i18n="aboutTitle">关于本站</h3>
-        <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.1.0 「兑换系统」</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.2.0 「体验优化」</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutTotal">收录资料</span><span class="about-val font-mono">19 份</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutSync">最后同步</span><span class="about-val font-mono">2026-08-19 17:52</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutGames">收录游戏</span><span class="about-val">崩坏：星穹铁道、原神、异环、绝区零</span></div>
@@ -659,6 +676,21 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 
       <div class="about-card">
         <h3 data-i18n="changelogTitle">更新日志</h3>
+        <div class="cl-entry">
+          <span class="cl-ver">v1.2.0</span>
+          <span class="cl-date">2026-08-20</span>
+          <h4>「体验优化」</h4>
+          <ul>
+            <li>邮箱新增「一键已读」，快速清除未读红点</li>
+            <li>邮箱复制兑换码时只复制码本身，不再复制整段内容</li>
+            <li>三条框菜单仅在商城页面显示，减少干扰</li>
+            <li>邮箱有新消息时，商城入口和菜单同时出现红点提醒</li>
+            <li>已解锁的资料库若有更新，以红点方式提醒用户</li>
+            <li>管理后台：兑换码按角色库/武器库分类显示和生成</li>
+            <li>管理后台：确认订单时自动分配兑换码，无需手动选取</li>
+            <li>管理后台：修复兑换记录加载失败的问题</li>
+          </ul>
+        </div>
         <div class="cl-entry">
           <span class="cl-ver">v1.1.0</span>
           <span class="cl-date">2026-08-19</span>
@@ -693,7 +725,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
         <h2 data-i18n="previewTitle">前瞻</h2>
         <span class="desc" data-i18n="previewDesc">各游戏最新版本情报</span>
       </div>
-      <div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">4.5</span><div class="game-block" style="--ac:#6f8cff"><div class="game-head"><h2>崩坏：星穹铁道</h2></div><div class="group group-locked" data-gid="崩坏星穹铁道-4.5-角色" data-pool="character"><div class="group-label"><i style="background:#6f8cff"></i>角色</div><div class="lock-overlay" data-gid="崩坏星穹铁道-4.5-角色" data-pool="character">
+      <div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">4.5</span><div class="game-block" style="--ac:#6f8cff"><div class="game-head"><h2>崩坏：星穹铁道</h2></div><div class="group group-locked" data-gid="崩坏星穹铁道-4.5-角色" data-pool="character"><div class="group-label"><i style="background:#6f8cff"></i>角色<span class="group-update-dot"></span></div><div class="lock-overlay" data-gid="崩坏星穹铁道-4.5-角色" data-pool="character">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，使用兑换码解锁</span>
@@ -730,7 +762,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="VUJqTQ=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div></div><div class="group group-locked" data-gid="崩坏星穹铁道-4.5-光锥" data-pool="weapon"><div class="group-label"><i style="background:#6f8cff"></i>光锥</div><div class="lock-overlay" data-gid="崩坏星穹铁道-4.5-光锥" data-pool="weapon">
+</div></div></div><div class="group group-locked" data-gid="崩坏星穹铁道-4.5-光锥" data-pool="weapon"><div class="group-label"><i style="background:#6f8cff"></i>光锥<span class="group-update-dot"></span></div><div class="lock-overlay" data-gid="崩坏星穹铁道-4.5-光锥" data-pool="weapon">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，使用兑换码解锁</span>
@@ -796,7 +828,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     </div>
   </div>
 </div></div></div></div></div>
-<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">7.1</span><div class="game-block" style="--ac:#e8b04b"><div class="game-head"><h2>原神</h2></div><div class="group group-locked" data-gid="原神-7.1-角色" data-pool="character"><div class="group-label"><i style="background:#e8b04b"></i>角色</div><div class="lock-overlay" data-gid="原神-7.1-角色" data-pool="character">
+<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">7.1</span><div class="game-block" style="--ac:#e8b04b"><div class="game-head"><h2>原神</h2></div><div class="group group-locked" data-gid="原神-7.1-角色" data-pool="character"><div class="group-label"><i style="background:#e8b04b"></i>角色<span class="group-update-dot"></span></div><div class="lock-overlay" data-gid="原神-7.1-角色" data-pool="character">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，使用兑换码解锁</span>
@@ -833,7 +865,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="cmo0aQ=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div></div><div class="group group-locked" data-gid="原神-7.1-武器" data-pool="weapon"><div class="group-label"><i style="background:#e8b04b"></i>武器</div><div class="lock-overlay" data-gid="原神-7.1-武器" data-pool="weapon">
+</div></div></div><div class="group group-locked" data-gid="原神-7.1-武器" data-pool="weapon"><div class="group-label"><i style="background:#e8b04b"></i>武器<span class="group-update-dot"></span></div><div class="lock-overlay" data-gid="原神-7.1-武器" data-pool="weapon">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，使用兑换码解锁</span>
@@ -871,7 +903,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     </div>
   </div>
 </div></div></div></div></div>
-<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">1.3</span><div class="game-block" style="--ac:#5fd68b"><div class="game-head"><h2>异环</h2></div><div class="group group-locked" data-gid="异环-1.3-角色" data-pool="character"><div class="group-label"><i style="background:#5fd68b"></i>角色</div><div class="lock-overlay" data-gid="异环-1.3-角色" data-pool="character">
+<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">1.3</span><div class="game-block" style="--ac:#5fd68b"><div class="game-head"><h2>异环</h2></div><div class="group group-locked" data-gid="异环-1.3-角色" data-pool="character"><div class="group-label"><i style="background:#5fd68b"></i>角色<span class="group-update-dot"></span></div><div class="lock-overlay" data-gid="异环-1.3-角色" data-pool="character">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，使用兑换码解锁</span>
@@ -908,7 +940,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="OGJGRw=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div></div><div class="group group-locked" data-gid="异环-1.3-武器" data-pool="weapon"><div class="group-label"><i style="background:#5fd68b"></i>武器</div><div class="lock-overlay" data-gid="异环-1.3-武器" data-pool="weapon">
+</div></div></div><div class="group group-locked" data-gid="异环-1.3-武器" data-pool="weapon"><div class="group-label"><i style="background:#5fd68b"></i>武器<span class="group-update-dot"></span></div><div class="lock-overlay" data-gid="异环-1.3-武器" data-pool="weapon">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，使用兑换码解锁</span>
@@ -946,7 +978,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     </div>
   </div>
 </div></div></div></div></div>
-<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">3.2</span><div class="game-block" style="--ac:#e8637a"><div class="game-head"><h2>绝区零</h2></div><div class="group group-locked" data-gid="绝区零-3.2-代理人" data-pool="character"><div class="group-label"><i style="background:#e8637a"></i>代理人</div><div class="lock-overlay" data-gid="绝区零-3.2-代理人" data-pool="character">
+<div class="ver-section"><span class="ver-badge" data-i18n="ver">版本</span> <span class="ver-badge">3.2</span><div class="game-block" style="--ac:#e8637a"><div class="game-head"><h2>绝区零</h2></div><div class="group group-locked" data-gid="绝区零-3.2-代理人" data-pool="character"><div class="group-label"><i style="background:#e8637a"></i>代理人<span class="group-update-dot"></span></div><div class="lock-overlay" data-gid="绝区零-3.2-代理人" data-pool="character">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，使用兑换码解锁</span>
@@ -997,7 +1029,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <button class="btn-pwd btn-locked" data-pwd-b64="OWJodA=="><span data-i18n="pwdLabel">提取码</span> **** <svg viewBox="0 0 24 24" width="12" height="12"><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-2M8 5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3M8 5v3m6 6h6m-3-3v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
     </div>
   </div>
-</div></div></div><div class="group group-locked" data-gid="绝区零-3.2-音擎" data-pool="weapon"><div class="group-label"><i style="background:#e8637a"></i>音擎</div><div class="lock-overlay" data-gid="绝区零-3.2-音擎" data-pool="weapon">
+</div></div></div><div class="group group-locked" data-gid="绝区零-3.2-音擎" data-pool="weapon"><div class="group-label"><i style="background:#e8637a"></i>音擎<span class="group-update-dot"></span></div><div class="lock-overlay" data-gid="绝区零-3.2-音擎" data-pool="weapon">
   <div class="lock-inner">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     <span data-i18n="lockMsg">资料已加密，使用兑换码解锁</span>
@@ -1072,6 +1104,9 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <div class="section-head">
         <h2>邮箱</h2>
         <span class="desc">查看店主发送的发票和兑换码</span>
+      </div>
+      <div class="inbox-toolbar">
+        <button class="btn-mark-read" id="btn-mark-all-read">一键已读</button>
       </div>
       <div id="inbox-list">
         <div class="empty-state" style="text-align:center;padding:40px;color:var(--ink-faint)">暂无消息</div>
@@ -1149,6 +1184,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       </button>
       <button class="bnav-item" data-tab="shop">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="bnav-dot" id="shop-dot"></span>
         <span class="bnav-label">商城</span>
       </button>
       <button class="bnav-item" data-tab="settings">
@@ -1411,6 +1447,8 @@ function showTab(which) {
     var t = b.getAttribute("data-tab");
     b.classList.toggle("active", t === which);
   });
+  // Show hamburger only on shop tab
+  document.getElementById("btn-sidebar").style.display = (which === "shop") ? "" : "none";
   window.scrollTo({top:0, behavior:"smooth"});
 }
 
@@ -1862,29 +1900,60 @@ function loadInbox() {
   sbRpc("shop_my_inbox", { p_device: myDeviceCode }).then(function(res) {
     if (!res || !res.ok) { el.innerHTML = '<div style="text-align:center;color:var(--ink-faint);padding:30px">加载失败</div>'; return; }
     var msgs = res.messages || [];
-    if (!msgs.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-faint)">暂无消息<br><small>店主处理完订单后会在这里给你发发票和兑换码</small></div>'; return; }
+    if (!msgs.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-faint)">暂无消息<br><small>店主处理完订单后会在这里给你发发票和兑换码</small></div>'; updateInboxBadge(); return; }
     el.innerHTML = msgs.map(function(m) {
       var typeIcon = m.type === "invoice" ? "📄" : "🔑";
       var esc = function(s) { return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); };
-      return '<div class="inbox-msg' + (m.is_read ? "" : " unread") + '"><div class="im-title">' + typeIcon + ' ' + esc(m.title) + '</div><div class="im-date">' + new Date(m.created_at).toLocaleString("zh-CN") + '</div><div class="im-content">' + esc(m.content) + '</div><button class="im-copy" data-content="' + esc(m.content) + '">复制内容</button></div>';
+      // For code-type messages, extract just the redemption code for copying
+      var copyLabel = "复制内容";
+      var copyData = m.content;
+      if (m.type === "code") {
+        var match = m.content.match(/兑换码:\s*([A-Z0-9\-]{9})/);
+        if (match) { copyData = match[1]; copyLabel = "复制兑换码"; }
+      }
+      return '<div class="inbox-msg' + (m.is_read ? "" : " unread") + '"><div class="im-title">' + typeIcon + ' ' + esc(m.title) + '</div><div class="im-date">' + new Date(m.created_at).toLocaleString("zh-CN") + '</div><div class="im-content">' + esc(m.content) + '</div><button class="im-copy" data-content="' + esc(copyData) + '">' + copyLabel + '</button></div>';
     }).join("");
     el.querySelectorAll(".im-copy").forEach(function(btn) {
       btn.addEventListener("click", function() {
         var c = btn.getAttribute("data-content");
         if (navigator.clipboard) navigator.clipboard.writeText(c);
         else { var t=document.createElement("textarea"); t.value=c; t.style.position="fixed"; t.style.opacity="0"; document.body.appendChild(t); t.select(); try{document.execCommand("copy");}catch(e){} document.body.removeChild(t); }
-        btn.textContent = "已复制 ✓"; setTimeout(function() { btn.textContent = "复制内容"; }, 1500);
+        btn.textContent = "已复制 ✓"; setTimeout(function() { btn.textContent = btn.getAttribute("data-copy-label") || "复制内容"; }, 1500);
       });
     });
+    // Refresh badge after loading inbox (shop_my_inbox marks as read)
+    setTimeout(updateInboxBadge, 500);
   });
 }
+
+/* Mark all as read button */
+document.getElementById("btn-mark-all-read").addEventListener("click", function() {
+  if (!myDeviceCode) return;
+  var btn = this;
+  btn.disabled = true;
+  btn.textContent = "处理中…";
+  sbRpc("shop_mark_all_read", { p_device: myDeviceCode }).then(function(res) {
+    btn.disabled = false;
+    btn.textContent = "一键已读";
+    if (res && res.ok) {
+      // Remove unread styling from all messages
+      document.querySelectorAll(".inbox-msg.unread").forEach(function(el) { el.classList.remove("unread"); });
+      updateInboxBadge();
+      toast("全部已读");
+    }
+  }).catch(function() { btn.disabled = false; btn.textContent = "一键已读"; });
+});
 
 function updateInboxBadge() {
   if (!myDeviceCode) return;
   sbRpc("shop_unread_count", { p_device: myDeviceCode }).then(function(res) {
-    var badge = document.getElementById("inbox-badge");
-    if (res && res.ok && res.count > 0) { badge.style.display = ""; badge.textContent = res.count; }
-    else { badge.style.display = "none"; }
+    var hasUnread = (res && res.ok && res.count > 0);
+    // Hamburger dot
+    var hDot = document.getElementById("hamburger-dot");
+    if (hDot) hDot.classList.toggle("show", hasUnread);
+    // Shop tab dot
+    var sDot = document.getElementById("shop-dot");
+    if (sDot) sDot.classList.toggle("show", hasUnread);
   });
 }
 
@@ -1908,6 +1977,43 @@ claimDevice = function() {
 };
 if (myDeviceCode) { loadShopProducts(); updateInboxBadge(); restoreUnlocks(); }
 else { setTimeout(function() { if (!shopProducts.length) loadShopProducts(); }, 2000); }
+
+/* ===== Library Update Notifications ===== */
+function checkLibraryUpdates() {
+  try {
+    var lastSeen = localStorage.getItem("erp3_last_sync_seen") || "";
+    if (lastSeen && lastSeen !== SITE_SYNCED) {
+      // Site has been updated since user last viewed
+      // Show dots on all unlocked groups that the user has
+      var unlockedGids = [];
+      if (myDeviceCode) {
+        sbRpc("check_unlocks", { p_device: myDeviceCode }).then(function(res) {
+          if (res && res.ok && res.unlocked) {
+            res.unlocked.forEach(function(gid) {
+              var dot = document.querySelector('.group[data-gid="'+gid+'"] .group-update-dot');
+              if (dot) dot.classList.add("show");
+            });
+          }
+        });
+      }
+    }
+  } catch(e) {}
+}
+
+// When user visits the preview tab, mark current sync as seen
+var _origShowTab = showTab;
+showTab = function(which) {
+  _origShowTab(which);
+  if (which === "preview") {
+    try {
+      localStorage.setItem("erp3_last_sync_seen", SITE_SYNCED);
+      // Clear all update dots
+      document.querySelectorAll(".group-update-dot.show").forEach(function(d) { d.classList.remove("show"); });
+    } catch(e) {}
+  }
+};
+
+if (myDeviceCode) { setTimeout(checkLibraryUpdates, 1000); }
 
 /* ===== Service Worker ===== */
 if ("serviceWorker" in navigator) {
