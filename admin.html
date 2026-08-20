@@ -197,7 +197,7 @@ td.dim { color:var(--ink-dim); font-size:12px; }
 
 <!-- Top Bar -->
 <div class="topbar">
-  <button class="hamburger" id="btn-sidebar">
+  <button class="hamburger" id="btn-sidebar" style="display:none">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
   <div style="flex:1">
@@ -329,6 +329,7 @@ document.querySelectorAll("#bnav .bnav-item").forEach(function(btn) {
     document.getElementById("view-workspace").style.display = tab === "workspace" ? "" : "none";
     document.getElementById("view-orders").style.display = tab === "orders" ? "" : "none";
     document.getElementById("page-title").textContent = tab === "workspace" ? "工作台" : "订单";
+    document.getElementById("btn-sidebar").style.display = tab === "orders" ? "" : "none";
     if (tab === "orders") renderOrders();
   });
 });
@@ -458,7 +459,7 @@ function renderOrders() {
 
 function renderOrderCard(o) {
   var items = (o.items || []).map(function(it) {
-    var priceStr = it.line_total === 0 ? '<span class="oi-free">赠品</span>' : it.line_total + '元';
+    var priceStr = it.line_total === 0 ? '0元' : it.line_total + '元';
     return '<tr><td class="oi-name">' + it.product_name + ' ×' + it.quantity + '</td><td class="oi-price">' + priceStr + '</td></tr>';
   }).join("");
   var codes = (o.codes || []).map(function(c) { return '<div style="font-size:12px;font-family:Consolas,monospace;margin-top:4px">' + c.product_code + ': ' + c.redemption_code + ' → ' + c.password + '</div>'; }).join("");
