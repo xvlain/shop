@@ -502,25 +502,12 @@ function renderOrders() {
 
 function renderOrderCard(o) {
   var items = (o.items || []).map(function(it) {
-    var priceStr = it.line_total === 0 ? '0元' : it.line_total + '元';
-    return '<tr><td class="oi-name">' + it.product_name + ' ×' + it.quantity + '</td><td class="oi-price">' + priceStr + '</td></tr>';
+    var priceStr = it.line_total === 0 ? '<span style="color:var(--success);font-style:italic">赠品</span>' : it.line_total + '元';
+    return '<tr><td class="oi-name">' + it.product_name + '</td><td class="oi-price">' + priceStr + '</td></tr>';
   }).join("");
-  var codes = (o.codes || []).map(function(c) { return '<div style="font-size:12px;font-family:Consolas,monospace;margin-top:4px">' + c.product_code + ': ' + c.redemption_code + ' → ' + c.password + '</div>'; }).join("");
+  var codes = (o.codes || []).map(function(c) { return '<div style="font-size:12px;font-family:Consolas,monospace;margin-top:4px">' + c.product_code + ': <b>' + c.redemption_code + '</b></div>'; }).join("");
   var groupOpts = allGroups.map(function(g) { return '<option value="' + g.id + '"' + (o.group_id === g.id ? ' selected' : '') + '>' + (g.name || '拼团 #' + g.id) + '</option>'; }).join("");
   var pmOpts = [['cash','现金'],['crypto','电子货币']].map(function(p) { return '<option value="' + p[0] + '"' + (o.payment_method === p[0] ? ' selected' : '') + '>' + p[1] + '</option>'; }).join("");
-
-  // unused codes for assignment - filter by pool based on product name
-  var assignRows = (o.items || []).filter(function(it) { return it.line_total > 0; }).map(function(it) {
-    var assigned = (o.codes || []).find(function(c) { return c.product_code === it.product_code; });
-    if (assigned) {
-      return '<div class="code-assign-row"><span style="font-size:12px;flex:1">' + it.product_name + ': <b>' + assigned.redemption_code + '</b></span></div>';
-    }
-    // Determine pool from product name
-    var pool = (it.product_name.indexOf('角色') > -1 || it.product_name.indexOf('代理人') > -1) ? 'character' : 'weapon';
-    var poolCodes = unusedByPool[pool] || unusedCodes;
-    var poolLabel = pool === 'character' ? '角色' : '武器';
-    return '<div class="code-assign-row"><span style="font-size:12px;width:100px">' + it.product_name + '</span><select data-order="' + o.id + '" data-product="' + it.product_code + '" class="code-select"><option value="">选择' + poolLabel + '库兑换码…</option>' + poolCodes.map(function(c) { return '<option value="' + c + '">' + c + '</option>'; }).join("") + '</select></div>';
-  }).join("");
 
   return '<div class="order-card" data-order-id="' + o.id + '">' +
     '<div class="order-head">' +
@@ -537,14 +524,11 @@ function renderOrderCard(o) {
       '<table class="order-items-table">' + items + '</table>' +
       (codes ? '<div style="margin-top:8px;padding:10px;background:var(--accent-pale);border-radius:8px"><div style="font-size:12px;font-weight:700;margin-bottom:4px">已分配兑换码</div>' + codes + '</div>' : '') +
       (o.status === "pending" ? '<div style="margin-top:14px">' +
-        '<div style="font-size:13px;font-weight:700;margin-bottom:8px">分配兑换码</div>' + assignRows +
-        '<div class="order-edit-row" style="margin-top:10px"><label>支付方式</label><select class="pm-select" data-order="' + o.id + '">' + pmOpts + '</select></div>' +
+        '<div class="order-edit-row"><label>支付方式</label><select class="pm-select" data-order="' + o.id + '">' + pmOpts + '</select></div>' +
         '<div class="order-edit-row"><label>拼团</label><select class="group-select" data-order="' + o.id + '"><option value="">不拼团</option>' + groupOpts + '</select></div>' +
         '<div class="order-edit-row"><label>备注</label><input type="text" class="notes-input" data-order="' + o.id + '" value="' + (o.notes || "").replace(/"/g, '&quot;') + '" placeholder="可选"></div>' +
         '<div class="order-actions">' +
-          '<button class="btn-sm success btn-complete" data-order="' + o.id + '">确认完成</button>' +
-          '<button class="btn-sm btn-assign-codes" data-order="' + o.id + '">分配选中兑换码</button>' +
-          '<button class="btn-sm btn-save-edit" data-order="' + o.id + '">保存修改</button>' +
+          '<button class="btn-sm success btn-complete" data-order="' + o.id + '">确认完成（自动分配兑换码）</button>' +
         '</div>' +
       '</div>' : '') +
     '</div>' +
@@ -583,44 +567,8 @@ function bindOrderEvents() {
   document.querySelectorAll(".order-card").forEach(function(card) {
     card.querySelector(".order-head").addEventListener("click", function() { card.classList.toggle("expanded"); });
   });
-  // complete
+  // complete - 先保存支付方式和拼团状态，再自动分配兑换码并确认
   document.querySelectorAll(".btn-complete").forEach(function(btn) {
-    btn.addEventListener("click", function(e) {
-      e.stopPropagation();
-      if (!confirm("确认完成此订单？系统将自动分配兑换码并发送发票到用户邮箱。")) return;
-      rpc("admin_auto_assign_and_complete", { p_secret: SECRET, p_order_id: parseInt(btn.getAttribute("data-order")) }).then(function(r) {
-        if (r && r.ok) { toast("订单已完成（自动分配兑换码）"); Promise.all([loadUnused(), loadOrders()]).then(renderOrders); loadStats(); }
-        else {
-          var err = (r && r.error) || "";
-          if (err === "no_available_codes") toast("没有足够的可用兑换码（" + (r && r.pool || "") + "），请先生成");
-          else if (err === "unauthorized") toast("密码已过期，请刷新页面重新登录");
-          else if (err === "already_completed") toast("订单已完成");
-          else toast("确认失败: " + err || JSON.stringify(r));
-        }
-      }).catch(function(err) { toast("网络错误，请重试"); console.error(err); });
-    });
-  });
-  // assign codes
-  document.querySelectorAll(".btn-assign-codes").forEach(function(btn) {
-    btn.addEventListener("click", function(e) {
-      e.stopPropagation();
-      var oid = parseInt(btn.getAttribute("data-order"));
-      var selects = btn.closest(".order-body").querySelectorAll(".code-select");
-      var codes = [];
-      selects.forEach(function(s) { if (s.value) codes.push({ redemption_code: s.value, product_code: s.getAttribute("data-product") }); });
-      if (!codes.length) { toast("请先为每个商品选择兑换码"); return; }
-      rpc("admin_assign_codes", { p_secret: SECRET, p_order_id: oid, p_codes: codes }).then(function(r) {
-        if (r && r.ok) { toast("兑换码已分配"); Promise.all([loadUnused(), loadOrders()]).then(renderOrders); }
-        else {
-          var err = (r && r.error) || "";
-          if (err === "code_not_available") toast("兑换码已被使用，请换一个");
-          else toast("分配失败: " + err);
-        }
-      }).catch(function(err) { toast("网络错误，请重试"); console.error(err); });
-    });
-  });
-  // save edits
-  document.querySelectorAll(".btn-save-edit").forEach(function(btn) {
     btn.addEventListener("click", function(e) {
       e.stopPropagation();
       var oid = parseInt(btn.getAttribute("data-order"));
@@ -628,14 +576,34 @@ function bindOrderEvents() {
       var pm = card.querySelector(".pm-select").value;
       var gid = card.querySelector(".group-select").value;
       var notes = card.querySelector(".notes-input").value;
-      var promises = [];
-      promises.push(rpc("admin_edit_order", { p_secret: SECRET, p_order_id: oid, p_notes: notes, p_payment_method: pm, p_is_group_buy: !!gid }));
-      if (gid) promises.push(rpc("admin_add_to_group", { p_secret: SECRET, p_order_id: oid, p_group_id: parseInt(gid) }));
-      else promises.push(rpc("admin_remove_from_group", { p_secret: SECRET, p_order_id: oid }));
-      Promise.all(promises).then(function(results) {
-        var err = results.find(function(r) { return r && !r.ok; });
-        if (err) { toast("失败: " + (err.error || "")); }
-        else { toast("已保存"); loadOrders().then(renderOrders); }
+      btn.disabled = true; btn.textContent = "处理中…";
+      // 先保存编辑信息
+      var editPromise = rpc("admin_edit_order", { p_secret: SECRET, p_order_id: oid, p_notes: notes, p_payment_method: pm, p_is_group_buy: !!gid });
+      var groupPromise;
+      if (gid) {
+        groupPromise = rpc("admin_add_to_group", { p_secret: SECRET, p_order_id: oid, p_group_id: parseInt(gid) });
+      } else {
+        groupPromise = rpc("admin_remove_from_group", { p_secret: SECRET, p_order_id: oid });
+      }
+      Promise.all([editPromise, groupPromise]).then(function() {
+        // 再自动分配兑换码并确认完成
+        return rpc("admin_auto_assign_and_complete", { p_secret: SECRET, p_order_id: oid });
+      }).then(function(r) {
+        btn.disabled = false; btn.textContent = "确认完成（自动分配兑换码）";
+        if (r && r.ok) {
+          toast("订单已完成，兑换码已自动分配");
+          Promise.all([loadUnused(), loadOrders(), loadGroups()]).then(function() { renderOrders(); });
+          loadStats();
+        } else {
+          var err = (r && r.error) || "";
+          if (err === "no_available_codes") toast("没有足够的可用兑换码（" + (r && r.pool || "") + "），请先生成");
+          else if (err === "unauthorized") toast("密码已过期，请刷新页面重新登录");
+          else if (err === "already_completed") toast("订单已完成");
+          else toast("确认失败: " + (err || JSON.stringify(r)));
+        }
+      }).catch(function(err) {
+        btn.disabled = false; btn.textContent = "确认完成（自动分配兑换码）";
+        toast("网络错误，请重试"); console.error(err);
       });
     });
   });
