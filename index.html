@@ -513,6 +513,8 @@ body::before {
 /* ===== sidebar (hamburger menu) ===== */
 .top-hamburger { position:fixed; top:14px; right:18px; z-index:120; background:var(--panel); border:1.5px solid var(--line); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.06); }
 .top-hamburger svg { width:20px; height:20px; }
+.hamburger-badge { position:absolute; top:-4px; right:-4px; background:#e05050; color:#fff; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:none; align-items:center; justify-content:center; line-height:1; }
+.hamburger-badge.show { display:flex; }
 .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:200; opacity:0; pointer-events:none; transition:opacity .25s; }
 .sidebar-overlay.open { opacity:1; pointer-events:auto; }
 .sidebar { position:fixed; top:0; right:-300px; width:300px; height:100%; background:var(--panel); z-index:201; transition:right .3s cubic-bezier(.4,0,.2,1); padding:28px 22px; box-shadow:-4px 0 20px rgba(0,0,0,.1); overflow-y:auto; }
@@ -535,10 +537,15 @@ body::before {
 .shop-product .sp-cat { font-size:11px; color:var(--accent-deep); font-weight:600; letter-spacing:.08em; }
 .shop-product .sp-price { font-size:18px; font-weight:700; color:var(--accent-deep); margin-right:12px; white-space:nowrap; }
 .shop-product .sp-price small { font-size:12px; color:var(--ink-faint); font-weight:400; }
-.qty-ctrl { display:flex; align-items:center; gap:0; border:1.5px solid var(--line); border-radius:8px; overflow:hidden; }
-.qty-ctrl button { width:32px; height:32px; border:none; background:var(--bg); color:var(--ink); font-size:16px; font-weight:700; cursor:pointer; font-family:inherit; }
-.qty-ctrl button:hover { background:var(--accent-pale); }
-.qty-ctrl .qty-val { width:36px; text-align:center; font-size:14px; font-weight:700; border:none; background:var(--panel); font-family:inherit; }
+.btn-add-cart {
+  padding:9px 18px; border-radius:10px; border:none;
+  background:var(--accent); color:#fff; font-size:13px;
+  font-weight:700; cursor:pointer; font-family:inherit;
+  transition:all .15s; white-space:nowrap;
+}
+.btn-add-cart:hover { background:var(--accent-deep); }
+.btn-add-cart.in-cart { background:var(--success); pointer-events:none; }
+.btn-add-cart.purchased { background:var(--ink-faint); pointer-events:none; opacity:.6; }
 .shop-note { margin-top:16px; padding:14px 18px; background:var(--accent-pale); border-radius:10px; font-size:13px; color:var(--ink-dim); line-height:1.8; }
 .shop-note b { color:var(--accent-deep); }
 
@@ -600,6 +607,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   <!-- Sidebar (hamburger menu) -->
   <button class="top-hamburger" id="btn-sidebar" aria-label="菜单">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <span class="hamburger-badge" id="hamburger-badge">0</span>
   </button>
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
   <div class="sidebar" id="sidebar">
@@ -624,6 +632,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     <div class="cart-header"><h2>购物车</h2><button class="cart-close" id="cart-close">&times;</button></div>
     <div id="cart-items"></div>
     <div class="cart-total" id="cart-total" style="display:none"><span class="ct-label">合计</span><span class="ct-amount" id="cart-amount">0元</span></div>
+
     <button class="cart-submit" id="cart-submit" style="display:none">提交订单</button>
   </div>
 
@@ -1507,6 +1516,8 @@ function restoreUnlocks() {
   sbRpc("check_unlocks", { p_device: myDeviceCode }).then(function(res) {
     if (res && res.ok && res.unlocked) {
       res.unlocked.forEach(function(gid) { unlockGroup(gid); });
+      // 同步更新已购买状态
+      if (shopProducts.length) checkPurchased();
     }
   });
 }
@@ -1735,62 +1746,66 @@ document.querySelectorAll(".sidebar-item").forEach(function(btn) {
 /* ===== Shop ===== */
 var shopProducts = [];
 var cart = [];
+var purchasedProducts = [];
+
+function checkPurchased() {
+  if (!myDeviceCode) return;
+  sbRpc("check_unlocks", { p_device: myDeviceCode }).then(function(res) {
+    if (!res || !res.ok) return;
+    var unlocked = res.unlocked || [];
+    purchasedProducts = [];
+    shopProducts.forEach(function(p) {
+      var gid = p.game_name + '-' + (p.ver || '') + '-' + (p.category === 'character' ? ((p.game_group||'').indexOf('zzz')>-1?'代理人':'角色') : ((p.game_group||'').indexOf('hsr')>-1?'光锥':((p.game_group||'').indexOf('zzz')>-1?'音擎':'武器')));
+      if (unlocked.indexOf(gid) > -1) purchasedProducts.push(p.code);
+    });
+    renderShop();
+  });
+}
 
 function loadShopProducts() {
   sbRpc("shop_products", {}).then(function(res) {
     if (!res || !res.ok) return;
     shopProducts = res.products || [];
-    renderShop();
+    checkPurchased();
   });
 }
 
 function renderShop() {
   var el = document.getElementById("shop-products");
   if (!shopProducts.length) { el.innerHTML = '<div style="text-align:center;color:var(--ink-faint);padding:30px">暂无商品</div>'; return; }
-  var groups = {};
+  var gameGroups = {};
   shopProducts.forEach(function(p) {
-    if (!groups[p.game_name]) groups[p.game_name] = [];
-    groups[p.game_name].push(p);
+    if (!gameGroups[p.game_name]) gameGroups[p.game_name] = [];
+    gameGroups[p.game_name].push(p);
   });
   var html = "";
-  Object.keys(groups).forEach(function(game) {
+  Object.keys(gameGroups).forEach(function(game) {
     html += '<div class="shop-game-block"><div class="shop-game-title">' + game + '</div>';
-    groups[game].forEach(function(p) {
+    gameGroups[game].forEach(function(p) {
       var catLabel = p.category === "character" ? "角色库" : "武器库";
-      var inCart = cart.find(function(c) { return c.product_code === p.code; });
-      var qty = inCart ? inCart.quantity : 0;
+      var inCart = cart.some(function(c) { return c.product_code === p.code; });
       html += '<div class="shop-product" data-code="' + p.code + '">' +
-        '<div class="sp-info"><div class="sp-name">' + p.name + '</div></div>' +
-        '<div class="sp-price">' + p.price + '元<small> /个</small></div>' +
-        '<div class="qty-ctrl">' +
-        '<button class="qty-minus" data-code="' + p.code + '">−</button>' +
-        '<span class="qty-val">' + qty + '</span>' +
-        '<button class="qty-plus" data-code="' + p.code + '">+</button>' +
-        '</div></div>';
+        '<div class="sp-info"><div class="sp-name">' + p.name + '</div><div class="sp-cat">' + catLabel + '</div></div>' +
+        '<div class="sp-price">' + p.price + '元</div>' +
+        '<button class="btn-sm shop-buy-btn' + (purchasedProducts.indexOf(p.code) > -1 ? ' purchased' : (inCart ? ' in-cart' : '')) + '" style="' + (purchasedProducts.indexOf(p.code) > -1 ? 'background:var(--ink-faint);color:#fff;border-color:var(--ink-faint);opacity:.6;pointer-events:none' : (inCart ? 'background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7' : '')) + '" data-code="' + p.code + '">' + (purchasedProducts.indexOf(p.code) > -1 ? '已购买' : (inCart ? '✓ 已选' : '购买')) + '</button>' +
+        '</div>';
     });
     html += '</div>';
   });
   el.innerHTML = html;
-  el.querySelectorAll(".qty-plus").forEach(function(btn) {
-    btn.addEventListener("click", function() { changeQty(btn.getAttribute("data-code"), 1); });
+  el.querySelectorAll(".shop-buy-btn").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      var code = btn.getAttribute("data-code");
+      if (cart.some(function(c) { return c.product_code === code; })) {
+        cart = cart.filter(function(c) { return c.product_code !== code; });
+      } else {
+        var product = shopProducts.find(function(pp) { return pp.code === code; });
+        if (product) cart.push({ product_code: code, name: product.name, price: product.price, quantity: 1, category: product.category, game_group: product.game_group });
+      }
+      updateCartUI();
+      renderShop();
+    });
   });
-  el.querySelectorAll(".qty-minus").forEach(function(btn) {
-    btn.addEventListener("click", function() { changeQty(btn.getAttribute("data-code"), -1); });
-  });
-}
-
-function changeQty(code, delta) {
-  var product = shopProducts.find(function(p) { return p.code === code; });
-  if (!product) return;
-  var item = cart.find(function(c) { return c.product_code === code; });
-  if (item) {
-    item.quantity += delta;
-    if (item.quantity <= 0) cart = cart.filter(function(c) { return c.product_code !== code; });
-  } else if (delta > 0) {
-    cart.push({ product_code: code, name: product.name, price: product.price, group_price: product.group_price, quantity: 1, category: product.category, game_group: product.game_group });
-  }
-  updateCartUI();
-  renderShop();
 }
 
 function updateCartUI() {
@@ -1802,8 +1817,21 @@ function updateCartUI() {
 
 function calcCartTotal() {
   var total = 0;
+  // 先按 game_group 分组检查捆绑优惠
+  var gameGroups = {};
   cart.forEach(function(item) {
-    total += item.price * item.quantity;
+    if (!gameGroups[item.game_group]) gameGroups[item.game_group] = { hasChar: false, hasWpn: false };
+    if (item.category === "character") gameGroups[item.game_group].hasChar = true;
+    if (item.category === "weapon") gameGroups[item.game_group].hasWpn = true;
+  });
+  cart.forEach(function(item) {
+    var gg = gameGroups[item.game_group];
+    // 同 game_group 同时有角色和武器，武器免费
+    if (gg && gg.hasChar && gg.hasWpn && item.category === "weapon") {
+      // 武器免费，不计入总价
+    } else {
+      total += item.price;
+    }
   });
   return { total: total };
 }
@@ -1826,10 +1854,26 @@ function renderCart() {
   }
   var calc = calcCartTotal();
   var html = "";
+  // 检查捆绑优惠
+  var gameGroups = {};
   cart.forEach(function(item) {
-    var lineTotal = item.price * item.quantity;
-    html += '<div class="cart-item"><span class="ci-name">' + item.name + ' ×' + item.quantity + '</span><span class="ci-price">' + lineTotal + '元</span><button class="ci-remove" data-code="' + item.product_code + '">&times;</button></div>';
+    if (!gameGroups[item.game_group]) gameGroups[item.game_group] = { hasChar: false, hasWpn: false };
+    if (item.category === "character") gameGroups[item.game_group].hasChar = true;
+    if (item.category === "weapon") gameGroups[item.game_group].hasWpn = true;
   });
+  cart.forEach(function(item) {
+    var gg = gameGroups[item.game_group];
+    var isFree = gg && gg.hasChar && gg.hasWpn && item.category === "weapon";
+    var priceStr = isFree ? '<span style="color:var(--success);font-weight:700">免费</span>' : item.price + '元';
+    html += '<div class="cart-item"><span class="ci-name">' + item.name + (isFree ? ' <span style="font-size:11px;color:var(--success);font-weight:700">(赠品)</span>' : '') + '</span><span class="ci-price">' + priceStr + '</span><button class="ci-remove" data-code="' + item.product_code + '">&times;</button></div>';
+  });
+  // 拼团选项
+  html += '<div class="gb-options" style="margin-top:16px;padding:14px;background:var(--panel);border:1.5px solid var(--line);border-radius:12px">';
+  html += '<div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--accent-deep)">拼团方式</div>';
+  html += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="none" checked style="accent-color:var(--accent)"> 普通购买（不拼团）</label>';
+  html += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="create" style="accent-color:var(--accent)"> 发起拼团（满3单店主才收到）</label>';
+  html += '<div id="gb-public-list" style="margin-top:8px"></div>';
+  html += '</div>';
   el.innerHTML = html;
   totalEl.style.display = "flex"; submitEl.style.display = "block";
   var amtEl = document.getElementById("cart-amount");
@@ -1840,18 +1884,77 @@ function renderCart() {
       updateCartUI(); renderCart(); renderShop();
     });
   });
+  // 加载公开拼团组
+  loadPublicGroups();
+}
+
+var publicGroupsCache = [];
+function loadPublicGroups() {
+  sbRpc("shop_public_groups", {}).then(function(res) {
+    publicGroupsCache = (res && res.ok) ? (res.groups || []) : [];
+    var listEl = document.getElementById("gb-public-list");
+    if (!listEl) return;
+    if (!publicGroupsCache.length) {
+      listEl.innerHTML = '<div style="font-size:12px;color:var(--ink-faint);padding:4px 0">暂无可加入的拼团</div>';
+      return;
+    }
+    var h = '';
+    publicGroupsCache.forEach(function(g) {
+      h += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="join-' + g.id + '" style="accent-color:var(--accent)"> 加入 ' + (g.name || '拼团#' + g.id) + ' (' + g.order_count + '单)</label>';
+    });
+    listEl.innerHTML = h;
+  });
 }
 
 document.getElementById("cart-submit").addEventListener("click", function() {
   if (!cart.length || !myDeviceCode) return;
-  if (!confirm("确认提交订单？提交后不可修改。")) return;
-  var items = cart.map(function(c) { return { product_code: c.product_code, quantity: c.quantity }; });
+  // 确定拼团方式
+  var gbRadio = document.querySelector('input[name="gb-type"]:checked');
+  var gbType = gbRadio ? gbRadio.value : "none";
+  var groupId = null;
+  if (gbType === "create") {
+    // 同步创建拼团组
+    groupId = "__create__";
+  } else if (gbType.indexOf("join-") === 0) {
+    groupId = parseInt(gbType.substring(5));
+  }
+  var items = cart.map(function(c) { return { product_code: c.product_code, quantity: 1 }; });
   var btn = this; btn.disabled = true; btn.textContent = "提交中…";
-  sbRpc("shop_submit_order", { p_device: myDeviceCode, p_items: items }).then(function(res) {
-    btn.disabled = false; btn.textContent = "提交订单";
-    if (res && res.ok) { toast("订单已提交！等待店主处理"); cart = []; updateCartUI(); document.getElementById("cart-overlay").classList.remove("open"); renderShop(); }
-    else { toast("提交失败: " + (res && res.error || "未知错误")); }
-  });
+
+  function doSubmit(gid) {
+    sbRpc("shop_submit_order", { p_device: myDeviceCode, p_items: items, p_group_id: gid }).then(function(res) {
+      btn.disabled = false; btn.textContent = "提交订单";
+      if (res && res.ok) {
+        // 自动解锁：如果后端已自动分配兑换码并解锁
+        if (res.unlocked_gids && res.unlocked_gids.length > 0) {
+          res.unlocked_gids.forEach(function(ugid) { unlockGroup(ugid); });
+          checkPurchased();
+        }
+        if (gid && res.group_ready === false) {
+          toast("订单已提交！拼团进行中（" + res.order_count + "/3单）");
+        } else {
+          toast("订单已提交！兑换码已自动分配");
+        }
+        cart = []; updateCartUI();
+        document.getElementById("cart-overlay").classList.remove("open");
+        renderShop();
+        updateInboxBadge();
+      } else {
+        var errMsg = (res && res.error) || "未知错误";
+        if (errMsg === "group_device_limit") errMsg = "该拼团组设备数已满";
+        toast("提交失败: " + errMsg);
+      }
+    });
+  }
+
+  if (groupId === "__create__") {
+    sbRpc("shop_create_group", { p_device: myDeviceCode, p_name: "" }).then(function(res) {
+      if (res && res.ok) { doSubmit(res.group_id); }
+      else { btn.disabled = false; btn.textContent = "提交订单"; toast("创建拼团失败"); }
+    });
+  } else {
+    doSubmit(groupId);
+  }
 });
 
 /* ===== Inbox ===== */
@@ -1882,11 +1985,21 @@ function loadInbox() {
 function updateInboxBadge() {
   if (!myDeviceCode) return;
   sbRpc("shop_unread_count", { p_device: myDeviceCode }).then(function(res) {
+    var count = (res && res.ok) ? (res.count || 0) : 0;
+    // 侧边栏邮箱红点
     var badge = document.getElementById("inbox-badge");
-    if (res && res.ok && res.count > 0) { badge.style.display = ""; badge.textContent = res.count; }
+    if (count > 0) { badge.style.display = ""; badge.textContent = count; }
     else { badge.style.display = "none"; }
+    // 汉堡菜单红点（始终可见）
+    var hBadge = document.getElementById("hamburger-badge");
+    if (hBadge) {
+      if (count > 0) { hBadge.textContent = count > 99 ? "99+" : count; hBadge.classList.add("show"); }
+      else { hBadge.classList.remove("show"); }
+    }
   });
 }
+// 每30秒轮询一次邮箱红点
+setInterval(updateInboxBadge, 30000);
 
 function toast(msg) { var t = document.createElement("div"); t.style.cssText = "position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#2d2a32;color:#fff;padding:10px 22px;border-radius:999px;font-size:13px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none"; t.textContent = msg; document.body.appendChild(t); setTimeout(function() { t.style.opacity = "1"; }, 10); setTimeout(function() { t.style.opacity = "0"; setTimeout(function() { document.body.removeChild(t); }, 300); }, 2000); }
 
@@ -1903,10 +2016,11 @@ claimDevice = function() {
       loadShopProducts();
       updateInboxBadge();
       restoreUnlocks();
+      setTimeout(checkPurchased, 1000);
     }
   });
 };
-if (myDeviceCode) { loadShopProducts(); updateInboxBadge(); restoreUnlocks(); }
+if (myDeviceCode) { loadShopProducts(); updateInboxBadge(); restoreUnlocks(); setTimeout(checkPurchased, 500); }
 
 /* ===== Service Worker ===== */
 if ("serviceWorker" in navigator) {
