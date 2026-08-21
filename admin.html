@@ -263,6 +263,13 @@ td.dim { color:var(--ink-dim); font-size:12px; }
         <button class="btn-sm success" id="btn-gen-dev" style="width:100%;padding:10px;font-size:14px;">生成设备码</button>
         <div class="gen-result" id="gen-dev-result"></div>
       </div>
+      <div class="gen-form">
+        <h3 style="font-size:15px;margin-bottom:14px;color:var(--accent-deep)">清理兑换码</h3>
+        <p style="font-size:12px;color:var(--ink-dim);margin-bottom:12px">删除超过指定天数未使用的兑换码（不影响已分配的码）</p>
+        <label>天数</label><input type="number" id="cleanup-days" value="30" min="1" max="365">
+        <button class="btn-sm danger" id="btn-cleanup" style="width:100%;padding:10px;font-size:14px;">清理废码</button>
+        <div class="gen-result" id="cleanup-result"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -478,6 +485,20 @@ document.getElementById("btn-gen-dev").addEventListener("click", function() {
     var res = document.getElementById("gen-dev-result"); res.classList.add("show");
     res.innerHTML = '<div style="margin-bottom:8px;font-weight:700;color:var(--success)">生成 ' + codes.length + ' 个</div><div style="font-family:Consolas,monospace;font-size:12px;line-height:1.8;white-space:pre-wrap;user-select:all">' + codes.join(" ") + '</div>';
     loadStats(); loadDevices();
+  });
+});
+
+// Cleanup unused codes
+document.getElementById("btn-cleanup").addEventListener("click", function() {
+  var days = parseInt(document.getElementById("cleanup-days").value) || 30;
+  if (!confirm("确认删除超过 " + days + " 天未使用的兑换码？此操作不可恢复。")) return;
+  var btn = this; btn.disabled = true; btn.textContent = "清理中…";
+  rpc("admin_cleanup_unused_codes", { p_secret: SECRET, p_days: days }).then(function(r) {
+    btn.disabled = false; btn.textContent = "清理废码";
+    if (!r || !r.ok) { toast("失败"); return; }
+    var res = document.getElementById("cleanup-result"); res.classList.add("show");
+    res.innerHTML = '<div style="font-weight:700;color:var(--success)">已清理 ' + (r.deleted || 0) + ' 个废码</div>';
+    loadStats(); loadUnused();
   });
 });
 
