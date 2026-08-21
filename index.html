@@ -1755,7 +1755,7 @@ function checkPurchased() {
     var unlocked = res.unlocked || [];
     purchasedProducts = [];
     shopProducts.forEach(function(p) {
-      var gid = p.game_name + '-' + (p.ver || '') + '-' + (p.category === 'character' ? ((p.game_group||'').indexOf('zzz')>-1?'代理人':'角色') : ((p.game_group||'').indexOf('hsr')>-1?'光锥':((p.game_group||'').indexOf('zzz')>-1?'音擎':'武器')));
+      var gid = (p.game_name || '').replace(/：/g, '') + '-' + (p.ver || '') + '-' + (p.category === 'character' ? ((p.game_group||'').indexOf('zzz')>-1?'代理人':'角色') : ((p.game_group||'').indexOf('hsr')>-1?'光锥':((p.game_group||'').indexOf('zzz')>-1?'音擎':'武器')));
       if (unlocked.indexOf(gid) > -1) purchasedProducts.push(p.code);
     });
     renderShop();
