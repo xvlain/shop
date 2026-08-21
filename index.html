@@ -537,6 +537,12 @@ body::before {
 .shop-product .sp-cat { font-size:11px; color:var(--accent-deep); font-weight:600; letter-spacing:.08em; }
 .shop-product .sp-price { font-size:18px; font-weight:700; color:var(--accent-deep); margin-right:12px; white-space:nowrap; }
 .shop-product .sp-price small { font-size:12px; color:var(--ink-faint); font-weight:400; }
+.shop-buy-btn { font-size:13px; font-weight:600; padding:7px 18px; border-radius:20px; border:1.5px solid var(--accent); background:transparent; color:var(--accent-deep); cursor:pointer; transition:all .25s ease; letter-spacing:.04em; white-space:nowrap; min-width:64px; }
+.shop-buy-btn:hover { background:var(--accent-pale); border-color:var(--accent-deep); transform:translateY(-1px); box-shadow:0 3px 10px color-mix(in srgb, var(--accent) 18%, transparent); }
+.shop-buy-btn:active { transform:translateY(0); box-shadow:none; }
+.shop-buy-btn.in-cart { background:var(--accent-pale); color:var(--accent-deep); border-color:var(--accent-soft); }
+.shop-buy-btn.in-cart:hover { background:var(--accent-soft); }
+.shop-buy-btn.purchased { background:var(--ink-faint); color:#fff; border-color:transparent; opacity:.55; pointer-events:none; font-weight:500; }
 .qty-ctrl { display:flex; align-items:center; gap:0; border:1.5px solid var(--line); border-radius:8px; overflow:hidden; }
 .qty-ctrl button { width:32px; height:32px; border:none; background:var(--bg); color:var(--ink); font-size:16px; font-weight:700; cursor:pointer; font-family:inherit; }
 .qty-ctrl button:hover { background:var(--accent-pale); }
@@ -1780,7 +1786,7 @@ function renderShop() {
       html += '<div class="shop-product" data-code="' + p.code + '">' +
         '<div class="sp-info"><div class="sp-name">' + p.name + '</div><div class="sp-cat">' + catLabel + '</div></div>' +
         '<div class="sp-price">' + p.price + '元</div>' +
-        '<button class="btn-sm shop-buy-btn' + (purchased ? ' purchased' : (inCart ? ' in-cart' : '')) + '" style="' + (purchased ? 'background:var(--ink-faint);color:#fff;border-color:var(--ink-faint);opacity:.6;pointer-events:none' : (inCart ? 'background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7' : '')) + '" data-code="' + p.code + '">' + (purchased ? '已购买' : (inCart ? '✓ 已选' : '购买')) + '</button>' +
+        '<button class="shop-buy-btn' + (purchased ? ' purchased' : (inCart ? ' in-cart' : '')) + '" data-code="' + p.code + '">' + (purchased ? '已购买' : (inCart ? '✓ 已选' : '购买')) + '</button>' +
         '</div>';
     });
     html += '</div>';
