@@ -593,7 +593,7 @@ function renderGroupCard(g) {
       '<div><span style="font-weight:700">#' + o.id + '</span> <span class="order-device" style="font-size:11px">' + o.device_code + '</span> <span style="font-size:11px;color:var(--ink-dim)">' + itemCount + '件</span></div>' +
       '<div style="display:flex;align-items:center;gap:6px"><span>' + (o.total || o.total_price || 0) + '元</span>' +
       '<span class="order-status ' + o.status + '" style="font-size:10px">' + (o.status === "pending" ? "待处理" : "已完成") + '</span>' +
-      (g.status === 'pending' ? '<button class="btn-sm danger group-kick-order" data-group="' + g.id + '" data-order="' + o.id + '" style="padding:3px 8px;font-size:11px">踢出</button>' : '') +
+      (g.status !== 'expired' ? '<button class="btn-sm danger group-kick-order" data-group="' + g.id + '" data-order="' + o.id + '" style="padding:3px 8px;font-size:11px">踢出</button>' : '') +
       '</div></div>';
   }).join("");
 
