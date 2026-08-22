@@ -578,6 +578,21 @@ body::before {
 .inbox-msg .im-copy { margin-top:8px; padding:6px 14px; border-radius:8px; border:1.5px solid var(--accent-soft); background:var(--accent-pale); color:var(--accent-deep); font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; }
 .inbox-msg .im-copy:hover { background:var(--accent); color:#fff; }
 
+/* ===== my orders ===== */
+.my-order-card { background:var(--panel); border:1.5px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
+.my-order-card .mo-head { display:flex; justify-content:space-between; align-items:center; }
+.my-order-card .mo-id { font-size:13px; font-weight:700; color:var(--accent-deep); }
+.my-order-card .mo-total { font-size:16px; font-weight:800; color:var(--accent-deep); }
+.my-order-card .mo-items { margin-top:8px; font-size:13px; color:var(--ink-dim); line-height:1.8; }
+.my-order-card .mo-actions { margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; }
+.my-order-card .mo-actions button { padding:6px 12px; border-radius:8px; font-size:12px; font-weight:600; border:1.5px solid var(--line); background:var(--bg); color:var(--ink-dim); cursor:pointer; font-family:inherit; transition:all .15s; }
+.my-order-card .mo-actions button:hover { border-color:var(--accent-soft); color:var(--accent-deep); }
+.my-order-card .mo-actions button.danger { color:var(--danger); border-color:#f5c0c0; }
+.my-order-card .mo-actions button.danger:hover { background:#fff5f5; }
+.my-order-card .mo-group-tag { font-size:11px; color:var(--accent); font-weight:600; background:var(--accent-pale); padding:2px 8px; border-radius:6px; margin-left:6px; }
+.clear-data-btn { margin-top:24px; width:100%; padding:14px; border-radius:12px; border:1.5px solid #f5c0c0; background:#fff5f5; color:var(--danger); font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s; }
+.clear-data-btn:hover { background:var(--danger); color:#fff; }
+
 .footer-icon {
   display:block; margin:0 auto 12px; width:48px; height:48px;
   border-radius:50%; object-fit:cover;
@@ -1131,6 +1146,58 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       </div>
     </section>
 
+    <!-- ===== ME (我的) ===== -->
+    <section class="section-panel hidden" id="sec-me">
+      <div style="position:relative">
+        <button id="me-settings-btn" style="position:absolute;top:0;right:0;background:var(--panel);border:1.5px solid var(--line);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink)">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+      <!-- Profile card -->
+      <div style="background:var(--panel);border:1.5px solid var(--line);border-radius:16px;padding:24px;margin-top:16px;display:flex;align-items:center;gap:16px">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--accent-pale);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--accent)" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:17px;font-weight:800;color:var(--ink)">旅行者</div>
+          <div style="font-size:12px;color:var(--ink-faint);margin-top:2px;font-family:Consolas,monospace">设备码: <span id="me-device-code">—</span></div>
+        </div>
+      </div>
+      <!-- Menu list -->
+      <div style="margin-top:16px;background:var(--panel);border:1.5px solid var(--line);border-radius:16px;overflow:hidden">
+        <button class="me-menu-item" id="me-orders-btn" style="width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;border:none;background:none;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--line)">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+          我的订单
+          <span style="margin-left:auto;color:var(--ink-faint);font-size:13px">›</span>
+        </button>
+        <button class="me-menu-item" id="me-inbox-btn" style="width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;border:none;background:none;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--line)">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          邮箱
+          <span class="sidebar-badge" id="me-inbox-badge" style="display:none;margin-left:auto">0</span>
+          <span style="margin-left:auto;color:var(--ink-faint);font-size:13px" class="me-arrow">›</span>
+        </button>
+        <button class="me-menu-item" id="me-redeem-btn" style="width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;border:none;background:none;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;color:var(--ink)">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4h-4z"/></svg>
+          兑换
+          <span style="margin-left:auto;color:var(--ink-faint);font-size:13px">›</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== MY ORDERS ===== -->
+    <section class="section-panel hidden" id="sec-my-orders">
+      <div class="section-head">
+        <h2>我的订单</h2>
+      </div>
+      <div style="display:flex;gap:0;border-bottom:1.5px solid var(--line);margin-bottom:16px">
+        <button class="my-orders-tab active" data-status="pending" style="flex:1;padding:10px;font-size:14px;font-weight:700;border:none;background:none;cursor:pointer;font-family:inherit;color:var(--accent-deep);border-bottom:2.5px solid var(--accent)">打包中</button>
+        <button class="my-orders-tab" data-status="completed" style="flex:1;padding:10px;font-size:14px;font-weight:700;border:none;background:none;cursor:pointer;font-family:inherit;color:var(--ink-dim);border-bottom:2.5px solid transparent">已完成</button>
+      </div>
+      <div id="my-orders-list">
+        <div style="text-align:center;padding:40px;color:var(--ink-faint)">加载中…</div>
+      </div>
+    </section>
+
     <p class="empty-tip" id="empty" data-i18n="noResult">没有找到匹配的资料，换个关键词试试。</p>
   </main>
 
@@ -1163,9 +1230,9 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span class="bnav-label">商城</span>
       </button>
-      <button class="bnav-item" data-tab="settings">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        <span class="bnav-label" data-i18n="navSettings">设置</span>
+      <button class="bnav-item" data-tab="me">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="bnav-label" data-i18n="navMe">我的</span>
       </button>
     </div>
   </nav>
@@ -1211,6 +1278,11 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
         <button class="opt-btn active" data-val="sans" data-i18n="efontSans">黑体</button>
       </div>
     </div>
+
+    <div class="setting-group">
+      <button class="clear-data-btn" id="clear-data-btn">清除用户数据</button>
+      <div style="font-size:11px;color:var(--ink-faint);text-align:center;margin-top:6px">清除后不可恢复，下次进入将重新分配设备码</div>
+    </div>
   </div>
 
   <!-- Password Modal removed - now using redemption code unlock -->
@@ -1247,7 +1319,7 @@ var LANG = {
     homeTitle:"首页",
     previewTitle:"前瞻", previewDesc:"各游戏最新版本情报",
     archiveTitle:"二游遗产名录", archiveDesc:"历史版本情报归档，按版本号分类",
-    navHome:"首页", navPreview:"前瞻", navArchive:"遗产名录", navSettings:"设置",
+    navHome:"首页", navPreview:"前瞻", navArchive:"遗产名录", navSettings:"设置", navMe:"我的",
     noResult:"没有找到匹配的资料，换个关键词试试。",
     noArchive:"暂无历史版本，所有情报均为最新版本。",
     noArchiveSub:"当游戏更新新版本后，旧版本情报会自动归档到这里。",
@@ -1290,7 +1362,7 @@ var LANG = {
     homeTitle:"Home",
     previewTitle:"Preview", previewDesc:"Latest version intel for each game",
     archiveTitle:"Legacy Archive", archiveDesc:"Historical version intel, sorted by version",
-    navHome:"Home", navPreview:"Preview", navArchive:"Archive", navSettings:"Settings",
+    navHome:"Home", navPreview:"Preview", navArchive:"Archive", navSettings:"Settings", navMe:"Me",
     noResult:"No matching files found. Try a different keyword.",
     noArchive:"No legacy versions yet — all intel is up to date.",
     noArchiveSub:"When a new version is released, older intel will be archived here.",
@@ -1404,34 +1476,126 @@ function toggleSettings(open) {
   settingsOpen = typeof open === "boolean" ? open : !settingsOpen;
   document.getElementById("settings-overlay").classList.toggle("open", settingsOpen);
   document.getElementById("settings-panel").classList.toggle("open", settingsOpen);
-  if (settingsOpen) {
-    document.querySelectorAll(".bnav-item").forEach(function(b) {
-      b.classList.toggle("active", b.getAttribute("data-tab") === "settings");
-    });
-  }
 }
 document.getElementById("settings-overlay").addEventListener("click", function() { toggleSettings(false); });
 
+// Settings gear on "me" page
+document.getElementById("me-settings-btn").addEventListener("click", function() { toggleSettings(); });
+
 function showTab(which) {
   toggleSettings(false);
-  var tabs = ["home", "preview", "archive", "redeem", "shop", "inbox"];
+  var tabs = ["home", "preview", "archive", "redeem", "shop", "inbox", "me", "my-orders"];
   tabs.forEach(function(t) {
     var el = document.getElementById("sec-" + t);
     if (el) el.classList.toggle("hidden", t !== which);
   });
   document.querySelectorAll(".bnav-item").forEach(function(b) {
     var t = b.getAttribute("data-tab");
-    b.classList.toggle("active", t === which);
+    b.classList.toggle("active", t === which || (which === "my-orders" && t === "me"));
   });
   window.scrollTo({top:0, behavior:"smooth"});
+  // Load orders when entering my-orders
+  if (which === "my-orders") loadMyOrders();
+  // Sync me-device-code display
+  if (which === "me" && myDeviceCode) {
+    var el = document.getElementById("me-device-code");
+    if (el) el.textContent = myDeviceCode;
+  }
 }
 
 document.querySelectorAll(".bnav-item").forEach(function(btn) {
   btn.addEventListener("click", function() {
     var tab = btn.getAttribute("data-tab");
-    if (tab === "settings") { toggleSettings(); }
-    else { showTab(tab); }
+    showTab(tab);
   });
+});
+
+// "我的" page menu buttons
+document.getElementById("me-orders-btn").addEventListener("click", function() { showTab("my-orders"); });
+document.getElementById("me-inbox-btn").addEventListener("click", function() { showTab("inbox"); loadInbox(); });
+document.getElementById("me-redeem-btn").addEventListener("click", function() { showTab("redeem"); });
+
+/* ===== My Orders ===== */
+var myOrdersTab = "pending";
+document.querySelectorAll(".my-orders-tab").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    myOrdersTab = btn.getAttribute("data-status");
+    document.querySelectorAll(".my-orders-tab").forEach(function(b) {
+      var isActive = b === btn;
+      b.style.color = isActive ? "var(--accent-deep)" : "var(--ink-dim)";
+      b.style.borderBottomColor = isActive ? "var(--accent)" : "transparent";
+      b.classList.toggle("active", isActive);
+    });
+    loadMyOrders();
+  });
+});
+
+function loadMyOrders() {
+  if (!myDeviceCode) return;
+  var el = document.getElementById("my-orders-list");
+  el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--ink-faint)">加载中…</div>';
+  sbRpc("shop_my_orders", { p_device: myDeviceCode }).then(function(res) {
+    if (!res || !res.ok) { el.innerHTML = '<div style="text-align:center;color:var(--ink-faint);padding:30px">加载失败</div>'; return; }
+    var all = res.orders || [];
+    var filtered = all.filter(function(o) { return o.status === myOrdersTab; });
+    if (!filtered.length) {
+      el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-faint)">' + (myOrdersTab === "pending" ? "暂无打包中的订单" : "暂无已完成的订单") + '</div>';
+      return;
+    }
+    var html = "";
+    filtered.forEach(function(o) {
+      var itemsHtml = (o.items || []).map(function(it) {
+        var tag = it.line_total === 0 ? ' <span style="color:var(--success);font-size:11px">(赠品)</span>' : '';
+        return '<div>' + it.product_name + tag + '</div>';
+      }).join("");
+      var groupTag = o.is_group_buy ? '<span class="mo-group-tag">拼团</span>' : '';
+      var actionsHtml = "";
+      if (o.status === "pending") {
+        actionsHtml = '<div class="mo-actions">' +
+          '<button class="order-cancel-btn" data-order="' + o.id + '">取消订单</button>' +
+          '</div>';
+      }
+      html += '<div class="my-order-card">' +
+        '<div class="mo-head"><div><span class="mo-id">#' + o.id + '</span>' + groupTag + '</div><span class="mo-total">' + (o.total || o.total_price || 0) + '元</span></div>' +
+        '<div class="mo-items">' + itemsHtml + '</div>' +
+        actionsHtml +
+        '</div>';
+    });
+    el.innerHTML = html;
+    // Bind cancel buttons
+    el.querySelectorAll(".order-cancel-btn").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        if (!confirm("确认取消此订单？")) return;
+        sbRpc("shop_cancel_order", { p_device: myDeviceCode, p_order_id: parseInt(btn.getAttribute("data-order")) }).then(function(r) {
+          if (r && r.ok) { toast("订单已取消"); loadMyOrders(); }
+          else { toast("取消失败: " + (r && r.error || "未知错误")); }
+        });
+      });
+    });
+  });
+}
+
+/* ===== Clear User Data ===== */
+document.getElementById("clear-data-btn").addEventListener("click", function() {
+  if (!confirm("⚠️ 确认清除所有用户数据？\n\n这将清除：\n· 你的设备码\n· 所有已解锁的资料库\n· 所有偏好设置\n· 所有本地记录\n\n清除后不可恢复，下次进入将视为新用户。")) return;
+  // Clear localStorage
+  try {
+    localStorage.removeItem("erp3_prefs");
+    localStorage.removeItem("erp3_device");
+    localStorage.removeItem("erp3_redemptions");
+    localStorage.removeItem("erp3_admin_secret");
+  } catch(e) {}
+  // Clear any cookies
+  document.cookie.split(";").forEach(function(c) {
+    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+  });
+  toast("数据已清除");
+  // Close after short delay
+  setTimeout(function() {
+    window.close();
+    // If window.close() doesn't work (most browsers block it), redirect to blank
+    try { window.location.href = "about:blank"; } catch(e) {}
+  }, 800);
 });
 
 /* ===== copy extraction code ===== */
@@ -1962,6 +2126,12 @@ function updateInboxBadge() {
     var badge = document.getElementById("inbox-badge");
     if (count > 0) { badge.style.display = ""; badge.textContent = count; }
     else { badge.style.display = "none"; }
+    // Also update the "me" page badge
+    var meBadge = document.getElementById("me-inbox-badge");
+    if (meBadge) {
+      if (count > 0) { meBadge.style.display = ""; meBadge.textContent = count; }
+      else { meBadge.style.display = "none"; }
+    }
     var hBadge = document.getElementById("hamburger-badge");
     if (hBadge) {
       if (count > 0) { hBadge.textContent = count > 99 ? "99+" : count; hBadge.classList.add("show"); }
