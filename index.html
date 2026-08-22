@@ -13,8 +13,10 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" as="style">
 <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=ZCOOL+XiaoWei&family=Caveat:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&family=Caveat:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 /* ===== themes ===== */
 :root, [data-theme="pink"] {
@@ -511,7 +513,7 @@ body::before {
 .device-code-display b { color:var(--accent-deep); font-family:Consolas,monospace; font-size:14px; }
 
 /* ===== sidebar (hamburger menu) ===== */
-.top-hamburger { position:fixed; top:14px; right:18px; z-index:120; background:var(--panel); border:1.5px solid var(--line); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.06); }
+.top-hamburger { position:fixed; top:14px; right:18px; z-index:120; background:var(--panel); border:1.5px solid var(--line); border-radius:10px; width:40px; height:40px; display:none; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.06); }
 .top-hamburger svg { width:20px; height:20px; }
 .hamburger-badge { position:absolute; top:-4px; right:-4px; background:#e05050; color:#fff; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:none; align-items:center; justify-content:center; line-height:1; }
 .hamburger-badge.show { display:flex; }
@@ -597,6 +599,10 @@ body::before {
   display:block; margin:0 auto 12px; width:48px; height:48px;
   border-radius:50%; object-fit:cover;
 }
+
+/* ===== render optimization ===== */
+.ver-section { content-visibility: auto; contain-intrinsic-size: 600px; }
+.game-block { contain: layout style; }
 
 /* ===== footer ===== */
 footer {
@@ -1159,7 +1165,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
           <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--accent)" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </div>
         <div style="flex:1">
-          <div style="font-size:17px;font-weight:800;color:var(--ink)">旅行者</div>
+          <div style="font-size:17px;font-weight:800;color:var(--ink)" id="me-username">旅行者</div>
           <div style="font-size:12px;color:var(--ink-faint);margin-top:2px;font-family:Consolas,monospace">设备码: <span id="me-device-code">—</span></div>
         </div>
       </div>
@@ -1241,6 +1247,14 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   <div id="settings-overlay"></div>
   <div id="settings-panel">
     <div class="settings-title" data-i18n="settingsTitle">设置</div>
+
+    <div class="setting-group">
+      <div class="setting-label">用户名</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="text" id="username-input" placeholder="输入你的昵称" maxlength="12" style="flex:1;padding:10px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s">
+        <button id="username-save" style="padding:10px 16px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">保存</button>
+      </div>
+    </div>
 
     <div class="setting-group">
       <div class="setting-label" data-i18n="langLabel">语言 / Language</div>
@@ -1493,6 +1507,9 @@ function showTab(which) {
     var t = b.getAttribute("data-tab");
     b.classList.toggle("active", t === which || (which === "my-orders" && t === "me"));
   });
+  // 三条杠只在商城显示
+  var hamBtn = document.getElementById("btn-sidebar");
+  if (hamBtn) hamBtn.style.display = (which === "shop") ? "" : "none";
   window.scrollTo({top:0, behavior:"smooth"});
   // Load orders when entering my-orders
   if (which === "my-orders") loadMyOrders();
@@ -1500,6 +1517,9 @@ function showTab(which) {
   if (which === "me" && myDeviceCode) {
     var el = document.getElementById("me-device-code");
     if (el) el.textContent = myDeviceCode;
+    // 更新用户名显示
+    var nameEl = document.getElementById("me-username");
+    if (nameEl) nameEl.textContent = loadPref().username || "旅行者";
   }
 }
 
@@ -1578,24 +1598,55 @@ function loadMyOrders() {
 /* ===== Clear User Data ===== */
 document.getElementById("clear-data-btn").addEventListener("click", function() {
   if (!confirm("⚠️ 确认清除所有用户数据？\n\n这将清除：\n· 你的设备码\n· 所有已解锁的资料库\n· 所有偏好设置\n· 所有本地记录\n\n清除后不可恢复，下次进入将视为新用户。")) return;
-  // Clear localStorage
-  try {
-    localStorage.removeItem("erp3_prefs");
-    localStorage.removeItem("erp3_device");
-    localStorage.removeItem("erp3_redemptions");
-    localStorage.removeItem("erp3_admin_secret");
-  } catch(e) {}
-  // Clear any cookies
+  // Clear all localStorage
+  try { localStorage.clear(); } catch(e) {}
+  // Clear sessionStorage
+  try { sessionStorage.clear(); } catch(e) {}
+  // Clear all cookies
   document.cookie.split(";").forEach(function(c) {
     document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
   });
-  toast("数据已清除");
-  // Close after short delay
-  setTimeout(function() {
-    window.close();
-    // If window.close() doesn't work (most browsers block it), redirect to blank
-    try { window.location.href = "about:blank"; } catch(e) {}
-  }, 800);
+  // Clear caches (Service Worker)
+  if ("caches" in window) {
+    caches.keys().then(function(names) {
+      names.forEach(function(name) { caches.delete(name); });
+    });
+  }
+  // Unregister service worker
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(regs) {
+      regs.forEach(function(reg) { reg.unregister(); });
+    });
+  }
+  toast("数据已清除，即将重新加载…");
+  // Force reload
+  setTimeout(function() { window.location.reload(); }, 1000);
+});
+
+/* ===== Username ===== */
+var usernameInput = document.getElementById("username-input");
+var usernameSave = document.getElementById("username-save");
+// Load saved username
+var savedUsername = loadPref().username || "";
+if (usernameInput) usernameInput.value = savedUsername;
+if (savedUsername) {
+  var meName = document.getElementById("me-username");
+  if (meName) meName.textContent = savedUsername;
+}
+if (usernameSave) {
+  usernameSave.addEventListener("click", function() {
+    var name = usernameInput.value.trim();
+    if (!name) { toast("请输入昵称"); return; }
+    var p = loadPref();
+    p.username = name;
+    savePref(p);
+    var meName = document.getElementById("me-username");
+    if (meName) meName.textContent = name;
+    toast("昵称已保存");
+  });
+}
+usernameInput.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") usernameSave.click();
 });
 
 /* ===== copy extraction code ===== */
