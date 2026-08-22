@@ -557,30 +557,71 @@ function renderOrderCard(o) {
 }
 
 function renderGroupView(el) {
+  // 自动检查过期拼团
+  rpc("admin_check_expired_groups", { p_secret: SECRET });
+
+  var pending = allGroups.filter(function(g) { return g.status === 'pending'; });
+  var ended = allGroups.filter(function(g) { return g.status !== 'pending'; });
+
   var groupsHtml = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">' +
     '<span style="font-size:14px;font-weight:700;color:var(--accent-deep)">拼团组 (' + allGroups.length + ')</span>' +
     '<button class="btn-sm success" id="btn-create-group">新建拼团组</button></div>';
+
   if (!allGroups.length) {
     groupsHtml += '<div class="empty-state"><p>暂无拼团组，点击上方按钮创建</p></div>';
   } else {
-    allGroups.forEach(function(g) {
-      var gOrders = allOrders.filter(function(o) { return o.group_id === g.id; });
-      var orderList = gOrders.map(function(o) {
-        return '<div class="group-order-mini"><span>#' + o.id + ' ' + o.device_code + '</span><span>' + (o.total || o.total_price || 0) + '元 <span class="order-status ' + o.status + '" style="font-size:10px">' + (o.status === "pending" ? "待处理" : "已完成") + '</span></span></div>';
-      }).join("");
-      groupsHtml += '<div class="group-card" data-group-id="' + g.id + '">' +
-        '<div class="group-head"><div><span class="group-name">' + (g.name || '拼团 #' + g.id) + '</span>' +
-        '<div class="group-stats">' + g.device_count + '/5 设备 · ' + g.order_count + ' 单 · 合计 ' + g.total_price + '元' + (g.is_public ? ' · <span style="color:var(--success)">公开中</span>' : '') + '</div></div>' +
-        '<div style="display:flex;gap:6px;flex-wrap:wrap">' +
-        '<button class="btn-sm group-rename" data-group="' + g.id + '">改名</button>' +
-        '<button class="btn-sm ' + (g.is_public ? 'warning' : 'success') + ' group-toggle-public" data-group="' + g.id + '" data-public="' + g.is_public + '">' + (g.is_public ? '取消公开' : '公开') + '</button>' +
-        '<button class="btn-sm danger group-delete" data-group="' + g.id + '">删除</button>' +
-        '</div></div>' +
-        '<div class="group-orders">' + (orderList || '<div style="color:var(--ink-faint);font-size:12px;padding:8px 0">暂无订单</div>') + '</div></div>';
-    });
+    // 进行中的拼团
+    if (pending.length) {
+      groupsHtml += '<div style="font-size:13px;font-weight:700;color:var(--accent-deep);margin-bottom:8px">进行中 (' + pending.length + ')</div>';
+      pending.forEach(function(g) { groupsHtml += renderGroupCard(g); });
+    }
+    // 已结束的拼团
+    if (ended.length) {
+      groupsHtml += '<div style="font-size:13px;font-weight:700;color:var(--ink-dim);margin:16px 0 8px">已结束 (' + ended.length + ')</div>';
+      ended.forEach(function(g) { groupsHtml += renderGroupCard(g); });
+    }
   }
   el.innerHTML = groupsHtml;
   bindGroupEvents();
+}
+
+function renderGroupCard(g) {
+  var gOrders = allOrders.filter(function(o) { return o.group_id === g.id; });
+  var orderList = gOrders.map(function(o) {
+    var itemCount = (o.items || []).filter(function(it) { return it.line_total > 0; }).length;
+    return '<div class="group-order-mini" style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line)">' +
+      '<div><span style="font-weight:700">#' + o.id + '</span> <span class="order-device" style="font-size:11px">' + o.device_code + '</span> <span style="font-size:11px;color:var(--ink-dim)">' + itemCount + '件</span></div>' +
+      '<div style="display:flex;align-items:center;gap:6px"><span>' + (o.total || o.total_price || 0) + '元</span>' +
+      '<span class="order-status ' + o.status + '" style="font-size:10px">' + (o.status === "pending" ? "待处理" : "已完成") + '</span>' +
+      (g.status === 'pending' ? '<button class="btn-sm danger group-kick-order" data-group="' + g.id + '" data-order="' + o.id + '" style="padding:3px 8px;font-size:11px">踢出</button>' : '') +
+      '</div></div>';
+  }).join("");
+
+  var statusBadge = '';
+  if (g.status === 'ended') statusBadge = g.result === 'success' ? '<span style="color:var(--success);font-weight:700;font-size:12px"> · 成功</span>' : '<span style="color:var(--danger);font-weight:700;font-size:12px"> · 未成功</span>';
+  if (g.status === 'expired') statusBadge = '<span style="color:var(--ink-faint);font-weight:700;font-size:12px"> · 超时结束</span>';
+
+  var expStr = '';
+  if (g.status === 'pending' && g.expires_at) {
+    var daysLeft = Math.max(0, Math.ceil((new Date(g.expires_at) - Date.now()) / 86400000));
+    expStr = ' · 剩余' + daysLeft + '天';
+  }
+
+  var html = '<div class="group-card" data-group-id="' + g.id + '">' +
+    '<div class="group-head"><div><span class="group-name">' + (g.name || '拼团 #' + g.id) + statusBadge + '</span>' +
+    '<div class="group-stats">' + g.device_count + '/5 设备 · ' + (g.item_count || 0) + ' 商品 · 合计 ' + g.total_price + '元' +
+    (g.is_public ? ' · <span style="color:var(--success)">公开中</span>' : '') + expStr + '</div></div>' +
+    '<div style="display:flex;gap:6px;flex-wrap:wrap">';
+
+  if (g.status === 'pending') {
+    html += '<button class="btn-sm group-rename" data-group="' + g.id + '">改名</button>' +
+      '<button class="btn-sm ' + (g.is_public ? 'warning' : 'success') + ' group-toggle-public" data-group="' + g.id + '" data-public="' + g.is_public + '">' + (g.is_public ? '取消公开' : '公开') + '</button>' +
+      '<button class="btn-sm warning group-end" data-group="' + g.id + '">结束拼团</button>' +
+      '<button class="btn-sm danger group-delete" data-group="' + g.id + '">删除</button>';
+  }
+  html += '</div></div>' +
+    '<div class="group-orders">' + (orderList || '<div style="color:var(--ink-faint);font-size:12px;padding:8px 0">暂无订单</div>') + '</div></div>';
+  return html;
 }
 
 function bindOrderEvents() {
@@ -636,7 +677,7 @@ function bindGroupEvents() {
   if (createBtn) createBtn.addEventListener("click", function() {
     var name = prompt("拼团组名称（可选）");
     rpc("admin_create_group", { p_secret: SECRET, p_name: name || "" }).then(function(r) {
-      if (r && r.ok) { toast("拼团组已创建"); loadGroups().then(renderOrders); }
+      if (r && r.ok) { toast("拼团组已创建（3天后自动结束）"); loadGroups().then(renderOrders); }
     });
   });
   // rename
@@ -655,6 +696,35 @@ function bindGroupEvents() {
       var isPublic = btn.getAttribute("data-public") === "true";
       rpc("admin_set_group_public", { p_secret: SECRET, p_group_id: parseInt(btn.getAttribute("data-group")), p_public: !isPublic }).then(function(r) {
         if (r && r.ok) { loadGroups().then(renderOrders); }
+      });
+    });
+  });
+  // end group
+  document.querySelectorAll(".group-end").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      if (!confirm("确认结束此拼团？将通知所有参与者拼团结果。此操作不可撤回。")) return;
+      rpc("admin_end_group", { p_secret: SECRET, p_group_id: parseInt(btn.getAttribute("data-group")) }).then(function(r) {
+        if (r && r.ok) {
+          toast("拼团已结束：" + (r.result === "success" ? "成功" : "未成功") + "（" + r.item_count + "商品 / " + r.device_count + "人）");
+          loadGroups().then(renderOrders);
+        } else {
+          toast("结束失败: " + (r && r.error || "未知错误"));
+        }
+      });
+    });
+  });
+  // kick order from group
+  document.querySelectorAll(".group-kick-order").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      var oid = btn.getAttribute("data-order");
+      if (!confirm("确认将订单 #" + oid + " 从拼团中踢出？将即时通知该用户。")) return;
+      rpc("admin_remove_from_group", { p_secret: SECRET, p_order_id: parseInt(oid) }).then(function(r) {
+        if (r && r.ok) {
+          toast("订单 #" + oid + " 已从拼团中移除，已通知用户");
+          Promise.all([loadGroups(), loadOrders()]).then(renderOrders);
+        } else {
+          toast("踢出失败: " + (r && r.error || "未知错误"));
+        }
       });
     });
   });
