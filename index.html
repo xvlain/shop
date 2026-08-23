@@ -1509,7 +1509,7 @@ function showTab(which) {
   });
   // 三条杠只在商城显示
   var hamBtn = document.getElementById("btn-sidebar");
-  if (hamBtn) hamBtn.style.display = (which === "shop") ? "" : "none";
+  if (hamBtn) hamBtn.style.display = (which === "shop") ? "flex" : "none";
   window.scrollTo({top:0, behavior:"smooth"});
   // Load orders when entering my-orders
   if (which === "my-orders") loadMyOrders();
