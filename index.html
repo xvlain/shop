@@ -13,10 +13,8 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" as="style">
 <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&family=Caveat:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=ZCOOL+XiaoWei&family=Caveat:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ===== themes ===== */
 :root, [data-theme="pink"] {
@@ -513,7 +511,7 @@ body::before {
 .device-code-display b { color:var(--accent-deep); font-family:Consolas,monospace; font-size:14px; }
 
 /* ===== sidebar (hamburger menu) ===== */
-.top-hamburger { position:fixed; top:14px; right:18px; z-index:120; background:var(--panel); border:1.5px solid var(--line); border-radius:10px; width:40px; height:40px; display:none; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.06); }
+.top-hamburger { position:fixed; top:14px; right:18px; z-index:120; background:var(--panel); border:1.5px solid var(--line); border-radius:10px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.06); }
 .top-hamburger svg { width:20px; height:20px; }
 .hamburger-badge { position:absolute; top:-4px; right:-4px; background:#e05050; color:#fff; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:none; align-items:center; justify-content:center; line-height:1; }
 .hamburger-badge.show { display:flex; }
@@ -580,29 +578,10 @@ body::before {
 .inbox-msg .im-copy { margin-top:8px; padding:6px 14px; border-radius:8px; border:1.5px solid var(--accent-soft); background:var(--accent-pale); color:var(--accent-deep); font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; }
 .inbox-msg .im-copy:hover { background:var(--accent); color:#fff; }
 
-/* ===== my orders ===== */
-.my-order-card { background:var(--panel); border:1.5px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
-.my-order-card .mo-head { display:flex; justify-content:space-between; align-items:center; }
-.my-order-card .mo-id { font-size:13px; font-weight:700; color:var(--accent-deep); }
-.my-order-card .mo-total { font-size:16px; font-weight:800; color:var(--accent-deep); }
-.my-order-card .mo-items { margin-top:8px; font-size:13px; color:var(--ink-dim); line-height:1.8; }
-.my-order-card .mo-actions { margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; }
-.my-order-card .mo-actions button { padding:6px 12px; border-radius:8px; font-size:12px; font-weight:600; border:1.5px solid var(--line); background:var(--bg); color:var(--ink-dim); cursor:pointer; font-family:inherit; transition:all .15s; }
-.my-order-card .mo-actions button:hover { border-color:var(--accent-soft); color:var(--accent-deep); }
-.my-order-card .mo-actions button.danger { color:var(--danger); border-color:#f5c0c0; }
-.my-order-card .mo-actions button.danger:hover { background:#fff5f5; }
-.my-order-card .mo-group-tag { font-size:11px; color:var(--accent); font-weight:600; background:var(--accent-pale); padding:2px 8px; border-radius:6px; margin-left:6px; }
-.clear-data-btn { margin-top:24px; width:100%; padding:14px; border-radius:12px; border:1.5px solid #f5c0c0; background:#fff5f5; color:var(--danger); font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s; }
-.clear-data-btn:hover { background:var(--danger); color:#fff; }
-
 .footer-icon {
   display:block; margin:0 auto 12px; width:48px; height:48px;
   border-radius:50%; object-fit:cover;
 }
-
-/* ===== render optimization ===== */
-.ver-section { content-visibility: auto; contain-intrinsic-size: 600px; }
-.game-block { contain: layout style; }
 
 /* ===== footer ===== */
 footer {
@@ -643,6 +622,10 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4h-4z"/></svg>
       兑换
     </button>
+    <button class="sidebar-item" data-sidebar="orders" id="sb-orders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+      我的订单
+    </button>
     <button class="sidebar-item" data-sidebar="inbox" id="sb-inbox">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
       邮箱 <span class="sidebar-badge" id="inbox-badge" style="display:none">0</span>
@@ -681,7 +664,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 
       <div class="about-card">
         <h3 data-i18n="aboutTitle">关于本站</h3>
-        <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.3.0 「兑换系统」</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.4.0 「售后系统」</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutTotal">收录资料</span><span class="about-val font-mono">19 份</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutSync">最后同步</span><span class="about-val font-mono">2026-08-21 13:43</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutGames">收录游戏</span><span class="about-val">崩坏：星穹铁道、原神、异环、绝区零</span></div>
@@ -689,6 +672,19 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 
       <div class="about-card">
         <h3 data-i18n="changelogTitle">更新日志</h3>
+        <div class="cl-entry">
+          <span class="cl-ver">v1.4.0</span>
+          <span class="cl-date">2026-08-24</span>
+          <h4>售后系统与体验修复</h4>
+          <ul>
+            <li><b>Bug 修复</b></li>
+            <li>修复清除数据无效的问题：新增"清除所有数据"按钮，清除本地与服务端解锁记录，资料库重新上锁</li>
+            <li><b>新功能</b></li>
+            <li>新增"我的订单"页面：菜单中可查看所有订单状态和兑换码</li>
+            <li>新增售后服务：每个未完成订单可自由申请一次售后，包括取消订单、更改拼团、退换商品，无需管理员审核</li>
+            <li>新增黑名单机制：管理员可限制恶意用户的售后权利，其他功能不受影响</li>
+          </ul>
+        </div>
         <div class="cl-entry">
           <span class="cl-ver">v1.3.0</span>
           <span class="cl-date">2026-08-23</span>
@@ -719,14 +715,14 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
           <span class="cl-date">2026-08-21</span>
           <h4>「兑换系统」正式版发布</h4>
           <ul>
-            <li data-i18n="clV1_1">首页改版：致客信 + 站点信息 + 更新日志</li>
-            <li data-i18n="clV1_2">底部导航新增首页入口</li>
-            <li data-i18n="clV1_3">新增 3 种英文字体：衡水体、斜体、黑体</li>
-            <li data-i18n="clV1_4">五星角色/武器自动排列在四星之前</li>
-            <li data-i18n="clV1_5">加密资料库新增预览按钮，可查看角色/物品高清图片</li>
-            <li data-i18n="clV1_6">全站图片压缩优化，加载速度大幅提升</li>
-            <li data-i18n="clV1_7">修复字体设置偶发无响应问题</li>
-            <li data-i18n="clV1_8">收录游戏：崩坏：星穹铁道、原神、异环、绝区零</li>
+            <li>首页改版：致客信 + 站点信息 + 更新日志</li>
+            <li>底部导航新增首页入口</li>
+            <li>新增 3 种英文字体：衡水体、斜体、黑体</li>
+            <li>五星角色/武器自动排列在四星之前</li>
+            <li>加密资料库新增预览按钮，可查看角色/物品高清图片</li>
+            <li>全站图片压缩优化，加载速度大幅提升</li>
+            <li>修复字体设置偶发无响应问题</li>
+            <li>收录游戏：崩坏：星穹铁道、原神、异环、绝区零</li>
           </ul>
         </div>
         <div class="cl-entry">
@@ -737,16 +733,6 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
             <li>新增兑换系统：输入商品码+兑换码即可获取资料库密码</li>
             <li>支持添加到主屏幕（PWA），像 APP 一样使用</li>
             <li>新增绝区零 3.2 情报</li>
-          </ul>
-        </div>
-        <div class="cl-entry">
-          <span class="cl-ver">v1.0.0</span>
-          <span class="cl-date">2026-08-18</span>
-          <h4>站点上线</h4>
-          <ul>
-            <li>二游情报铺网站正式上线</li>
-            <li>收录崩坏：星穹铁道、原神、异环三款游戏情报</li>
-            <li>支持资料分类浏览与网盘链接获取</li>
           </ul>
         </div>
       </div>
@@ -1132,6 +1118,17 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       </div>
     </section>
 
+    <!-- ===== MY ORDERS ===== -->
+    <section class="section-panel hidden" id="sec-orders">
+      <div class="section-head">
+        <h2>我的订单</h2>
+        <span class="desc">查看订单与售后服务</span>
+      </div>
+      <div id="my-orders-list">
+        <div style="text-align:center;padding:40px;color:var(--ink-faint)">加载中…</div>
+      </div>
+    </section>
+
     <!-- ===== INBOX ===== -->
     <section class="section-panel hidden" id="sec-inbox">
       <div class="section-head">
@@ -1187,58 +1184,6 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       </div>
     </section>
 
-    <!-- ===== ME (我的) ===== -->
-    <section class="section-panel hidden" id="sec-me">
-      <div style="position:relative">
-        <button id="me-settings-btn" style="position:absolute;top:0;right:0;background:var(--panel);border:1.5px solid var(--line);border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink)">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        </button>
-      </div>
-      <!-- Profile card -->
-      <div style="background:var(--panel);border:1.5px solid var(--line);border-radius:16px;padding:24px;margin-top:16px;display:flex;align-items:center;gap:16px">
-        <div style="width:56px;height:56px;border-radius:50%;background:var(--accent-pale);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--accent)" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        </div>
-        <div style="flex:1">
-          <div style="font-size:17px;font-weight:800;color:var(--ink)" id="me-username">旅行者</div>
-          <div style="font-size:12px;color:var(--ink-faint);margin-top:2px;font-family:Consolas,monospace">设备码: <span id="me-device-code">—</span></div>
-        </div>
-      </div>
-      <!-- Menu list -->
-      <div style="margin-top:16px;background:var(--panel);border:1.5px solid var(--line);border-radius:16px;overflow:hidden">
-        <button class="me-menu-item" id="me-orders-btn" style="width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;border:none;background:none;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--line)">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
-          我的订单
-          <span style="margin-left:auto;color:var(--ink-faint);font-size:13px">›</span>
-        </button>
-        <button class="me-menu-item" id="me-inbox-btn" style="width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;border:none;background:none;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--line)">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          邮箱
-          <span class="sidebar-badge" id="me-inbox-badge" style="display:none;margin-left:auto">0</span>
-          <span style="margin-left:auto;color:var(--ink-faint);font-size:13px" class="me-arrow">›</span>
-        </button>
-        <button class="me-menu-item" id="me-redeem-btn" style="width:100%;display:flex;align-items:center;gap:14px;padding:16px 18px;border:none;background:none;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600;color:var(--ink)">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4h-4z"/></svg>
-          兑换
-          <span style="margin-left:auto;color:var(--ink-faint);font-size:13px">›</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- ===== MY ORDERS ===== -->
-    <section class="section-panel hidden" id="sec-my-orders">
-      <div class="section-head">
-        <h2>我的订单</h2>
-      </div>
-      <div style="display:flex;gap:0;border-bottom:1.5px solid var(--line);margin-bottom:16px">
-        <button class="my-orders-tab active" data-status="pending" style="flex:1;padding:10px;font-size:14px;font-weight:700;border:none;background:none;cursor:pointer;font-family:inherit;color:var(--accent-deep);border-bottom:2.5px solid var(--accent)">打包中</button>
-        <button class="my-orders-tab" data-status="completed" style="flex:1;padding:10px;font-size:14px;font-weight:700;border:none;background:none;cursor:pointer;font-family:inherit;color:var(--ink-dim);border-bottom:2.5px solid transparent">已完成</button>
-      </div>
-      <div id="my-orders-list">
-        <div style="text-align:center;padding:40px;color:var(--ink-faint)">加载中…</div>
-      </div>
-    </section>
-
     <p class="empty-tip" id="empty" data-i18n="noResult">没有找到匹配的资料，换个关键词试试。</p>
   </main>
 
@@ -1271,9 +1216,9 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span class="bnav-label">商城</span>
       </button>
-      <button class="bnav-item" data-tab="me">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span class="bnav-label" data-i18n="navMe">我的</span>
+      <button class="bnav-item" data-tab="settings">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span class="bnav-label" data-i18n="navSettings">设置</span>
       </button>
     </div>
   </nav>
@@ -1282,14 +1227,6 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   <div id="settings-overlay"></div>
   <div id="settings-panel">
     <div class="settings-title" data-i18n="settingsTitle">设置</div>
-
-    <div class="setting-group">
-      <div class="setting-label">用户名</div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <input type="text" id="username-input" placeholder="输入你的昵称" maxlength="12" style="flex:1;padding:10px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s">
-        <button id="username-save" style="padding:10px 16px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">保存</button>
-      </div>
-    </div>
 
     <div class="setting-group">
       <div class="setting-label" data-i18n="langLabel">语言 / Language</div>
@@ -1329,8 +1266,8 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     </div>
 
     <div class="setting-group">
-      <button class="clear-data-btn" id="clear-data-btn">清除用户数据</button>
-      <div style="font-size:11px;color:var(--ink-faint);text-align:center;margin-top:6px">清除后不可恢复，下次进入将重新分配设备码</div>
+      <div class="setting-label">数据管理</div>
+      <button id="btn-clear-data" style="padding:10px 22px;border-radius:999px;border:1.5px solid #f5c0c0;background:#fff5f5;color:#e05555;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">清除所有数据并重新上锁</button>
     </div>
   </div>
 
@@ -1368,7 +1305,7 @@ var LANG = {
     homeTitle:"首页",
     previewTitle:"前瞻", previewDesc:"各游戏最新版本情报",
     archiveTitle:"二游遗产名录", archiveDesc:"历史版本情报归档，按版本号分类",
-    navHome:"首页", navPreview:"前瞻", navArchive:"遗产名录", navSettings:"设置", navMe:"我的",
+    navHome:"首页", navPreview:"前瞻", navArchive:"遗产名录", navSettings:"设置",
     noResult:"没有找到匹配的资料，换个关键词试试。",
     noArchive:"暂无历史版本，所有情报均为最新版本。",
     noArchiveSub:"当游戏更新新版本后，旧版本情报会自动归档到这里。",
@@ -1386,7 +1323,7 @@ var LANG = {
     aboutTitle:"关于本站", aboutVer:"当前版本", aboutTotal:"收录资料",
     aboutSync:"最后同步", aboutGames:"收录游戏",
     changelogTitle:"更新日志",
-    clV1Title:"「兑换系统」正式版发布",
+    clV1Title:"「售后系统」正式版发布",
     clV1_1:"首页改版：致客信 + 站点信息 + 更新日志",
     clV1_2:"底部导航新增首页入口",
     clV1_3:"新增 3 种英文字体：衡水体、斜体、黑体",
@@ -1411,7 +1348,7 @@ var LANG = {
     homeTitle:"Home",
     previewTitle:"Preview", previewDesc:"Latest version intel for each game",
     archiveTitle:"Legacy Archive", archiveDesc:"Historical version intel, sorted by version",
-    navHome:"Home", navPreview:"Preview", navArchive:"Archive", navSettings:"Settings", navMe:"Me",
+    navHome:"Home", navPreview:"Preview", navArchive:"Archive", navSettings:"Settings",
     noResult:"No matching files found. Try a different keyword.",
     noArchive:"No legacy versions yet — all intel is up to date.",
     noArchiveSub:"When a new version is released, older intel will be archived here.",
@@ -1429,7 +1366,7 @@ var LANG = {
     aboutTitle:"About This Site", aboutVer:"Version", aboutTotal:"Total Files",
     aboutSync:"Last Synced", aboutGames:"Games Covered",
     changelogTitle:"Changelog",
-    clV1Title:'"兑换系统" Official Release',
+    clV1Title:'"售后系统" Official Release',
     clV1_1:"Home page redesign: welcome letter + site info + changelog",
     clV1_2:"Added Home tab to bottom navigation",
     clV1_3:"Added 3 English fonts: Hengshui, Italic, Sans",
@@ -1525,163 +1462,34 @@ function toggleSettings(open) {
   settingsOpen = typeof open === "boolean" ? open : !settingsOpen;
   document.getElementById("settings-overlay").classList.toggle("open", settingsOpen);
   document.getElementById("settings-panel").classList.toggle("open", settingsOpen);
+  if (settingsOpen) {
+    document.querySelectorAll(".bnav-item").forEach(function(b) {
+      b.classList.toggle("active", b.getAttribute("data-tab") === "settings");
+    });
+  }
 }
 document.getElementById("settings-overlay").addEventListener("click", function() { toggleSettings(false); });
 
-// Settings gear on "me" page
-document.getElementById("me-settings-btn").addEventListener("click", function() { toggleSettings(); });
-
 function showTab(which) {
   toggleSettings(false);
-  var tabs = ["home", "preview", "archive", "redeem", "shop", "inbox", "me", "my-orders"];
+  var tabs = ["home", "preview", "archive", "redeem", "shop", "inbox", "orders"];
   tabs.forEach(function(t) {
     var el = document.getElementById("sec-" + t);
     if (el) el.classList.toggle("hidden", t !== which);
   });
   document.querySelectorAll(".bnav-item").forEach(function(b) {
     var t = b.getAttribute("data-tab");
-    b.classList.toggle("active", t === which || (which === "my-orders" && t === "me"));
+    b.classList.toggle("active", t === which);
   });
-  // 三条杠只在商城显示
-  var hamBtn = document.getElementById("btn-sidebar");
-  if (hamBtn) hamBtn.style.display = (which === "shop") ? "flex" : "none";
   window.scrollTo({top:0, behavior:"smooth"});
-  // Load orders when entering my-orders
-  if (which === "my-orders") loadMyOrders();
-  // Sync me-device-code display
-  if (which === "me" && myDeviceCode) {
-    var el = document.getElementById("me-device-code");
-    if (el) el.textContent = myDeviceCode;
-    // 更新用户名显示
-    var nameEl = document.getElementById("me-username");
-    if (nameEl) nameEl.textContent = loadPref().username || "旅行者";
-  }
 }
 
 document.querySelectorAll(".bnav-item").forEach(function(btn) {
   btn.addEventListener("click", function() {
     var tab = btn.getAttribute("data-tab");
-    showTab(tab);
+    if (tab === "settings") { toggleSettings(); }
+    else { showTab(tab); }
   });
-});
-
-// "我的" page menu buttons
-document.getElementById("me-orders-btn").addEventListener("click", function() { showTab("my-orders"); });
-document.getElementById("me-inbox-btn").addEventListener("click", function() { showTab("inbox"); loadInbox(); });
-document.getElementById("me-redeem-btn").addEventListener("click", function() { showTab("redeem"); });
-
-/* ===== My Orders ===== */
-var myOrdersTab = "pending";
-document.querySelectorAll(".my-orders-tab").forEach(function(btn) {
-  btn.addEventListener("click", function() {
-    myOrdersTab = btn.getAttribute("data-status");
-    document.querySelectorAll(".my-orders-tab").forEach(function(b) {
-      var isActive = b === btn;
-      b.style.color = isActive ? "var(--accent-deep)" : "var(--ink-dim)";
-      b.style.borderBottomColor = isActive ? "var(--accent)" : "transparent";
-      b.classList.toggle("active", isActive);
-    });
-    loadMyOrders();
-  });
-});
-
-function loadMyOrders() {
-  if (!myDeviceCode) return;
-  var el = document.getElementById("my-orders-list");
-  el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--ink-faint)">加载中…</div>';
-  sbRpc("shop_my_orders", { p_device: myDeviceCode }).then(function(res) {
-    if (!res || !res.ok) { el.innerHTML = '<div style="text-align:center;color:var(--ink-faint);padding:30px">加载失败</div>'; return; }
-    var all = res.orders || [];
-    var filtered = all.filter(function(o) { return o.status === myOrdersTab; });
-    if (!filtered.length) {
-      el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-faint)">' + (myOrdersTab === "pending" ? "暂无打包中的订单" : "暂无已完成的订单") + '</div>';
-      return;
-    }
-    var html = "";
-    filtered.forEach(function(o) {
-      var itemsHtml = (o.items || []).map(function(it) {
-        var tag = it.line_total === 0 ? ' <span style="color:var(--success);font-size:11px">(赠品)</span>' : '';
-        return '<div>' + it.product_name + tag + '</div>';
-      }).join("");
-      var groupTag = o.is_group_buy ? '<span class="mo-group-tag">拼团</span>' : '';
-      var actionsHtml = "";
-      if (o.status === "pending") {
-        actionsHtml = '<div class="mo-actions">' +
-          '<button class="order-cancel-btn" data-order="' + o.id + '">取消订单</button>' +
-          '</div>';
-      }
-      html += '<div class="my-order-card">' +
-        '<div class="mo-head"><div><span class="mo-id">#' + o.id + '</span>' + groupTag + '</div><span class="mo-total">' + (o.total || o.total_price || 0) + '元</span></div>' +
-        '<div class="mo-items">' + itemsHtml + '</div>' +
-        actionsHtml +
-        '</div>';
-    });
-    el.innerHTML = html;
-    // Bind cancel buttons
-    el.querySelectorAll(".order-cancel-btn").forEach(function(btn) {
-      btn.addEventListener("click", function() {
-        if (!confirm("确认取消此订单？")) return;
-        sbRpc("shop_cancel_order", { p_device: myDeviceCode, p_order_id: parseInt(btn.getAttribute("data-order")) }).then(function(r) {
-          if (r && r.ok) { toast("订单已取消"); loadMyOrders(); }
-          else { toast("取消失败: " + (r && r.error || "未知错误")); }
-        });
-      });
-    });
-  });
-}
-
-/* ===== Clear User Data ===== */
-document.getElementById("clear-data-btn").addEventListener("click", function() {
-  if (!confirm("⚠️ 确认清除所有用户数据？\n\n这将清除：\n· 你的设备码\n· 所有已解锁的资料库\n· 所有偏好设置\n· 所有本地记录\n\n清除后不可恢复，下次进入将视为新用户。")) return;
-  // Clear all localStorage
-  try { localStorage.clear(); } catch(e) {}
-  // Clear sessionStorage
-  try { sessionStorage.clear(); } catch(e) {}
-  // Clear all cookies
-  document.cookie.split(";").forEach(function(c) {
-    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-  });
-  // Clear caches (Service Worker)
-  if ("caches" in window) {
-    caches.keys().then(function(names) {
-      names.forEach(function(name) { caches.delete(name); });
-    });
-  }
-  // Unregister service worker
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.getRegistrations().then(function(regs) {
-      regs.forEach(function(reg) { reg.unregister(); });
-    });
-  }
-  toast("数据已清除，即将重新加载…");
-  // Force reload
-  setTimeout(function() { window.location.reload(); }, 1000);
-});
-
-/* ===== Username ===== */
-var usernameInput = document.getElementById("username-input");
-var usernameSave = document.getElementById("username-save");
-// Load saved username
-var savedUsername = loadPref().username || "";
-if (usernameInput) usernameInput.value = savedUsername;
-if (savedUsername) {
-  var meName = document.getElementById("me-username");
-  if (meName) meName.textContent = savedUsername;
-}
-if (usernameSave) {
-  usernameSave.addEventListener("click", function() {
-    var name = usernameInput.value.trim();
-    if (!name) { toast("请输入昵称"); return; }
-    var p = loadPref();
-    p.username = name;
-    savePref(p);
-    var meName = document.getElementById("me-username");
-    if (meName) meName.textContent = name;
-    toast("昵称已保存");
-  });
-}
-usernameInput.addEventListener("keydown", function(e) {
-  if (e.key === "Enter") usernameSave.click();
 });
 
 /* ===== copy extraction code ===== */
@@ -1992,6 +1800,7 @@ document.querySelectorAll(".sidebar-item").forEach(function(btn) {
     if (target === "cart") { openCart(); }
     else if (target === "redeem") { showTab("redeem"); }
     else if (target === "inbox") { showTab("inbox"); loadInbox(); }
+    else if (target === "orders") { showTab("orders"); loadMyOrders(); }
   });
 });
 
@@ -2006,7 +1815,7 @@ function checkPurchased() {
     var unlocked = res.unlocked || [];
     purchasedProducts = [];
     shopProducts.forEach(function(p) {
-      var gid = (p.game_name || '').replace(/：/g, '') + '-' + (p.ver || '') + '-' + (p.category === 'character' ? ((p.game_group||'').indexOf('zzz')>-1?'代理人':'角色') : ((p.game_group||'').indexOf('hsr')>-1?'光锥':((p.game_group||'').indexOf('zzz')>-1?'音擎':'武器')));
+      var gid = p.game_name + '-' + (p.ver || '') + '-' + (p.category === 'character' ? ((p.game_group||'').indexOf('zzz')>-1?'代理人':'角色') : ((p.game_group||'').indexOf('hsr')>-1?'光锥':((p.game_group||'').indexOf('zzz')>-1?'音擎':'武器')));
       if (unlocked.indexOf(gid) > -1) purchasedProducts.push(p.code);
     });
     renderShop();
@@ -2100,11 +1909,7 @@ function renderCart() {
   html += '<div class="gb-options" style="margin-top:16px;padding:14px;background:var(--panel);border:1.5px solid var(--line);border-radius:12px">';
   html += '<div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--accent-deep)">拼团方式</div>';
   html += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="none" checked style="accent-color:var(--accent)"> 普通购买（不拼团）</label>';
-  if (cart.length >= 3) {
-    html += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="none" style="accent-color:var(--accent)"> <span>个人拼团（已选' + cart.length + '件，自动享受拼团优惠）</span></label>';
-  } else {
-    html += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="create" style="accent-color:var(--accent)"> 发起拼团（满3件成团，3天有效）</label>';
-  }
+  html += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="create" style="accent-color:var(--accent)"> 发起拼团（总商品数满3店主才收到）</label>';
   html += '<div id="gb-public-list" style="margin-top:8px"></div>';
   html += '</div>';
   el.innerHTML = html;
@@ -2131,8 +1936,7 @@ function loadPublicGroups() {
     }
     var h = '';
     publicGroupsCache.forEach(function(g) {
-      var expStr = g.expires_at ? ' · 剩余' + Math.max(0, Math.ceil((new Date(g.expires_at) - Date.now()) / 86400000)) + '天' : '';
-      h += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="join-' + g.id + '" style="accent-color:var(--accent)"> 加入 ' + (g.name || '拼团#' + g.id) + ' <span style="color:var(--ink-dim);font-size:12px">(' + g.device_count + '人 / ' + (g.item_count || 0) + '商品' + expStr + ')</span></label>';
+      h += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="join-' + g.id + '" style="accent-color:var(--accent)"> 加入 ' + (g.name || '拼团#' + g.id) + ' <span style="color:var(--ink-dim);font-size:12px">(' + g.device_count + '人 / ' + g.order_count + '单 / ' + (g.item_count || 0) + '商品)</span></label>';
     });
     listEl.innerHTML = h;
   });
@@ -2212,12 +2016,6 @@ function updateInboxBadge() {
     var badge = document.getElementById("inbox-badge");
     if (count > 0) { badge.style.display = ""; badge.textContent = count; }
     else { badge.style.display = "none"; }
-    // Also update the "me" page badge
-    var meBadge = document.getElementById("me-inbox-badge");
-    if (meBadge) {
-      if (count > 0) { meBadge.style.display = ""; meBadge.textContent = count; }
-      else { meBadge.style.display = "none"; }
-    }
     var hBadge = document.getElementById("hamburger-badge");
     if (hBadge) {
       if (count > 0) { hBadge.textContent = count > 99 ? "99+" : count; hBadge.classList.add("show"); }
@@ -2247,6 +2045,193 @@ claimDevice = function() {
   });
 };
 if (myDeviceCode) { loadShopProducts(); updateInboxBadge(); restoreUnlocks(); setTimeout(checkPurchased, 500); }
+
+/* ===== Clear Data ===== */
+document.getElementById("btn-clear-data").addEventListener("click", function() {
+  if (!confirm("确认清除所有数据？这将清除你的解锁记录、兑换记录和所有设置，资料库将重新上锁。此操作不可恢复。")) return;
+  var btn = this; btn.disabled = true; btn.textContent = "清除中…";
+  var promise = myDeviceCode ? sbRpc("shop_clear_unlocks", { p_device: myDeviceCode }) : Promise.resolve({ok:true});
+  promise.then(function() {
+    try {
+      localStorage.removeItem("erp3_device");
+      localStorage.removeItem("erp3_prefs");
+      localStorage.removeItem("erp3_redemptions");
+    } catch(e) {}
+    btn.disabled = false; btn.textContent = "已清除，正在刷新…";
+    setTimeout(function() { location.reload(); }, 800);
+  }).catch(function() {
+    btn.disabled = false; btn.textContent = "清除失败，请重试";
+    setTimeout(function() { btn.textContent = "清除所有数据并重新上锁"; }, 2000);
+  });
+});
+
+/* ===== My Orders & After-Sales ===== */
+var myOrders = [];
+var isBlacklisted = false;
+
+function loadMyOrders() {
+  if (!myDeviceCode) return;
+  var el = document.getElementById("my-orders-list");
+  el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--ink-faint)">加载中…</div>';
+  // Check blacklist first
+  sbRpc("shop_check_blacklist", { p_device: myDeviceCode }).then(function(blRes) {
+    isBlacklisted = blRes && blRes.is_blacklisted;
+    return sbRpc("shop_my_orders", { p_device: myDeviceCode });
+  }).then(function(res) {
+    if (!res || !res.ok) { el.innerHTML = '<div style="text-align:center;color:var(--ink-faint);padding:30px">加载失败</div>'; return; }
+    myOrders = res.orders || [];
+    if (!myOrders.length) {
+      el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--ink-faint)">暂无订单<br><small>在商城选购情报后提交订单即可看到</small></div>';
+      return;
+    }
+    var html = '';
+    myOrders.forEach(function(o) {
+      var statusLabel = o.status === 'pending' ? '处理中' : (o.status === 'completed' ? '已完成' : '已取消');
+      var statusClass = o.status === 'pending' ? 'pending' : (o.status === 'completed' ? 'completed' : 'cancelled');
+      var items = (o.items || []).map(function(it) {
+        return '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px"><span>' + it.product_name + '</span><span style="color:var(--accent-deep);font-weight:600">' + (it.line_total || 0) + '元</span></div>';
+      }).join("");
+      var codes = (o.codes || []).map(function(c) {
+        return '<div style="font-size:12px;font-family:Consolas,monospace;margin-top:2px">' + c.product_code + ': <b>' + c.redemption_code + '</b></div>';
+      }).join("");
+
+      // After-sales button logic
+      var canApplyAfterSales = o.status === 'pending' && !o.after_sales_status && !isBlacklisted;
+      var afterSalesLabel = o.after_sales_status ? '已申请售后' : '';
+
+      html += '<div class="my-order-card" style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center">' +
+          '<div><span style="font-weight:700;color:var(--accent-deep)">#' + o.id + '</span>' +
+          (o.is_group_buy ? ' <span style="font-size:11px;color:var(--accent);font-weight:600">拼团</span>' : '') +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:8px"><span style="font-size:18px;font-weight:700;color:var(--accent-deep)">' + o.total + '元</span>' +
+          '<span class="order-status ' + statusClass + '" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:' +
+          (statusClass === 'pending' ? '#fff3e0' : (statusClass === 'completed' ? '#e8f5e9' : '#f5f5f5')) + ';color:' +
+          (statusClass === 'pending' ? '#e68a00' : (statusClass === 'completed' ? '#2e7d32' : '#999')) + '">' + statusLabel + '</span></div>' +
+        '</div>' +
+        '<div style="font-size:12px;color:var(--ink-faint);margin-top:6px">' + new Date(o.created_at).toLocaleString("zh-CN") + '</div>' +
+        '<div style="margin-top:10px;border-top:1px solid var(--line);padding-top:10px">' + items + '</div>' +
+        (codes ? '<div style="margin-top:8px;padding:10px;background:var(--accent-pale);border-radius:8px"><div style="font-size:12px;font-weight:700;margin-bottom:4px">兑换码</div>' + codes + '</div>' : '') +
+        (canApplyAfterSales ? '<div style="margin-top:12px;text-align:right"><button class="btn-apply-as" data-order="' + o.id + '" style="padding:8px 18px;border-radius:999px;border:1.5px solid var(--accent-soft);background:var(--accent-pale);color:var(--accent-deep);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">申请售后</button></div>' : '') +
+        (afterSalesLabel ? '<div style="margin-top:8px;font-size:12px;color:var(--ink-dim);text-align:right">' + afterSalesLabel + '</div>' : '') +
+      '</div>';
+    });
+    el.innerHTML = html;
+    bindAfterSalesEvents();
+  });
+}
+
+function bindAfterSalesEvents() {
+  document.querySelectorAll(".btn-apply-as").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      var oid = parseInt(btn.getAttribute("data-order"));
+      openAfterSalesModal(oid);
+    });
+  });
+}
+
+var asModalOrderId = null;
+function openAfterSalesModal(orderId) {
+  asModalOrderId = orderId;
+  var order = myOrders.find(function(o) { return o.id === orderId; });
+  if (!order) return;
+
+  // Build modal content
+  var itemsHtml = (order.items || []).map(function(it, idx) {
+    return '<label style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;cursor:pointer">' +
+      '<input type="checkbox" class="as-item-cb" data-code="' + it.product_code + '" style="accent-color:var(--accent)">' +
+      '<span style="flex:1">' + it.product_name + '</span>' +
+      '<span style="color:var(--accent-deep);font-weight:600">' + (it.line_total || 0) + '元</span></label>';
+  }).join("");
+
+  var modalHtml = '<div style="position:fixed;inset:0;z-index:320;background:rgba(0,0,0,.5)" id="as-overlay">' +
+    '<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--panel);border-radius:18px;padding:24px;width:min(380px,92vw);max-height:80vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.2)" id="as-modal">' +
+      '<h3 style="font-size:18px;font-weight:800;color:var(--accent-deep);text-align:center;margin-bottom:16px">申请售后 - 订单 #' + orderId + '</h3>' +
+      '<div style="margin-bottom:16px">' +
+        '<div style="font-size:13px;font-weight:700;color:var(--ink-dim);margin-bottom:8px">选择售后类型</div>' +
+        '<div style="display:flex;flex-direction:column;gap:8px">' +
+          '<button class="as-type-btn" data-type="cancel" style="padding:10px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;text-align:left">取消订单<br><small style="color:var(--ink-faint)">取消整个订单并退出拼团</small></button>' +
+          '<button class="as-type-btn" data-type="change_group" style="padding:10px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;text-align:left">更改拼团<br><small style="color:var(--ink-faint)">退出当前拼团或加入其他拼团</small></button>' +
+          '<button class="as-type-btn" data-type="return_items" style="padding:10px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;text-align:left">退换商品<br><small style="color:var(--ink-faint)">选择要退换的商品</small></button>' +
+        '</div>' +
+      '</div>' +
+      '<div id="as-items-section" style="display:none;margin-bottom:16px">' +
+        '<div style="font-size:13px;font-weight:700;color:var(--ink-dim);margin-bottom:8px">选择要退换的商品</div>' +
+        itemsHtml +
+      '</div>' +
+      '<div id="as-group-section" style="display:none;margin-bottom:16px">' +
+        '<div style="font-size:13px;font-weight:700;color:var(--ink-dim);margin-bottom:8px">拼团操作</div>' +
+        '<div style="font-size:13px;color:var(--ink-dim);padding:10px;background:var(--bg);border-radius:8px">将退出当前拼团，可重新发起或加入其他拼团。</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:10px;margin-top:16px">' +
+        '<button id="as-cancel" style="flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink-dim);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">取消</button>' +
+        '<button id="as-confirm" style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit" disabled>确认申请</button>' +
+      '</div>' +
+    '</div></div>';
+
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+  var asType = null;
+
+  document.querySelectorAll(".as-type-btn").forEach(function(b) {
+    b.addEventListener("click", function() {
+      asType = b.getAttribute("data-type");
+      document.querySelectorAll(".as-type-btn").forEach(function(bb) { bb.style.borderColor = "var(--line)"; bb.style.background = "var(--bg)"; });
+      b.style.borderColor = "var(--accent)"; b.style.background = "var(--accent-pale)";
+      document.getElementById("as-items-section").style.display = asType === "return_items" ? "" : "none";
+      document.getElementById("as-group-section").style.display = asType === "change_group" ? "" : "none";
+      document.getElementById("as-confirm").disabled = false;
+    });
+  });
+
+  document.getElementById("as-cancel").addEventListener("click", function() {
+    document.getElementById("as-overlay").remove();
+  });
+  document.getElementById("as-overlay").addEventListener("click", function(ev) {
+    if (ev.target.id === "as-overlay") document.getElementById("as-overlay").remove();
+  });
+
+  document.getElementById("as-confirm").addEventListener("click", function() {
+    if (!asType) return;
+    var details = [];
+    if (asType === "return_items") {
+      document.querySelectorAll(".as-item-cb:checked").forEach(function(cb) {
+        details.push({ product_code: cb.getAttribute("data-code") });
+      });
+      if (!details.length) { toast("请至少选择一个商品"); return; }
+    } else if (asType === "change_group") {
+      details = {}; // exit group
+    }
+    var confirmBtn = document.getElementById("as-confirm");
+    confirmBtn.disabled = true; confirmBtn.textContent = "处理中…";
+    sbRpc("shop_apply_after_sales", {
+      p_device: myDeviceCode,
+      p_order_id: asModalOrderId,
+      p_type: asType,
+      p_details: details
+    }).then(function(res) {
+      confirmBtn.disabled = false; confirmBtn.textContent = "确认申请";
+      if (res && res.ok) {
+        document.getElementById("as-overlay").remove();
+        toast("售后申请已处理");
+        loadMyOrders();
+        // Refresh unlocks if items were returned
+        if (asType === "return_items" || asType === "cancel") {
+          setTimeout(function() { restoreUnlocks(); checkPurchased(); }, 500);
+        }
+      } else {
+        var errMsg = (res && res.error) || "未知错误";
+        if (errMsg === "blacklisted") errMsg = "您的账号已被限制售后权利";
+        else if (errMsg === "order_completed") errMsg = "订单已完成，无法申请售后";
+        else if (errMsg === "group_ended") errMsg = "拼团已结束，无法申请售后";
+        else if (errMsg === "already_applied") errMsg = "该订单已申请过售后";
+        toast("申请失败：" + errMsg);
+      }
+    }).catch(function() {
+      confirmBtn.disabled = false; confirmBtn.textContent = "确认申请";
+      toast("网络错误，请重试");
+    });
+  });
+}
 
 /* ===== Service Worker ===== */
 if ("serviceWorker" in navigator) {
