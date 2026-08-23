@@ -120,6 +120,7 @@ td.dim { color:var(--ink-dim); font-size:12px; }
 .order-status { font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px; }
 .order-status.pending { background:#fff3e0; color:#e68a00; }
 .order-status.completed { background:#e8f5e9; color:#2e7d32; }
+.order-status.cancelled { background:#f5f5f5; color:#999; }
 .order-total { font-size:18px; font-weight:700; color:var(--accent-deep); }
 .order-body { margin-top:14px; display:none; border-top:1.5px solid var(--line); padding-top:14px; }
 .order-card.expanded .order-body { display:block; }
@@ -216,12 +217,15 @@ td.dim { color:var(--ink-dim); font-size:12px; }
     <div class="stat-card"><div class="num" id="st-redeem">-</div><div class="label">兑换记录</div></div>
     <div class="stat-card"><div class="num" id="st-dev-free">-</div><div class="label">空闲设备码</div></div>
     <div class="stat-card"><div class="num" id="st-dev-claimed">-</div><div class="label">已分配设备码</div></div>
+    <div class="stat-card"><div class="num" id="st-blacklist">-</div><div class="label">黑名单</div></div>
+    <div class="stat-card"><div class="num" id="st-aftersales">-</div><div class="label">售后记录</div></div>
   </div>
   <div class="tabs" id="ws-tabs">
     <button class="tab active" data-panel="p-unused">可用兑换码</button>
     <button class="tab" data-panel="p-used">已用兑换码</button>
     <button class="tab" data-panel="p-records">兑换记录</button>
     <button class="tab" data-panel="p-devices">设备码</button>
+    <button class="tab" data-panel="p-blacklist">黑名单</button>
     <button class="tab" data-panel="p-generate">生成新码</button>
   </div>
   <div class="content">
@@ -244,6 +248,17 @@ td.dim { color:var(--ink-dim); font-size:12px; }
     <div class="panel" id="p-devices">
       <div class="code-toolbar"><span style="font-size:12px;color:var(--ink-dim)" id="dev-summary"></span></div>
       <div class="table-wrap"><table><thead><tr><th>设备码</th><th>状态</th><th>指纹</th><th>分配时间</th></tr></thead><tbody id="dev-tbody"><tr><td colspan="4" class="loading"><div class="spinner"></div></td></tr></tbody></table></div>
+    </div>
+    <div class="panel" id="p-blacklist">
+      <div class="code-toolbar">
+        <button class="btn-sm success" id="btn-bl-add">+ 添加黑名单</button>
+        <span style="font-size:12px;color:var(--ink-dim)" id="bl-summary"></span>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>设备码</th><th>原因</th><th>添加时间</th><th>操作</th></tr></thead><tbody id="bl-tbody"><tr><td colspan="4" class="loading"><div class="spinner"></div></td></tr></tbody></table></div>
+      <div style="margin-top:20px">
+        <h3 style="font-size:14px;font-weight:700;color:var(--accent-deep);margin-bottom:10px">售后记录</h3>
+        <div class="table-wrap"><table><thead><tr><th>#</th><th>订单</th><th>设备码</th><th>类型</th><th>详情</th><th>时间</th></tr></thead><tbody id="as-tbody"><tr><td colspan="6" style="color:var(--ink-faint);text-align:center;padding:20px">加载中…</td></tr></tbody></table></div>
+      </div>
     </div>
     <div class="panel" id="p-generate">
       <div class="gen-form">
@@ -362,7 +377,7 @@ document.querySelectorAll("#ws-tabs .tab").forEach(function(btn) {
 
 // ===== Load All =====
 function loadAll() {
-  loadStats(); loadUsed(); loadRecords(); loadDevices();
+  loadStats(); loadUsed(); loadRecords(); loadDevices(); loadBlacklist(); loadAfterSales();
   // 先加载兑换码和订单，再渲染（确保下拉框有数据）
   Promise.all([loadUnused(), loadOrders(), loadGroups()]).then(function() { renderOrders(); });
   document.getElementById("header-sub").textContent = "已登录 · " + new Date().toLocaleString("zh-CN");
@@ -378,6 +393,8 @@ function loadStats() {
     document.getElementById("st-redeem").textContent = r.total_redemptions;
     document.getElementById("st-dev-free").textContent = r.free_devices;
     document.getElementById("st-dev-claimed").textContent = r.claimed_devices;
+    document.getElementById("st-blacklist").textContent = r.blacklist_count || 0;
+    document.getElementById("st-aftersales").textContent = r.after_sales_count || 0;
   });
 }
 
@@ -511,10 +528,13 @@ function renderOrders() {
   if (orderView === "single") {
     var pending = allOrders.filter(function(o) { return o.status === "pending"; });
     var completed = allOrders.filter(function(o) { return o.status === "completed"; });
+    var cancelled = allOrders.filter(function(o) { return o.status === "cancelled"; });
     el.innerHTML = '<div style="margin-bottom:12px;font-size:14px;font-weight:700;color:var(--accent-deep)">待处理 (' + pending.length + ')</div>' +
       (pending.length ? pending.map(renderOrderCard).join("") : '<div class="empty-state"><p>暂无待处理订单</p></div>') +
       '<div style="margin:20px 0 12px;font-size:14px;font-weight:700;color:var(--ink-dim)">已完成 (' + completed.length + ')</div>' +
-      (completed.length ? completed.map(renderOrderCard).join("") : '<div class="empty-state"><p>暂无已完成订单</p></div>');
+      (completed.length ? completed.map(renderOrderCard).join("") : '<div class="empty-state"><p>暂无已完成订单</p></div>') +
+      '<div style="margin:20px 0 12px;font-size:14px;font-weight:700;color:var(--ink-faint)">已取消 (' + cancelled.length + ')</div>' +
+      (cancelled.length ? cancelled.map(renderOrderCard).join("") : '<div class="empty-state"><p>暂无已取消订单</p></div>');
     bindOrderEvents();
   } else {
     renderGroupView(el);
@@ -533,7 +553,7 @@ function renderOrderCard(o) {
   return '<div class="order-card" data-order-id="' + o.id + '">' +
     '<div class="order-head">' +
       '<div><span class="order-id">#' + o.id + '</span> <span class="order-device">' + o.device_code + '</span></div>' +
-      '<div style="display:flex;align-items:center;gap:8px"><span class="order-status ' + o.status + '">' + (o.status === "pending" ? "待处理" : "已完成") + '</span><span class="order-total">' + (o.total || o.total_price || 0) + '元</span></div>' +
+      '<div style="display:flex;align-items:center;gap:8px"><span class="order-status ' + o.status + '">' + (o.status === "pending" ? "待处理" : (o.status === "cancelled" ? "已取消" : "已完成")) + '</span><span class="order-total">' + (o.total || o.total_price || 0) + '元</span></div>' +
     '</div>' +
     '<div class="order-meta">' +
       '<span>' + fmtTime(o.created_at) + '</span>' +
@@ -736,6 +756,62 @@ function bindGroupEvents() {
         if (r && r.ok) { toast("已删除"); loadGroups().then(loadOrders()).then(renderOrders); }
       });
     });
+  });
+}
+
+// ===== Blacklist =====
+function loadBlacklist() {
+  rpc("admin_blacklist_list", { p_secret: SECRET }).then(function(r) {
+    var tb = document.getElementById("bl-tbody");
+    if (!r || !r.ok) { tb.innerHTML = '<tr><td colspan="4" style="color:var(--danger)">加载失败</td></tr>'; return; }
+    var list = r.list || [];
+    document.getElementById("bl-summary").textContent = "共 " + list.length + " 个黑名单用户";
+    if (!list.length) { tb.innerHTML = '<tr><td colspan="4" style="color:var(--ink-faint);text-align:center;padding:20px">暂无黑名单用户</td></tr>'; return; }
+    tb.innerHTML = list.map(function(b) {
+      return '<tr><td class="mono">' + b.device_code + '</td><td class="dim">' + (b.reason || '-') + '</td><td class="dim">' + fmtTime(b.created_at) + '</td>' +
+        '<td><button class="btn-sm danger btn-bl-remove" data-device="' + b.device_code + '" style="padding:3px 10px;font-size:11px">移除</button></td></tr>';
+    }).join("");
+    document.querySelectorAll(".btn-bl-remove").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var device = btn.getAttribute("data-device");
+        if (!confirm("确认将 " + device + " 从黑名单中移除？")) return;
+        rpc("admin_blacklist_remove", { p_secret: SECRET, p_device: device }).then(function(r) {
+          if (r && r.ok) { toast("已移除"); loadBlacklist(); loadStats(); }
+        });
+      });
+    });
+  });
+}
+
+document.getElementById("btn-bl-add").addEventListener("click", function() {
+  var device = prompt("输入要加入黑名单的设备码：");
+  if (!device) return;
+  var reason = prompt("原因（可选）：") || "";
+  rpc("admin_blacklist_add", { p_secret: SECRET, p_device: device.trim(), p_reason: reason }).then(function(r) {
+    if (r && r.ok) { toast("已加入黑名单"); loadBlacklist(); loadStats(); }
+    else { toast("添加失败"); }
+  });
+});
+
+// ===== After-Sales =====
+function loadAfterSales() {
+  rpc("admin_after_sales_list", { p_secret: SECRET }).then(function(r) {
+    var tb = document.getElementById("as-tbody");
+    if (!r || !r.ok) { tb.innerHTML = '<tr><td colspan="6" style="color:var(--danger)">加载失败</td></tr>'; return; }
+    var list = r.list || [];
+    if (!list.length) { tb.innerHTML = '<tr><td colspan="6" style="color:var(--ink-faint);text-align:center;padding:20px">暂无售后记录</td></tr>'; return; }
+    var typeLabels = { cancel: "取消订单", change_group: "更改拼团", return_items: "退换商品" };
+    tb.innerHTML = list.map(function(a) {
+      var details = "";
+      try {
+        var d = typeof a.details === "string" ? JSON.parse(a.details) : a.details;
+        if (Array.isArray(d) && d.length) details = d.map(function(x) { return x.product_code || ""; }).join(", ");
+        else if (d && d.new_group_id) details = "新拼团 #" + d.new_group_id;
+        else if (d && typeof d === "object" && !Array.isArray(d)) details = "退出拼团";
+      } catch(e) {}
+      return '<tr><td>' + a.id + '</td><td class="mono">#' + a.order_id + '</td><td class="mono">' + a.device_code + '</td>' +
+        '<td>' + (typeLabels[a.type] || a.type) + '</td><td class="dim">' + (details || '-') + '</td><td class="dim">' + fmtTime(a.created_at) + '</td></tr>';
+    }).join("");
   });
 }
 </script>
