@@ -392,7 +392,11 @@ BEGIN
       ))
       FROM order_codes oc WHERE oc.order_id = o.id
     ), '[]'::jsonb),
-    'after_sales_done', EXISTS(SELECT 1 FROM after_sales WHERE order_id = o.id)
+    'after_sales_status', (
+      SELECT asa.status FROM after_sales asa
+      WHERE asa.order_id = o.id
+      ORDER BY asa.created_at DESC LIMIT 1
+    )
   ) ORDER BY o.created_at DESC) INTO rows
   FROM orders o
   WHERE o.device_code = p_device;
