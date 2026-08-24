@@ -2,6 +2,9 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="googlebot" content="noindex, nofollow">
@@ -2386,7 +2389,7 @@ function initCommunity() {
     communityLoaded = true;
     renderCommunity();
     // 后台刷新最新数据
-    fetch("community_data.json").then(function(r) { return r.json(); }).then(function(d) {
+    fetch("community_data.json?v=20260824").then(function(r) { return r.json(); }).then(function(d) {
       if (d && d.games) { communityData = d; renderCommunity(); }
     }).catch(function() {});
   } else { renderCommunity(); }
