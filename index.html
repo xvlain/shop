@@ -1340,7 +1340,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
       返回社区
     </button>
-    <div class="vp-player"><iframe id="vp-iframe" allowfullscreen="true" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts" allow="autoplay; fullscreen"></iframe></div>
+    <div class="vp-player"><iframe id="vp-iframe" allowfullscreen webkitallowfullscreen mozallowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture; accelerometer; gyroscope" frameborder="0" scrolling="no"></iframe></div>
     <div class="vp-info">
       <div class="vp-title" id="vp-title"></div>
       <div class="vp-meta" id="vp-meta"></div>
@@ -2376,7 +2376,7 @@ function openAfterSalesModal(orderId) {
 }
 
 /* ===== Community (Video) ===== */
-var communityData = {"games":{"崩坏：星穹铁道":[{"title":"《崩坏：星穹铁道》官方视频","bvid":"","aid":"1340190821","desc":"崩坏：星穹铁道官方宣传视频","cover":"","added_at":"2026-08-24"}],"原神":[],"异环":[],"绝区零":[]}};
+var communityData = {"games":{"崩坏：星穹铁道":[{"title":"《崩坏：星穹铁道》白厄角色PV——「日冕」","bvid":"BV1HfKiz3Ezf","aid":"","desc":"「看见那圈白色光晕了么？它叫做日冕，是太阳炽烈的皇冠。」\n「那为什么平时我们看不见它呢？」\n「因为太阳总是过于刺眼。而只有在他一片漆黑的时候，你方能得见他的冠冕。」","cover":"https://i0.hdslb.com/bfs/archive/361e099fd6d34fcc870fbedb4cc6313bc5fc1d58.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》EP：「希望有羽毛和翅膀」","bvid":"BV1Tf421m7iW","aid":"","desc":"希望在我的灵魂中筑巢栖息，\n唱着没有词的歌曲，\n似乎永远不会停息。","cover":"https://i0.hdslb.com/bfs/archive/60ac7666c6ed96880ffdcb2f483ac0857c9d412f.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》花火角色PV——「独角戏」","bvid":"BV1mW421A7nM","aid":"","desc":"「这世界上根本没有不麻烦的人哦？」\n「陪我一起把全部都搅乱的话，我就让你成为我的东西吧。」","cover":"https://i0.hdslb.com/bfs/archive/ac2c1c7a46c0ed7bbbe88a0281aafcfdacecd15c.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》OP：「不眠之夜」","bvid":"BV1me411n7eu","aid":"","desc":"梦境里那个声音笑着说：「带我离开。」\n但我却亲手杀死了睡眠、忘记了时间。\n\n中文演唱者：张杰\n英文演唱者：Jake Miller","cover":"https://i2.hdslb.com/bfs/archive/987f433d2fcc8f6f4fb685d8a10d38fbe468d6e5.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》OP：「星间旅行」","bvid":"BV1rh4y1n77f","aid":"","desc":"把星球当作沿途站台，去开拓一个时代。\n这旅途危机多过意外，但星辰唾手可摘。","cover":"https://i2.hdslb.com/bfs/archive/5e8870128205a2a1a4f45269b06a2086f9e394e7.jpg","added_at":"2026-08-24"}],"原神":[],"异环":[],"绝区零":[]}};
 var communityLoaded = false;
 
 function initCommunity() {
@@ -2436,7 +2436,7 @@ function openVideo(v) {
   document.getElementById("vp-meta").textContent = v.game;
   document.getElementById("vp-desc").textContent = v.desc || "暂无简介";
   var vidParam = v.bvid ? "bvid=" + v.bvid : "aid=" + (v.aid || "");
-  document.getElementById("vp-iframe").src = "//player.bilibili.com/player.html?" + vidParam + "&high_quality=1&danmaku=0";
+  document.getElementById("vp-iframe").src = "//player.bilibili.com/player.html?" + vidParam + "&high_quality=1&danmaku=0&autoplay=0";
   document.getElementById("vp-overlay").classList.add("open");
   document.body.style.overflow = "hidden";
 }
