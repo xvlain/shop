@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="pink">
+<head>
+<script>
+!(function(j,a,g){j.__itrace_conf = {bid: 'f43basl8-6nqu7l3w',rel: '0.0.1', spa: true, uid: '', plugins:['jserror','interface','perf','resource','flow','blank']};var b = a.createElement("script");var d = a.getElementsByTagName("script")[0];b.type = "text/javascript";b.crossorigin = true;b.async = true;b.onload = function(){j.__itrace && j.__itrace.setReady()};d.parentNode.insertBefore(b,d);b.src = g})(window, document, "https://g.alicdn.com/woodpeckerx/itrace-next/itrace.iife.js")
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>二游情报铺 v2 · 社区 & 留声机 设计原型</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* ===== Design Prototype: Community & Jukebox ===== */
+/* 复用现有站点的 CSS 变量体系 */
+
+:root, [data-theme="pink"] {
+  --bg:#fff5f7; --panel:#ffffff; --line:#ffd6e0;
+  --ink:#3d2b3d; --ink-dim:#7a6474; --ink-faint:#b8a0b0;
+  --accent:#e87aa0; --accent-deep:#d4608a; --accent-soft:#f5b8cc; --accent-pale:#fce4ec;
+  --bar-bg:rgba(255,245,247,.92);
+  --danger:#e05555; --success:#50b878;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--bg); color:var(--ink);
+  font-family:"LXGW WenKai","PingFang SC","Microsoft YaHei",sans-serif;
+  line-height:1.7; -webkit-font-smoothing:antialiased;
+  padding-bottom:80px;
+}
+body::before {
+  content:""; position:fixed; inset:0;
+  background-image:radial-gradient(circle at 2px 2px, color-mix(in srgb, var(--accent) 6%, transparent) 1.5px, transparent 0);
+  background-size:28px 28px;
+  pointer-events:none; z-index:0;
+}
+.wrap { position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 22px; }
+
+/* ===== Prototype Navigation Bar ===== */
+.proto-nav {
+  position:sticky; top:0; z-index:300;
+  background:var(--bar-bg); backdrop-filter:blur(12px);
+  border-bottom:1.5px solid var(--line);
+  padding:10px 22px;
+  display:flex; align-items:center; gap:12px;
+}
+.proto-nav h1 { font-size:14px; color:var(--accent-deep); flex:1; }
+.proto-nav .tab-btn {
+  padding:6px 16px; border-radius:20px; border:1.5px solid var(--line);
+  background:var(--panel); color:var(--ink-dim); font-size:13px; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:all .2s;
+}
+.proto-nav .tab-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+.proto-nav .tab-btn:hover:not(.active) { background:var(--accent-pale); color:var(--accent-deep); }
+
+/* ===== Page Container ===== */
+.page { display:none; }
+.page.active { display:block; }
+
+/* ===== Masthead (shared with main site) ===== */
+.masthead {
+  border-bottom:2px solid var(--line);
+  background:linear-gradient(180deg, color-mix(in srgb, var(--bg) 80%, #fff), var(--bg));
+  padding:20px 0 16px;
+}
+.brand { display:flex; align-items:center; gap:14px; }
+.brand h1 { font-size:22px; font-weight:900; color:var(--accent-deep); }
+.brand .sub { font-size:12px; color:var(--ink-faint); margin-top:2px; }
+
+/* ===== Hamburger Menu (首页版) ===== */
+.top-hamburger {
+  position:fixed; top:14px; right:18px; z-index:120;
+  background:var(--panel); border:1.5px solid var(--line); border-radius:10px;
+  width:40px; height:40px; display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.top-hamburger svg { width:20px; height:20px; }
+.sidebar-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:200;
+  opacity:0; pointer-events:none; transition:opacity .25s;
+}
+.sidebar-overlay.open { opacity:1; pointer-events:auto; }
+.sidebar {
+  position:fixed; top:0; right:-300px; width:300px; height:100%;
+  background:var(--panel); z-index:201;
+  transition:right .3s cubic-bezier(.4,0,.2,1);
+  padding:28px 22px; box-shadow:-4px 0 20px rgba(0,0,0,.1); overflow-y:auto;
+}
+.sidebar.open { right:0; }
+.sidebar h3 { font-size:13px; color:var(--ink-faint); margin-bottom:14px; letter-spacing:.12em; }
+.sidebar-item {
+  display:flex; align-items:center; gap:12px; padding:14px 16px;
+  border-radius:12px; cursor:pointer; font-size:15px; font-weight:600;
+  color:var(--ink); transition:all .15s; margin-bottom:4px;
+  border:none; background:none; width:100%; font-family:inherit; text-align:left;
+}
+.sidebar-item:hover { background:var(--accent-pale); color:var(--accent-deep); }
+.sidebar-item svg { width:20px; height:20px; flex-shrink:0; }
+.sidebar-close {
+  position:absolute; top:16px; right:16px;
+  background:none; border:none; cursor:pointer;
+  color:var(--ink-dim); font-size:22px; line-height:1;
+}
+
+/* ===== 社区 — 游戏分类标签 ===== */
+.community-tabs {
+  display:flex; gap:0; border-bottom:1.5px solid var(--line);
+  overflow-x:auto; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.community-tabs::-webkit-scrollbar { display:none; }
+.community-tab {
+  padding:12px 18px; font-size:14px; font-weight:700;
+  color:var(--ink-dim); cursor:pointer; border:none; background:none;
+  font-family:inherit; white-space:nowrap;
+  border-bottom:2.5px solid transparent; transition:all .2s;
+}
+.community-tab.active { color:var(--accent-deep); border-bottom-color:var(--accent); }
+.community-tab:hover:not(.active) { color:var(--accent); }
+
+/* ===== 社区 — 视频卡片网格 ===== */
+.video-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+  gap:16px; padding:20px 0;
+}
+.video-card {
+  background:var(--panel); border:1.5px solid var(--line);
+  border-radius:12px; overflow:hidden; cursor:pointer;
+  transition:all .2s; position:relative;
+}
+.video-card:hover {
+  border-color:var(--accent-soft);
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(0,0,0,.06);
+}
+.video-card .vc-cover {
+  width:100%; aspect-ratio:16/9; background:#1a1a2e;
+  position:relative; overflow:hidden;
+}
+.video-card .vc-cover img {
+  width:100%; height:100%; object-fit:cover;
+  transition:transform .3s;
+}
+.video-card:hover .vc-cover img { transform:scale(1.03); }
+.video-card .vc-duration {
+  position:absolute; bottom:8px; right:8px;
+  background:rgba(0,0,0,.7); color:#fff; font-size:11px;
+  padding:2px 6px; border-radius:4px; font-weight:600;
+  font-family:Consolas,monospace;
+}
+.video-card .vc-info { padding:12px 14px; }
+.video-card .vc-title {
+  font-size:14px; font-weight:700; color:var(--ink);
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  overflow:hidden; line-height:1.5;
+}
+.video-card .vc-meta {
+  font-size:12px; color:var(--ink-faint); margin-top:6px;
+  display:flex; gap:12px;
+}
+
+/* ===== 社区 — 视频播放页 (B站风格) ===== */
+.video-player-page { display:none; padding-top:0; }
+.video-player-page.active { display:block; }
+
+.vp-back {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:10px 0; font-size:13px; color:var(--ink-dim);
+  cursor:pointer; background:none; border:none; font-family:inherit;
+  font-weight:600;
+}
+.vp-back:hover { color:var(--accent-deep); }
+.vp-back svg { width:16px; height:16px; }
+
+.vp-container {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:20px;
+}
+@media(min-width:768px) {
+  .vp-container { grid-template-columns:1fr 320px; }
+}
+
+.vp-main {}
+.vp-player-wrap {
+  width:100%; aspect-ratio:16/9; background:#000;
+  border-radius:12px; overflow:hidden; position:relative;
+  box-shadow:0 4px 20px rgba(0,0,0,.15);
+}
+.vp-player-wrap iframe {
+  width:100%; height:100%; border:none;
+}
+.vp-player-placeholder {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:#fff; font-size:14px; gap:8px;
+}
+.vp-player-placeholder svg { width:48px; height:48px; opacity:.6; }
+
+.vp-info { margin-top:16px; }
+.vp-title {
+  font-size:20px; font-weight:800; color:var(--ink);
+  line-height:1.4; margin-bottom:10px;
+}
+.vp-stats {
+  display:flex; gap:16px; font-size:13px; color:var(--ink-faint);
+  padding-bottom:12px; border-bottom:1.5px solid var(--line);
+}
+.vp-stats span { display:flex; align-items:center; gap:4px; }
+.vp-stats svg { width:14px; height:14px; }
+
+.vp-desc {
+  margin-top:14px; padding:16px;
+  background:var(--accent-pale); border-radius:12px;
+  font-size:14px; color:var(--ink); line-height:1.8;
+  white-space:pre-wrap;
+}
+.vp-desc-toggle {
+  background:none; border:none; color:var(--accent-deep);
+  font-size:13px; font-weight:600; cursor:pointer;
+  font-family:inherit; margin-top:8px; padding:4px 0;
+}
+.vp-desc-toggle:hover { text-decoration:underline; }
+
+/* ===== 社区 — 评论区 (Waline 占位) ===== */
+.vp-comments {
+  margin-top:24px; padding-top:20px;
+  border-top:1.5px solid var(--line);
+}
+.vp-comments h3 {
+  font-size:16px; font-weight:700; color:var(--ink);
+  margin-bottom:16px;
+}
+.comment-placeholder {
+  background:var(--panel); border:1.5px dashed var(--line);
+  border-radius:12px; padding:30px; text-align:center;
+  color:var(--ink-faint); font-size:13px;
+}
+.comment-placeholder .cp-icon { font-size:32px; margin-bottom:8px; }
+
+/* 模拟评论条目 */
+.comment-item {
+  display:flex; gap:12px; padding:14px 0;
+  border-bottom:1px solid var(--line);
+}
+.comment-item:last-child { border-bottom:none; }
+.comment-avatar {
+  width:36px; height:36px; border-radius:50%;
+  background:var(--accent-pale); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:700; color:var(--accent-deep);
+}
+.comment-body { flex:1; }
+.comment-name { font-size:13px; font-weight:700; color:var(--accent-deep); }
+.comment-time { font-size:11px; color:var(--ink-faint); margin-left:8px; }
+.comment-text { font-size:14px; color:var(--ink); margin-top:4px; line-height:1.6; }
+.comment-actions {
+  margin-top:6px; display:flex; gap:16px;
+  font-size:12px; color:var(--ink-faint);
+}
+.comment-actions span { cursor:pointer; }
+.comment-actions span:hover { color:var(--accent); }
+
+/* ===== 社区 — 侧边推荐 ===== */
+.vp-sidebar {}
+.vp-recommend {
+  background:var(--panel); border:1.5px solid var(--line);
+  border-radius:12px; padding:16px;
+}
+.vp-recommend h4 {
+  font-size:14px; font-weight:700; color:var(--accent-deep);
+  margin-bottom:12px; padding-bottom:8px;
+  border-bottom:1.5px dashed var(--line);
+}
+.recommend-item {
+  display:flex; gap:10px; padding:8px 0;
+  border-bottom:1px solid var(--line); cursor:pointer;
+  transition:background .15s;
+}
+.recommend-item:last-child { border-bottom:none; }
+.recommend-item:hover { background:var(--accent-pale); border-radius:8px; }
+.ri-cover {
+  width:120px; height:68px; border-radius:6px;
+  background:#1a1a2e; flex-shrink:0; overflow:hidden;
+}
+.ri-cover img { width:100%; height:100%; object-fit:cover; }
+.ri-info { flex:1; min-width:0; }
+.ri-title {
+  font-size:12px; font-weight:600; color:var(--ink);
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  overflow:hidden; line-height:1.4;
+}
+.ri-meta { font-size:11px; color:var(--ink-faint); margin-top:4px; }
+
+/* ===== 留声机 ===== */
+.jukebox-hero {
+  text-align:center; padding:30px 0 20px;
+}
+.jukebox-hero h2 {
+  font-size:24px; font-weight:900; color:var(--accent-deep);
+}
+.jukebox-hero p {
+  font-size:13px; color:var(--ink-faint); margin-top:6px;
+}
+
+/* 留声机 — 游戏分类 */
+.jukebox-tabs {
+  display:flex; gap:8px; flex-wrap:wrap;
+  justify-content:center; padding:0 0 20px;
+}
+.jukebox-tab {
+  padding:8px 20px; border-radius:20px;
+  border:1.5px solid var(--line); background:var(--panel);
+  color:var(--ink-dim); font-size:13px; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:all .2s;
+}
+.jukebox-tab.active {
+  background:var(--accent); color:#fff; border-color:var(--accent);
+}
+.jukebox-tab:hover:not(.active) {
+  background:var(--accent-pale); color:var(--accent-deep); border-color:var(--accent-soft);
+}
+
+/* 留声机 — 歌曲列表 */
+.track-list { max-width:640px; margin:0 auto; }
+.track-item {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px; margin-bottom:8px;
+  background:var(--panel); border:1.5px solid var(--line);
+  border-radius:12px; cursor:pointer; transition:all .2s;
+}
+.track-item:hover { border-color:var(--accent-soft); background:var(--accent-pale); }
+.track-item.playing { border-color:var(--accent); background:var(--accent-pale); }
+.track-item.playing .ti-num { color:var(--accent); }
+
+.ti-num {
+  font-size:14px; font-weight:700; color:var(--ink-faint);
+  width:24px; text-align:center; flex-shrink:0;
+  font-family:Consolas,monospace;
+}
+.ti-info { flex:1; min-width:0; }
+.ti-name {
+  font-size:14px; font-weight:700; color:var(--ink);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.ti-artist {
+  font-size:12px; color:var(--ink-faint); margin-top:2px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.ti-duration {
+  font-size:12px; color:var(--ink-faint); font-family:Consolas,monospace;
+  flex-shrink:0;
+}
+.ti-play-icon {
+  width:32px; height:32px; border-radius:50%;
+  background:var(--accent); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.ti-play-icon svg { width:14px; height:14px; }
+.track-item.playing .ti-play-icon { animation:pulse-ring 1.5s ease-in-out infinite; }
+@keyframes pulse-ring {
+  0%,100% { box-shadow:0 0 0 0 rgba(232,122,160,.4); }
+  50% { box-shadow:0 0 0 8px rgba(232,122,160,0); }
+}
+
+/* 留声机 — 底部播放条 (固定) */
+.player-bar {
+  position:fixed; bottom:60px; left:0; right:0; z-index:100;
+  background:var(--panel); border-top:1.5px solid var(--line);
+  box-shadow:0 -4px 16px rgba(0,0,0,.06);
+  padding:0;
+}
+.pb-progress {
+  height:3px; background:var(--line); width:100%;
+  cursor:pointer; position:relative;
+}
+.pb-progress-fill {
+  height:100%; background:var(--accent); width:35%;
+  transition:width .1s linear; position:relative;
+}
+.pb-progress-fill::after {
+  content:""; position:absolute; right:-6px; top:-4px;
+  width:12px; height:12px; border-radius:50%;
+  background:var(--accent); box-shadow:0 0 4px rgba(0,0,0,.2);
+  opacity:0; transition:opacity .15s;
+}
+.pb-progress:hover .pb-progress-fill::after { opacity:1; }
+
+.pb-inner {
+  display:flex; align-items:center; gap:14px;
+  padding:10px 20px;
+}
+.pb-cover {
+  width:44px; height:44px; border-radius:8px;
+  background:var(--accent-pale); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+.pb-cover img { width:100%; height:100%; object-fit:cover; }
+.pb-cover svg { width:20px; height:20px; color:var(--accent); }
+
+.pb-track-info { flex:1; min-width:0; }
+.pb-track-name {
+  font-size:14px; font-weight:700; color:var(--ink);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.pb-track-artist {
+  font-size:11px; color:var(--ink-faint);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+.pb-controls {
+  display:flex; align-items:center; gap:8px; flex-shrink:0;
+}
+.pb-btn {
+  width:36px; height:36px; border-radius:50%;
+  border:none; background:none; cursor:pointer;
+  color:var(--ink); display:flex; align-items:center; justify-content:center;
+  transition:all .15s;
+}
+.pb-btn:hover { background:var(--accent-pale); color:var(--accent-deep); }
+.pb-btn svg { width:20px; height:20px; }
+.pb-btn.play-pause {
+  width:42px; height:42px;
+  background:var(--accent); color:#fff;
+}
+.pb-btn.play-pause:hover { background:var(--accent-deep); }
+.pb-btn.play-pause svg { width:22px; height:22px; }
+
+.pb-time {
+  font-size:11px; color:var(--ink-faint); font-family:Consolas,monospace;
+  flex-shrink:0; white-space:nowrap;
+}
+
+.pb-extra {
+  display:flex; align-items:center; gap:4px; flex-shrink:0;
+}
+.pb-extra .pb-btn { width:32px; height:32px; }
+.pb-extra .pb-btn svg { width:16px; height:16px; }
+.pb-extra .pb-btn.active { color:var(--accent); }
+
+/* 留声机 — 设置面板 */
+.jukebox-settings {
+  background:var(--panel); border:1.5px solid var(--line);
+  border-radius:12px; padding:16px 20px;
+  max-width:640px; margin:20px auto;
+}
+.jukebox-settings h4 {
+  font-size:14px; font-weight:700; color:var(--accent-deep);
+  margin-bottom:12px;
+}
+.js-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 0; border-bottom:1px solid var(--line);
+}
+.js-row:last-child { border-bottom:none; }
+.js-label { font-size:14px; color:var(--ink); }
+.js-desc { font-size:11px; color:var(--ink-faint); margin-top:2px; }
+
+/* Toggle switch */
+.toggle {
+  position:relative; width:44px; height:24px;
+  background:var(--line); border-radius:12px;
+  cursor:pointer; transition:background .2s;
+}
+.toggle.on { background:var(--accent); }
+.toggle::after {
+  content:""; position:absolute;
+  top:3px; left:3px; width:18px; height:18px;
+  border-radius:50%; background:#fff;
+  transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.15);
+}
+.toggle.on::after { transform:translateX(20px); }
+
+/* ===== Bottom Nav (shared) ===== */
+#bnav {
+  position:fixed; bottom:0; left:0; right:0;
+  background:var(--panel); border-top:1.5px solid var(--line);
+  z-index:50; padding-bottom:env(safe-area-inset-bottom);
+}
+#bnav .bnav-inner { display:flex; max-width:520px; margin:0 auto; }
+#bnav .bnav-item {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+  padding:8px 0 6px; border:none; background:none;
+  color:var(--ink-faint); cursor:pointer; font-family:inherit;
+}
+#bnav .bnav-item.active { color:var(--accent); }
+#bnav .bnav-item svg { width:22px; height:22px; }
+#bnav .bnav-label { font-size:11px; font-weight:600; }
+
+/* ===== Section panels ===== */
+.section-head {
+  display:flex; align-items:baseline; gap:10px;
+  margin-bottom:20px; padding-top:10px;
+}
+.section-head h2 { font-size:22px; font-weight:900; color:var(--accent-deep); }
+.section-head .desc { font-size:13px; color:var(--ink-faint); }
+
+/* ===== Empty state ===== */
+.empty-state {
+  text-align:center; padding:60px 20px; color:var(--ink-faint);
+}
+.empty-state svg { width:56px; height:56px; margin-bottom:12px; opacity:.4; }
+.empty-state p { font-size:15px; }
+.empty-state small { font-size:12px; display:block; margin-top:8px; }
+
+/* ===== Responsive ===== */
+@media(max-width:600px) {
+  .video-grid { grid-template-columns:1fr; }
+  .vp-title { font-size:17px; }
+  .ri-cover { width:100px; height:56px; }
+  .pb-time { display:none; }
+  .pb-extra { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Prototype Navigation (仅用于设计原型切换页面) ===== -->
+<div class="proto-nav">
+  <h1>v2 设计原型</h1>
+  <button class="tab-btn active" onclick="showPage('home')">首页菜单</button>
+  <button class="tab-btn" onclick="showPage('community')">社区</button>
+  <button class="tab-btn" onclick="showPage('video')">视频播放</button>
+  <button class="tab-btn" onclick="showPage('jukebox')">留声机</button>
+</div>
+
+<!-- ====================================================== -->
+<!-- PAGE: 首页 — 汉堡菜单设计 -->
+<!-- ====================================================== -->
+<div class="page active" id="page-home">
+  <div class="wrap">
+    <div class="masthead">
+      <div class="brand">
+        <h1>二游情报铺</h1>
+      </div>
+    </div>
+
+    <div style="padding:40px 0; text-align:center;">
+      <p style="font-size:15px; color:var(--ink-dim); margin-bottom:30px;">
+        点击右上角的汉堡菜单查看首页菜单设计
+      </p>
+    </div>
+  </div>
+
+  <!-- 汉堡按钮 -->
+  <button class="top-hamburger" onclick="openSidebar()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+
+  <!-- 侧边栏 -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+  <div class="sidebar" id="sidebar">
+    <button class="sidebar-close" onclick="closeSidebar()">&times;</button>
+    <h3>探索</h3>
+    <!-- 社区入口 -->
+    <button class="sidebar-item" onclick="closeSidebar(); showPage('community');">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+      社区
+    </button>
+    <!-- 留声机入口 -->
+    <button class="sidebar-item" onclick="closeSidebar(); showPage('jukebox');">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="5.5" cy="17.5" r="2.5"/>
+        <circle cx="17.5" cy="15.5" r="2.5"/>
+        <path d="M8 17V5l12-2v12"/>
+      </svg>
+      留声机
+    </button>
+
+    <h3 style="margin-top:24px;">快捷入口</h3>
+    <button class="sidebar-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+        <line x1="8" y1="21" x2="16" y2="21"/>
+        <line x1="12" y1="17" x2="12" y2="21"/>
+      </svg>
+      商城
+    </button>
+    <button class="sidebar-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 12 20 22 4 22 4 12"/>
+        <rect x="2" y="7" width="20" height="5"/>
+        <line x1="12" y1="22" x2="12" y2="7"/>
+        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+      </svg>
+      兑换
+    </button>
+    <button class="sidebar-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      邮箱
+    </button>
+  </div>
+</div>
+
+<!-- ====================================================== -->
+<!-- PAGE: 社区 — 视频列表 -->
+<!-- ====================================================== -->
+<div class="page" id="page-community">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>社区</h2>
+      <span class="desc">视频 · 攻略 · 日常</span>
+    </div>
+
+    <!-- 游戏分类标签 -->
+    <div class="community-tabs">
+      <button class="community-tab active">全部</button>
+      <button class="community-tab">崩坏：星穹铁道</button>
+      <button class="community-tab">原神</button>
+      <button class="community-tab">异环</button>
+      <button class="community-tab">绝区零</button>
+    </div>
+
+    <!-- 视频卡片网格 -->
+    <div class="video-grid">
+      <!-- 视频卡片示例 1 -->
+      <div class="video-card" onclick="showPage('video')">
+        <div class="vc-cover">
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px">
+            ⭐
+          </div>
+          <span class="vc-duration">12:34</span>
+        </div>
+        <div class="vc-info">
+          <div class="vc-title">星穹铁道 4.5 角色前瞻：全新五星角色深度解析</div>
+          <div class="vc-meta">
+            <span>崩坏：星穹铁道</span>
+            <span>1.2k 播放</span>
+            <span>3天前</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 视频卡片示例 2 -->
+      <div class="video-card" onclick="showPage('video')">
+        <div class="vc-cover">
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#2d1b4e,#1a1a3e);display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px">
+            🎮
+          </div>
+          <span class="vc-duration">08:22</span>
+        </div>
+        <div class="vc-info">
+          <div class="vc-title">原神 7.1 深渊满星攻略·低配阵容也能轻松过</div>
+          <div class="vc-meta">
+            <span>原神</span>
+            <span>856 播放</span>
+            <span>5天前</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 视频卡片示例 3 -->
+      <div class="video-card" onclick="showPage('video')">
+        <div class="vc-cover">
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#1b3a2d,#1a2e1e);display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px">
+            🌿
+          </div>
+          <span class="vc-duration">15:47</span>
+        </div>
+        <div class="vc-info">
+          <div class="vc-title">异环 1.3 全隐藏任务收集指南·一次跑完不迷路</div>
+          <div class="vc-meta">
+            <span>异环</span>
+            <span>432 播放</span>
+            <span>1周前</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 视频卡片示例 4 -->
+      <div class="video-card" onclick="showPage('video')">
+        <div class="vc-cover">
+          <div style="width:100%;height:100%;background:linear-gradient(135deg,#3a1b2d,#2e1a1e);display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px">
+            🔥
+          </div>
+          <span class="vc-duration">06:15</span>
+        </div>
+        <div class="vc-info">
+          <div class="vc-title">绝区零 3.2 新代理人实战评测·值得抽吗？</div>
+          <div class="vc-meta">
+            <span>绝区零</span>
+            <span>678 播放</span>
+            <span>2天前</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================== -->
+<!-- PAGE: 视频播放页 (B站风格排版) -->
+<!-- ====================================================== -->
+<div class="page" id="page-video">
+  <div class="wrap">
+    <button class="vp-back" onclick="showPage('community')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+      返回社区
+    </button>
+
+    <div class="vp-container">
+      <!-- 左侧主区域 -->
+      <div class="vp-main">
+        <!-- B站嵌入播放器 -->
+        <div class="vp-player-wrap">
+          <!-- 实际使用时替换为 B站 iframe -->
+          <!-- <iframe src="//player.bilibili.com/player.html?bvid=BV1xx411c7mD&high_quality=1&danmaku=1" allowfullscreen></iframe> -->
+          <div class="vp-player-placeholder">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <span>B站嵌入式播放器</span>
+            <span style="font-size:11px;opacity:.6">player.bilibili.com/player.html?bvid=xxx</span>
+          </div>
+        </div>
+
+        <!-- 视频信息 -->
+        <div class="vp-info">
+          <h1 class="vp-title">星穹铁道 4.5 角色前瞻：全新五星角色深度解析</h1>
+          <div class="vp-stats">
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              1.2k 播放
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              2026-08-21
+            </span>
+            <span>崩坏：星穹铁道</span>
+          </div>
+
+          <!-- 简介区域 -->
+          <div class="vp-desc" id="vp-desc">本期视频详细解析了星穹铁道 4.5 版本全新五星角色的技能机制、光锥搭配和队伍构建思路。
+
+从普攻到终结技，逐一拆解每个技能倍率和实战表现。适合想要提前了解角色强度的旅行者参考。
+
+时间轴：
+00:00 角色概览
+02:30 技能解析
+06:00 光锥推荐
+09:15 队伍搭配
+11:40 抽取卡建议</div>
+          <button class="vp-desc-toggle" id="vp-desc-toggle" onclick="toggleDesc()">收起</button>
+        </div>
+
+        <!-- 评论区 -->
+        <div class="vp-comments">
+          <h3>评论 (12)</h3>
+
+          <!-- 模拟评论 -->
+          <div class="comment-item">
+            <div class="comment-avatar">旅</div>
+            <div class="comment-body">
+              <span class="comment-name">旅行者小明</span>
+              <span class="comment-time">2小时前</span>
+              <div class="comment-text">这个角色太强了吧，感觉必抽！感谢分析~</div>
+              <div class="comment-actions">
+                <span>👍 12</span>
+                <span>回复</span>
+              </div>
+            </div>
+          </div>
+          <div class="comment-item">
+            <div class="comment-avatar">星</div>
+            <div class="comment-body">
+              <span class="comment-name">星穹列车长</span>
+              <span class="comment-time">5小时前</span>
+              <div class="comment-text">队伍搭配那段讲得很清楚，正好在纠结怎么组队。收藏了！</div>
+              <div class="comment-actions">
+                <span>👍 8</span>
+                <span>回复</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Waline 评论系统占位 -->
+          <div class="comment-placeholder" style="margin-top:16px;">
+            <div class="cp-icon">💬</div>
+            <p>实际部署时接入 Waline 评论系统</p>
+            <small>免费部署在 Vercel · 支持 Markdown · 嵌套回复 · 表情</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右侧推荐列表 -->
+      <div class="vp-sidebar">
+        <div class="vp-recommend">
+          <h4>相关视频</h4>
+
+          <div class="recommend-item" onclick="showPage('video')">
+            <div class="ri-cover">
+              <div style="width:100%;height:100%;background:linear-gradient(135deg,#2d1b4e,#1a1a3e);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px">🎮</div>
+            </div>
+            <div class="ri-info">
+              <div class="ri-title">原神 7.1 深渊满星攻略</div>
+              <div class="ri-meta">原神 · 856 播放</div>
+            </div>
+          </div>
+
+          <div class="recommend-item" onclick="showPage('video')">
+            <div class="ri-cover">
+              <div style="width:100%;height:100%;background:linear-gradient(135deg,#1b3a2d,#1a2e1e);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px">🌿</div>
+            </div>
+            <div class="ri-info">
+              <div class="ri-title">异环 1.3 隐藏任务收集</div>
+              <div class="ri-meta">异环 · 432 播放</div>
+            </div>
+          </div>
+
+          <div class="recommend-item" onclick="showPage('video')">
+            <div class="ri-cover">
+              <div style="width:100%;height:100%;background:linear-gradient(135deg,#3a1b2d,#2e1a1e);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px">🔥</div>
+            </div>
+            <div class="ri-info">
+              <div class="ri-title">绝区零 3.2 新代理人评测</div>
+              <div class="ri-meta">绝区零 · 678 播放</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================== -->
+<!-- PAGE: 留声机 -->
+<!-- ====================================================== -->
+<div class="page" id="page-jukebox">
+  <div class="wrap">
+    <div class="jukebox-hero">
+      <h2>🎵 留声机</h2>
+      <p>游戏原声 · 随时聆听</p>
+    </div>
+
+    <!-- 游戏分类 -->
+    <div class="jukebox-tabs">
+      <button class="jukebox-tab active">全部</button>
+      <button class="jukebox-tab">崩坏：星穹铁道</button>
+      <button class="jukebox-tab">原神</button>
+      <button class="jukebox-tab">异环</button>
+      <button class="jukebox-tab">绝区零</button>
+    </div>
+
+    <!-- 播放设置 -->
+    <div class="jukebox-settings">
+      <h4>播放设置</h4>
+      <div class="js-row">
+        <div>
+          <div class="js-label">后台播放</div>
+          <div class="js-desc">切换页面时继续播放</div>
+        </div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="js-row">
+        <div>
+          <div class="js-label">自动播放上次进度</div>
+          <div class="js-desc">下次打开时从上次位置继续</div>
+        </div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="js-row">
+        <div>
+          <div class="js-label">进入时自动播放</div>
+          <div class="js-desc">打开留声机时自动开始播放</div>
+        </div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+
+    <!-- 歌曲列表 -->
+    <div class="track-list">
+      <div class="track-item playing" onclick="selectTrack(this)">
+        <span class="ti-num">1</span>
+        <div class="ti-play-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+        </div>
+        <div class="ti-info">
+          <div class="ti-name">星穹铁道 · 开拓之旅</div>
+          <div class="ti-artist">HOYO-MiX</div>
+        </div>
+        <span class="ti-duration">03:42</span>
+      </div>
+
+      <div class="track-item" onclick="selectTrack(this)">
+        <span class="ti-num">2</span>
+        <div class="ti-info">
+          <div class="ti-name">星穹铁道 · 黑塔空间站</div>
+          <div class="ti-artist">HOYO-MiX</div>
+        </div>
+        <span class="ti-duration">04:15</span>
+      </div>
+
+      <div class="track-item" onclick="selectTrack(this)">
+        <span class="ti-num">3</span>
+        <div class="ti-info">
+          <div class="ti-name">原神 · 璃月</div>
+          <div class="ti-artist">HOYO-MiX</div>
+        </div>
+        <span class="ti-duration">05:28</span>
+      </div>
+
+      <div class="track-item" onclick="selectTrack(this)">
+        <span class="ti-num">4</span>
+        <div class="ti-info">
+          <div class="ti-name">原神 · 稻妻</div>
+          <div class="ti-artist">HOYO-MiX</div>
+        </div>
+        <span class="ti-duration">06:12</span>
+      </div>
+
+      <div class="track-item" onclick="selectTrack(this)">
+        <span class="ti-num">5</span>
+        <div class="ti-info">
+          <div class="ti-name">异环 · 序章</div>
+          <div class="ti-artist">游戏原声</div>
+        </div>
+        <span class="ti-duration">03:56</span>
+      </div>
+
+      <div class="track-item" onclick="selectTrack(this)">
+        <span class="ti-num">6</span>
+        <div class="ti-info">
+          <div class="ti-name">绝区零 · 新艾利都</div>
+          <div class="ti-artist">HOYO-MiX</div>
+        </div>
+        <span class="ti-duration">04:33</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部播放条 -->
+  <div class="player-bar">
+    <div class="pb-progress">
+      <div class="pb-progress-fill" style="width:35%"></div>
+    </div>
+    <div class="pb-inner">
+      <div class="pb-cover">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="5.5" cy="17.5" r="2.5"/>
+          <circle cx="17.5" cy="15.5" r="2.5"/>
+          <path d="M8 17V5l12-2v12"/>
+        </svg>
+      </div>
+      <div class="pb-track-info">
+        <div class="pb-track-name">星穹铁道 · 开拓之旅</div>
+        <div class="pb-track-artist">HOYO-MiX</div>
+      </div>
+      <span class="pb-time">01:18 / 03:42</span>
+      <div class="pb-controls">
+        <button class="pb-btn" title="上一首">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button class="pb-btn play-pause" title="暂停">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+        </button>
+        <button class="pb-btn" title="下一首">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+      </div>
+      <div class="pb-extra">
+        <button class="pb-btn active" title="循环播放">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="17 1 21 5 17 9"/>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <polyline points="7 23 3 19 7 15"/>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
+        </button>
+        <button class="pb-btn" title="列表">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="8" y1="6" x2="21" y2="6"/>
+            <line x1="8" y1="12" x2="21" y2="12"/>
+            <line x1="8" y1="18" x2="21" y2="18"/>
+            <line x1="3" y1="6" x2="3.01" y2="6"/>
+            <line x1="3" y1="12" x2="3.01" y2="12"/>
+            <line x1="3" y1="18" x2="3.01" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Bottom Nav ===== -->
+<nav id="bnav">
+  <div class="bnav-inner">
+    <button class="bnav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="bnav-label">首页</span>
+    </button>
+    <button class="bnav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+      <span class="bnav-label">前瞻</span>
+    </button>
+    <button class="bnav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
+      <span class="bnav-label">遗产名录</span>
+    </button>
+    <button class="bnav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span class="bnav-label">商城</span>
+    </button>
+  </div>
+</nav>
+
+<script>
+// 页面切换
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  var page = document.getElementById('page-' + name);
+  if (page) page.classList.add('active');
+  document.querySelectorAll('.proto-nav .tab-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.textContent.includes(
+      name === 'home' ? '首页' : name === 'community' ? '社区' : name === 'video' ? '视频' : '留声机'
+    ));
+  });
+  // 留声机页面显示播放条
+  document.querySelector('.player-bar').style.display = name === 'jukebox' ? '' : 'none';
+  window.scrollTo(0, 0);
+}
+
+// 侧边栏
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// 选择曲目
+function selectTrack(el) {
+  document.querySelectorAll('.track-item').forEach(function(t) {
+    t.classList.remove('playing');
+    var icon = t.querySelector('.ti-play-icon');
+    if (icon) icon.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+  });
+  el.classList.add('playing');
+  var icon = el.querySelector('.ti-play-icon');
+  if (icon) icon.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
+
+  var name = el.querySelector('.ti-name').textContent;
+  var artist = el.querySelector('.ti-artist').textContent;
+  document.querySelector('.pb-track-name').textContent = name;
+  document.querySelector('.pb-track-artist').textContent = artist;
+}
+
+// 简介展开/收起
+var descExpanded = true;
+function toggleDesc() {
+  var desc = document.getElementById('vp-desc');
+  var btn = document.getElementById('vp-desc-toggle');
+  descExpanded = !descExpanded;
+  if (descExpanded) {
+    desc.style.maxHeight = 'none';
+    btn.textContent = '收起';
+  } else {
+    desc.style.maxHeight = '80px';
+    desc.style.overflow = 'hidden';
+    btn.textContent = '展开全文';
+  }
+}
+
+// 初始化：隐藏播放条
+document.querySelector('.player-bar').style.display = 'none';
+
+// 社区标签切换
+document.querySelectorAll('.community-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.community-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+  });
+});
+
+// 留声机标签切换
+document.querySelectorAll('.jukebox-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.jukebox-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+  });
+});
+
+// 进度条交互
+document.querySelector('.pb-progress').addEventListener('click', function(e) {
+  var rect = this.getBoundingClientRect();
+  var pct = ((e.clientX - rect.left) / rect.width) * 100;
+  document.querySelector('.pb-progress-fill').style.width = Math.max(0, Math.min(100, pct)) + '%';
+});
+</script>
+
+</body>
+</html>
