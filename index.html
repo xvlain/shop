@@ -681,30 +681,129 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 .vp-ctrl-btn:hover { border-color:var(--accent-soft); color:var(--accent-deep); }
 .vp-ctrl-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
 
-/* Custom fullscreen overlay on iframe */
-.vp-custom-controls { position:absolute; inset:0; z-index:10; pointer-events:none; display:flex; flex-direction:column; justify-content:space-between; }
-.vp-custom-controls .vp-cc-top { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:linear-gradient(180deg, rgba(0,0,0,.6) 0%, transparent 100%); opacity:0; transition:opacity .25s; pointer-events:auto; }
-.vp-custom-controls .vp-cc-bottom { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:linear-gradient(0deg, rgba(0,0,0,.6) 0%, transparent 100%); opacity:0; transition:opacity .25s; pointer-events:auto; }
-.vp-custom-controls.show .vp-cc-top, .vp-custom-controls.show .vp-cc-bottom { opacity:1; }
-.vp-cc-btn { display:flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.15); backdrop-filter:blur(4px); border:none; color:#fff; cursor:pointer; transition:background .2s; pointer-events:auto; }
-.vp-cc-btn:hover { background:rgba(255,255,255,.3); }
-.vp-cc-btn svg { width:22px; height:22px; }
-.vp-cc-btn.active { background:var(--accent); }
-.vp-cc-group { display:flex; gap:8px; align-items:center; }
-.vp-cc-speed { font-size:12px; font-weight:700; padding:4px 10px; border-radius:14px; background:rgba(255,255,255,.15); backdrop-filter:blur(4px); border:1px solid rgba(255,255,255,.2); color:#fff; cursor:pointer; transition:all .2s; pointer-events:auto; }
-.vp-cc-speed.active { background:var(--accent); border-color:var(--accent); }
-.vp-cc-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); display:flex; gap:24px; align-items:center; opacity:0; transition:opacity .25s; pointer-events:auto; }
-.vp-custom-controls.show .vp-cc-center { opacity:1; }
-.vp-cc-play-btn { width:64px; height:64px; border-radius:50%; background:rgba(0,0,0,.5); backdrop-filter:blur(8px); border:2px solid rgba(255,255,255,.3); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; pointer-events:auto; }
-.vp-cc-play-btn:hover { background:rgba(0,0,0,.7); border-color:#fff; }
-.vp-cc-play-btn svg { width:32px; height:32px; }
-.vp-cc-toast { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,.75); color:#fff; padding:8px 20px; border-radius:20px; font-size:14px; font-weight:600; pointer-events:none; opacity:0; transition:opacity .2s; }
-.vp-cc-toast.show { opacity:1; }
-/* Floating show-controls button */
-.vp-show-ctrl-btn { position:absolute; bottom:12px; right:12px; z-index:12; width:40px; height:40px; border-radius:50%; background:rgba(0,0,0,.55); backdrop-filter:blur(4px); border:1.5px solid rgba(255,255,255,.2); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:opacity .25s, transform .25s; opacity:0; pointer-events:none; }
-.vp-show-ctrl-btn.visible { opacity:1; pointer-events:auto; }
-.vp-show-ctrl-btn:hover { background:rgba(0,0,0,.75); border-color:rgba(255,255,255,.4); }
-.vp-show-ctrl-btn svg { width:20px; height:20px; }
+/* ===== Custom Video Player ===== */
+.vp-controls-overlay {
+  position: absolute; inset: 0; z-index: 10;
+  display: flex; flex-direction: column; justify-content: space-between;
+  pointer-events: none;
+  transition: opacity .3s;
+}
+.vp-controls-overlay.hidden { opacity: 0; }
+.vp-controls-overlay.hidden * { pointer-events: none !important; }
+
+/* Top bar */
+.vp-top-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, rgba(0,0,0,.65) 0%, transparent 100%);
+  pointer-events: auto;
+}
+.vp-top-title {
+  flex: 1; color: #fff; font-size: 14px; font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+}
+
+/* Bottom bar */
+.vp-bottom-bar {
+  background: linear-gradient(0deg, rgba(0,0,0,.75) 0%, rgba(0,0,0,.3) 60%, transparent 100%);
+  padding: 0 14px 10px;
+  pointer-events: auto;
+}
+.vp-progress-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 0 4px;
+}
+.vp-time { color: rgba(255,255,255,.85); font-size: 11px; font-family: monospace; min-width: 38px; text-align: center; }
+.vp-progress-track {
+  flex: 1; height: 4px; background: rgba(255,255,255,.2);
+  border-radius: 2px; position: relative; cursor: pointer;
+}
+.vp-progress-fill {
+  height: 100%; background: var(--accent, #e87aa0);
+  border-radius: 2px; width: 0; transition: width .3s linear;
+  position: relative;
+}
+.vp-progress-fill::after {
+  content: ""; position: absolute; right: -6px; top: -4px;
+  width: 12px; height: 12px; background: #fff;
+  border-radius: 50%; box-shadow: 0 0 4px rgba(0,0,0,.3);
+}
+.vp-controls-row {
+  display: flex; align-items: center; gap: 4px;
+}
+.vp-ctrl-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: transparent; border: none; color: #fff;
+  cursor: pointer; transition: background .2s;
+  flex-shrink: 0;
+}
+.vp-ctrl-btn:hover { background: rgba(255,255,255,.15); }
+.vp-ctrl-btn.active { color: var(--accent, #e87aa0); }
+.vp-ctrl-btn svg { width: 20px; height: 20px; }
+.vp-spacer { flex: 1; }
+
+/* Settings popup */
+.vp-settings-popup {
+  position: absolute; bottom: 80px; right: 14px; z-index: 20;
+  background: rgba(20,20,25,.92); backdrop-filter: blur(12px);
+  border-radius: 12px; padding: 0; min-width: 180px;
+  color: #fff; overflow: hidden;
+  transform: translateY(10px); opacity: 0;
+  pointer-events: none; transition: all .25s;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4);
+}
+.vp-settings-popup.open {
+  transform: translateY(0); opacity: 1; pointer-events: auto;
+}
+.vp-settings-section { padding: 8px 0; }
+.vp-settings-section + .vp-settings-section { border-top: 1px solid rgba(255,255,255,.1); }
+.vp-settings-label { font-size: 11px; color: rgba(255,255,255,.5); padding: 4px 16px; font-weight: 600; letter-spacing: .05em; }
+.vp-settings-option {
+  display: block; width: 100%; padding: 8px 16px;
+  background: none; border: none; color: rgba(255,255,255,.8);
+  font-size: 13px; text-align: left; cursor: pointer;
+  transition: background .15s; font-family: inherit;
+}
+.vp-settings-option:hover { background: rgba(255,255,255,.1); }
+.vp-settings-option.active { color: var(--accent, #e87aa0); font-weight: 700; }
+.vp-settings-option.active::before { content: "✓ "; }
+
+/* Center play indicator */
+.vp-play-indicator {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 64px; height: 64px; border-radius: 50%;
+  background: rgba(0,0,0,.5); display: flex;
+  align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .3s; pointer-events: none;
+}
+.vp-play-indicator.show { opacity: 1; }
+.vp-play-indicator svg { width: 32px; height: 32px; color: #fff; }
+
+/* Show-controls floating button */
+.vp-show-ctrl-btn {
+  position: absolute; bottom: 14px; right: 14px; z-index: 12;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(0,0,0,.5); border: none; color: #fff;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.vp-show-ctrl-btn.visible { opacity: 1; pointer-events: auto; }
+.vp-show-ctrl-btn:hover { background: rgba(0,0,0,.7); }
+.vp-show-ctrl-btn svg { width: 18px; height: 18px; }
+
+/* B站 control blocker - covers B站's native bottom control bar */
+.vp-bilibili-blocker {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 48px;
+  z-index: 8; pointer-events: none;
+  background: linear-gradient(0deg, rgba(0,0,0,.4) 0%, transparent 100%);
+}
+.vp-bilibili-blocker-top {
+  position: absolute; top: 0; left: 0; right: 0; height: 36px;
+  z-index: 8; pointer-events: none;
+  background: linear-gradient(180deg, rgba(0,0,0,.3) 0%, transparent 100%);
+}
 
 /* Fullscreen mode */
 body.vp-landscape .vp-overlay { background:#000; }
@@ -1401,46 +1500,74 @@ body.vp-landscape .vp-iframe-container { max-width:none; width:100vw; height:100
     <div id="vp-cover" style="max-width:900px;margin:0 auto;padding:0 22px;display:none"></div>
     <div class="vp-player" id="vp-player-wrap">
       <div class="vp-iframe-container" id="vp-iframe-container">
-        <iframe id="vp-iframe" playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5-page" x5-video-player-fullscreen="true" x5-video-orientation="portrait|landscape" allowfullscreen webkitallowfullscreen mozallowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture; accelerometer; gyroscope" frameborder="0" scrolling="no"></iframe>
-        <div id="vp-tap-overlay" class="vp-tap-overlay"></div>
-        <!-- Custom controls overlay -->
-        <div class="vp-custom-controls" id="vp-custom-controls">
-          <div class="vp-cc-top">
-            <div class="vp-cc-group">
-              <button class="vp-cc-btn" id="vp-cc-back" title="返回">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-              </button>
-            </div>
-            <div class="vp-cc-group">
-              <button class="vp-cc-speed" data-speed="0.5">0.5x</button>
-              <button class="vp-cc-speed" data-speed="0.75">0.75x</button>
-              <button class="vp-cc-speed active" data-speed="1">1x</button>
-              <button class="vp-cc-speed" data-speed="1.25">1.25x</button>
-              <button class="vp-cc-speed" data-speed="1.5">1.5x</button>
-              <button class="vp-cc-speed" data-speed="2">2x</button>
-            </div>
-          </div>
-          <div class="vp-cc-center">
-            <button class="vp-cc-btn" id="vp-cc-rotate" title="旋转屏幕">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        <iframe id="vp-iframe" playsinline webkit-playsinline x5-playsinline x5-video-player-type="h5-page" x5-video-player-fullscreen="false" x5-video-orientation="portrait|landscape" allowfullscreen webkitallowfullscreen mozallowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture; accelerometer; gyroscope" frameborder="0" scrolling="no"></iframe>
+        <!-- Blocker overlays to hide B站 native controls -->
+        <div class="vp-bilibili-blocker-top"></div>
+        <div class="vp-bilibili-blocker"></div>
+        <!-- Custom controls -->
+        <div class="vp-controls-overlay" id="vp-controls-overlay">
+          <div class="vp-top-bar">
+            <button class="vp-ctrl-btn" id="vp-btn-back" title="返回">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <span class="vp-top-title" id="vp-ctrl-title"></span>
+            <button class="vp-ctrl-btn" id="vp-btn-settings" title="设置">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
             </button>
           </div>
-          <div class="vp-cc-bottom">
-            <div class="vp-cc-group" id="vp-cc-title" style="color:#fff;font-size:13px;font-weight:600;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
-            <div class="vp-cc-group">
-              <button class="vp-cc-btn" id="vp-cc-landscape" title="横屏">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/></svg>
+          <div class="vp-spacer" style="pointer-events:none"></div>
+          <div class="vp-bottom-bar">
+            <div class="vp-progress-row">
+              <span class="vp-time" id="vp-time-current">0:00</span>
+              <div class="vp-progress-track" id="vp-progress-track">
+                <div class="vp-progress-fill" id="vp-progress-fill"></div>
+              </div>
+              <span class="vp-time" id="vp-time-duration">0:00</span>
+            </div>
+            <div class="vp-controls-row">
+              <button class="vp-ctrl-btn" id="vp-btn-play" title="播放/暂停">
+                <svg viewBox="0 0 24 24" fill="currentColor" id="vp-play-icon"><polygon points="5,3 19,12 5,21"/></svg>
               </button>
-              <button class="vp-cc-btn" id="vp-cc-fullscreen" title="全屏">
+              <div class="vp-spacer"></div>
+              <button class="vp-ctrl-btn" id="vp-btn-auto" title="自动适配">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 4v16"/><path d="M2 12h20"/></svg>
+              </button>
+              <button class="vp-ctrl-btn" id="vp-btn-landscape" title="横屏">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="22" height="14" rx="2"/></svg>
+              </button>
+              <button class="vp-ctrl-btn" id="vp-btn-fullscreen" title="全屏">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
               </button>
             </div>
           </div>
-          <div class="vp-cc-toast" id="vp-cc-toast"></div>
         </div>
-        <!-- Floating show-controls button (visible when controls are hidden) -->
-        <button class="vp-show-ctrl-btn" id="vp-show-ctrl-btn" title="显示控制">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <!-- Settings popup -->
+        <div class="vp-settings-popup" id="vp-settings-popup">
+          <div class="vp-settings-section">
+            <div class="vp-settings-label">倍速</div>
+            <button class="vp-settings-option" data-speed="0.5">0.5x</button>
+            <button class="vp-settings-option" data-speed="0.75">0.75x</button>
+            <button class="vp-settings-option active" data-speed="1">1.0x</button>
+            <button class="vp-settings-option" data-speed="1.25">1.25x</button>
+            <button class="vp-settings-option" data-speed="1.5">1.5x</button>
+            <button class="vp-settings-option" data-speed="2">2.0x</button>
+          </div>
+          <div class="vp-settings-section">
+            <div class="vp-settings-label">画质</div>
+            <button class="vp-settings-option" data-quality="112">超清 4K</button>
+            <button class="vp-settings-option" data-quality="80">高清 1080P</button>
+            <button class="vp-settings-option active" data-quality="64">高清 720P</button>
+            <button class="vp-settings-option" data-quality="32">清晰 480P</button>
+            <button class="vp-settings-option" data-quality="16">流畅 360P</button>
+          </div>
+        </div>
+        <!-- Play indicator -->
+        <div class="vp-play-indicator" id="vp-play-indicator">
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+        <!-- Floating show-controls button -->
+        <button class="vp-show-ctrl-btn" id="vp-show-ctrl-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="6" r="1.5"/><circle cx="12" cy="18" r="1.5"/></svg>
         </button>
       </div>
     </div>
@@ -2572,37 +2699,31 @@ function renderCommunity() {
 }
 
 function openVideo(v) {
-  // Show data from local first
+  // Show info
   document.getElementById("vp-title").textContent = v.title || "加载中…";
   document.getElementById("vp-meta").textContent = v.game;
   document.getElementById("vp-desc").textContent = v.desc || "暂无简介";
-  // Update custom controls title
-  var ccTitle = document.getElementById("vp-cc-title");
-  if (ccTitle) ccTitle.textContent = v.title || "";
-  // Show cover if available
+  var ctrlTitle = document.getElementById("vp-ctrl-title");
+  if (ctrlTitle) ctrlTitle.textContent = v.title || "";
+  // Show cover
   var coverEl = document.getElementById("vp-cover");
   if (v.cover) {
     coverEl.style.display = "block";
     coverEl.innerHTML = '<img src="' + _coverUrl(v.cover) + '" alt="" style="width:100%;display:block;border-radius:12px 12px 0 0" referrerpolicy="no-referrer">';
-  } else {
-    coverEl.style.display = "none";
-  }
-  // Build video URL - add as_wide=1 for widescreen mode
+  } else { coverEl.style.display = "none"; }
+  // Build iframe URL - minimal B站 controls
   var vidParam = v.bvid ? "bvid=" + v.bvid : "aid=" + (v.aid || "");
-  document.getElementById("vp-iframe").src = "//player.bilibili.com/player.html?" + vidParam + "&high_quality=1&danmaku=0&autoplay=0&as_wide=1";
+  document.getElementById("vp-iframe").src = "//player.bilibili.com/player.html?" + vidParam + "&high_quality=1&danmaku=0&autoplay=1&as_wide=1";
   document.getElementById("vp-overlay").classList.add("open");
   document.body.style.overflow = "hidden";
-  // Reset controls state
-  vpIsFullscreen = false;
-  vpIsLandscape = false;
-  vpCurrentSpeed = 1;
-  document.body.classList.remove("vp-landscape");
-  document.querySelectorAll(".vp-cc-speed").forEach(function(b) { b.classList.toggle("active", b.getAttribute("data-speed") === "1"); });
-  document.getElementById("vp-cc-fullscreen").classList.remove("active");
-  document.getElementById("vp-cc-landscape").classList.remove("active");
-  // Show controls initially
+  // Reset state
+  vpResetState();
   showControlsInitially();
-  // Fetch fresh info from Bilibili API to update title/desc/cover
+  // Fetch video info from B站 API
+  vpVideoDuration = 0;
+  vpVideoElapsed = 0;
+  vpVideoPlaying = false;
+  vpStartTime = Date.now();
   if (v.bvid) {
     fetch("https://api.bilibili.com/x/web-interface/view?bvid=" + v.bvid)
       .then(function(r) { return r.json(); })
@@ -2611,13 +2732,16 @@ function openVideo(v) {
           var title = j.data.title || v.title;
           document.getElementById("vp-title").textContent = title;
           document.getElementById("vp-desc").textContent = j.data.desc || v.desc || "暂无简介";
-          var ccTitle = document.getElementById("vp-cc-title");
-          if (ccTitle) ccTitle.textContent = title;
+          var ct = document.getElementById("vp-ctrl-title");
+          if (ct) ct.textContent = title;
           if (j.data.pic && !v.cover) {
             coverEl.style.display = "block";
             coverEl.innerHTML = '<img src="' + _coverUrl(j.data.pic) + '" alt="" style="width:100%;display:block;border-radius:12px 12px 0 0" referrerpolicy="no-referrer">';
           }
-          // Update meta with view count
+          // Get duration
+          vpVideoDuration = j.data.duration || 0;
+          document.getElementById("vp-time-duration").textContent = vpFmtTime(vpVideoDuration);
+          // Update meta
           var stat = j.data.stat || {};
           var meta = v.game;
           if (stat.view) meta += " · " + (stat.view >= 10000 ? (stat.view/10000).toFixed(1)+"万播放" : stat.view+"播放");
@@ -2625,10 +2749,11 @@ function openVideo(v) {
         }
       }).catch(function() {});
   }
+  // Start progress timer
+  vpStartProgressTimer();
 }
 
 function closeVideo() {
-  // Exit fullscreen first if active
   if (document.fullscreenElement || document.webkitFullscreenElement) {
     (document.exitFullscreen || document.webkitExitFullscreen).call(document).catch(function(){});
   }
@@ -2639,176 +2764,273 @@ function closeVideo() {
   if (screen.orientation && screen.orientation.unlock) {
     try { screen.orientation.unlock(); } catch(e) {}
   }
-  vpControlsShown = false;
-  clearTimeout(vpControlsTimer);
-  document.getElementById("vp-custom-controls").classList.remove("show");
+  vpStopProgressTimer();
+  vpHideControls();
+  document.getElementById("vp-settings-popup").classList.remove("open");
   document.getElementById("vp-show-ctrl-btn").classList.remove("visible");
 }
 
 document.getElementById("vp-back").addEventListener("click", closeVideo);
-document.getElementById("vp-cc-back").addEventListener("click", closeVideo);
+document.getElementById("vp-btn-back").addEventListener("click", closeVideo);
 
 /* ===== Custom Video Player Controls ===== */
 var vpControlsShown = false;
 var vpControlsTimer = null;
 var vpIsFullscreen = false;
 var vpIsLandscape = false;
+var vpAutoMode = false;
 var vpCurrentSpeed = 1;
+var vpCurrentQuality = 64;
+var vpVideoDuration = 0;
+var vpVideoElapsed = 0;
+var vpVideoPlaying = false;
+var vpStartTime = 0;
+var vpProgressInterval = null;
 
 var vpContainer = document.getElementById("vp-iframe-container");
-var vpCustomControls = document.getElementById("vp-custom-controls");
+var vpControlsOverlay = document.getElementById("vp-controls-overlay");
 var vpIframe = document.getElementById("vp-iframe");
-var vpToast = document.getElementById("vp-cc-toast");
+var vpSettingsPopup = document.getElementById("vp-settings-popup");
+var vpShowCtrlBtn = document.getElementById("vp-show-ctrl-btn");
+var vpPlayIndicator = document.getElementById("vp-play-indicator");
 
-// Show/hide custom controls
-function showVpControls() {
-  vpControlsShown = true;
-  vpCustomControls.classList.add("show");
-  document.getElementById("vp-show-ctrl-btn").classList.remove("visible");
-  clearTimeout(vpControlsTimer);
-  vpControlsTimer = setTimeout(function() {
-    hideVpControls();
-  }, 5000);
-}
-function hideVpControls() {
-  vpControlsShown = false;
-  vpCustomControls.classList.remove("show");
-  document.getElementById("vp-show-ctrl-btn").classList.add("visible");
-  clearTimeout(vpControlsTimer);
-}
-
-// Show controls initially when video opens, auto-hide after 4s
-function showControlsInitially() {
-  showVpControls();
-  clearTimeout(vpControlsTimer);
-  vpControlsTimer = setTimeout(function() { hideVpControls(); }, 4000);
-}
-
-// Floating button to bring back controls
-document.getElementById("vp-show-ctrl-btn").addEventListener("click", function(e) {
-  e.stopPropagation();
-  showVpControls();
-});
-
-// Toast notification
-function vpShowToast(msg, duration) {
-  vpToast.textContent = msg;
-  vpToast.classList.add("show");
-  setTimeout(function() { vpToast.classList.remove("show"); }, duration || 1200);
-}
-
-// Fullscreen toggle
-function vpEnterFullscreen() {
-  var el = vpContainer;
-  if (el.requestFullscreen) el.requestFullscreen().catch(function(e) { vpShowToast("全屏失败，请手动横屏"); });
-  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-  else if (el.msRequestFullscreen) el.msRequestFullscreen();
-  else { vpShowToast("浏览器不支持全屏"); return; }
-  vpIsFullscreen = true;
-  document.getElementById("vp-cc-fullscreen").classList.add("active");
-  vpShowToast("全屏模式");
-}
-
-function vpExitFullscreen() {
-  if (document.exitFullscreen) document.exitFullscreen().catch(function(){});
-  else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+function vpResetState() {
   vpIsFullscreen = false;
-  document.getElementById("vp-cc-fullscreen").classList.remove("active");
-  vpShowToast("退出全屏");
+  vpIsLandscape = false;
+  vpAutoMode = false;
+  vpCurrentSpeed = 1;
+  vpCurrentQuality = 64;
+  vpVideoDuration = 0;
+  vpVideoElapsed = 0;
+  vpVideoPlaying = false;
+  document.body.classList.remove("vp-landscape");
+  document.querySelectorAll("[data-speed]").forEach(function(b) { b.classList.toggle("active", b.getAttribute("data-speed") === "1"); });
+  document.querySelectorAll("[data-quality]").forEach(function(b) { b.classList.toggle("active", b.getAttribute("data-quality") === "64"); });
+  document.getElementById("vp-btn-fullscreen").classList.remove("active");
+  document.getElementById("vp-btn-landscape").classList.remove("active");
+  document.getElementById("vp-btn-auto").classList.remove("active");
+  vpSettingsPopup.classList.remove("open");
 }
 
-document.getElementById("vp-cc-fullscreen").addEventListener("click", function(e) {
-  e.stopPropagation();
-  if (vpIsFullscreen || document.fullscreenElement || document.webkitFullscreenElement) {
-    vpExitFullscreen();
-  } else {
-    vpEnterFullscreen();
-  }
-});
-
-// Listen for fullscreen change (user might exit via browser/OS)
-document.addEventListener("fullscreenchange", function() {
-  vpIsFullscreen = !!document.fullscreenElement;
-  document.getElementById("vp-cc-fullscreen").classList.toggle("active", vpIsFullscreen);
-});
-document.addEventListener("webkitfullscreenchange", function() {
-  vpIsFullscreen = !!document.webkitFullscreenElement;
-  document.getElementById("vp-cc-fullscreen").classList.toggle("active", vpIsFullscreen);
-});
-
-// Landscape/Portrait toggle
-function vpToggleLandscape() {
-  vpIsLandscape = !vpIsLandscape;
-  if (vpIsLandscape) {
-    document.body.classList.add("vp-landscape");
-    document.getElementById("vp-cc-landscape").classList.add("active");
-    if (screen.orientation && screen.orientation.lock) {
-      screen.orientation.lock("landscape").catch(function() {});
-    }
-    if (!vpIsFullscreen && !document.fullscreenElement && !document.webkitFullscreenElement) {
-      vpEnterFullscreen();
-    }
-    vpShowToast("横屏模式");
-  } else {
-    document.body.classList.remove("vp-landscape");
-    document.getElementById("vp-cc-landscape").classList.remove("active");
-    if (screen.orientation && screen.orientation.unlock) {
-      try { screen.orientation.unlock(); } catch(e) {}
-    }
-    if (vpIsFullscreen || document.fullscreenElement || document.webkitFullscreenElement) {
-      vpExitFullscreen();
-    }
-    vpShowToast("竖屏模式");
-  }
+function vpFmtTime(s) {
+  s = Math.floor(s);
+  var m = Math.floor(s / 60);
+  var sec = s % 60;
+  return m + ":" + (sec < 10 ? "0" : "") + sec;
 }
 
-document.getElementById("vp-cc-landscape").addEventListener("click", function(e) {
+// Progress tracking (timer-based since we can't access iframe internals)
+function vpStartProgressTimer() {
+  vpStopProgressTimer();
+  vpStartTime = Date.now();
+  vpVideoElapsed = 0;
+  vpVideoPlaying = true;
+  vpProgressInterval = setInterval(function() {
+    if (vpVideoPlaying && vpVideoDuration > 0) {
+      vpVideoElapsed = (Date.now() - vpStartTime) / 1000;
+      if (vpVideoElapsed > vpVideoDuration) vpVideoElapsed = vpVideoDuration;
+      var pct = (vpVideoElapsed / vpVideoDuration) * 100;
+      document.getElementById("vp-progress-fill").style.width = pct + "%";
+      document.getElementById("vp-time-current").textContent = vpFmtTime(vpVideoElapsed);
+    }
+  }, 500);
+}
+
+function vpStopProgressTimer() {
+  if (vpProgressInterval) { clearInterval(vpProgressInterval); vpProgressInterval = null; }
+}
+
+// Show/hide controls
+function vpShowControlsFn() {
+  vpControlsShown = true;
+  vpControlsOverlay.classList.remove("hidden");
+  vpShowCtrlBtn.classList.remove("visible");
+  clearTimeout(vpControlsTimer);
+  vpControlsTimer = setTimeout(function() { vpHideControls(); }, 5000);
+}
+function vpHideControls() {
+  vpControlsShown = false;
+  vpControlsOverlay.classList.add("hidden");
+  vpShowCtrlBtn.classList.add("visible");
+  vpSettingsPopup.classList.remove("open");
+  clearTimeout(vpControlsTimer);
+}
+function showControlsInitially() {
+  vpShowControlsFn();
+  clearTimeout(vpControlsTimer);
+  vpControlsTimer = setTimeout(function() { vpHideControls(); }, 4000);
+}
+
+// Floating button to show controls
+vpShowCtrlBtn.addEventListener("click", function(e) {
   e.stopPropagation();
-  vpToggleLandscape();
+  vpShowControlsFn();
 });
 
-document.getElementById("vp-cc-rotate").addEventListener("click", function(e) {
+// Click on video area (middle spacer) to toggle controls
+document.querySelector(".vp-spacer").addEventListener("click", function(e) {
   e.stopPropagation();
-  vpToggleLandscape();
+  if (vpControlsShown) vpHideControls(); else vpShowControlsFn();
 });
 
-// Speed control buttons
-document.querySelectorAll(".vp-cc-speed").forEach(function(btn) {
+// Play/pause button - sends click to iframe
+document.getElementById("vp-btn-play").addEventListener("click", function(e) {
+  e.stopPropagation();
+  // Toggle our tracking state
+  if (vpVideoPlaying) {
+    vpVideoPlaying = false;
+    document.getElementById("vp-play-icon").innerHTML = '<polygon points="5,3 19,12 5,21"/>';
+  } else {
+    vpVideoPlaying = true;
+    vpStartTime = Date.now() - (vpVideoElapsed * 1000);
+    document.getElementById("vp-play-icon").innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+  }
+  // Show play indicator briefly
+  vpPlayIndicator.classList.add("show");
+  setTimeout(function() { vpPlayIndicator.classList.remove("show"); }, 600);
+  // Try to toggle via postMessage
+  try { vpIframe.contentWindow.postMessage({ type: vpVideoPlaying ? "play" : "pause" }, "*"); } catch(ex) {}
+  vpShowControlsFn();
+});
+
+// Settings popup toggle
+document.getElementById("vp-btn-settings").addEventListener("click", function(e) {
+  e.stopPropagation();
+  vpSettingsPopup.classList.toggle("open");
+  vpShowControlsFn();
+});
+
+// Speed options
+document.querySelectorAll("[data-speed]").forEach(function(btn) {
   btn.addEventListener("click", function(e) {
     e.stopPropagation();
     var speed = parseFloat(btn.getAttribute("data-speed"));
     vpCurrentSpeed = speed;
-    document.querySelectorAll(".vp-cc-speed").forEach(function(b) { b.classList.remove("active"); });
+    document.querySelectorAll("[data-speed]").forEach(function(b) { b.classList.remove("active"); });
     btn.classList.add("active");
-    try {
-      vpIframe.contentWindow.postMessage({ type: "setPlaybackRate", data: speed }, "*");
-    } catch(ex) {}
-    vpShowToast(speed + "x 倍速");
+    try { vpIframe.contentWindow.postMessage({ type: "setPlaybackRate", data: speed }, "*"); } catch(ex) {}
+    vpShowControlsFn();
   });
 });
 
-// Auto-detect orientation change
+// Quality options
+document.querySelectorAll("[data-quality]").forEach(function(btn) {
+  btn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    var qn = parseInt(btn.getAttribute("data-quality"));
+    vpCurrentQuality = qn;
+    document.querySelectorAll("[data-quality]").forEach(function(b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    try { vpIframe.contentWindow.postMessage({ type: "changeQuality", data: { qn: qn } }, "*"); } catch(ex) {}
+    vpShowControlsFn();
+  });
+});
+
+// Close settings when clicking outside
+vpControlsOverlay.addEventListener("click", function(e) {
+  if (!e.target.closest(".vp-settings-popup") && !e.target.closest("#vp-btn-settings")) {
+    vpSettingsPopup.classList.remove("open");
+  }
+});
+
+// Fullscreen
+function vpEnterFullscreen() {
+  var el = vpContainer;
+  if (el.requestFullscreen) el.requestFullscreen().catch(function() {});
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if (el.msRequestFullscreen) el.msRequestFullscreen();
+  vpIsFullscreen = true;
+  document.getElementById("vp-btn-fullscreen").classList.add("active");
+}
+function vpExitFullscreen() {
+  if (document.exitFullscreen) document.exitFullscreen().catch(function(){});
+  else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  vpIsFullscreen = false;
+  document.getElementById("vp-btn-fullscreen").classList.remove("active");
+}
+document.getElementById("vp-btn-fullscreen").addEventListener("click", function(e) {
+  e.stopPropagation();
+  if (vpIsFullscreen || document.fullscreenElement || document.webkitFullscreenElement) vpExitFullscreen();
+  else vpEnterFullscreen();
+  vpShowControlsFn();
+});
+document.addEventListener("fullscreenchange", function() {
+  vpIsFullscreen = !!document.fullscreenElement;
+  document.getElementById("vp-btn-fullscreen").classList.toggle("active", vpIsFullscreen);
+});
+document.addEventListener("webkitfullscreenchange", function() {
+  vpIsFullscreen = !!document.webkitFullscreenElement;
+  document.getElementById("vp-btn-fullscreen").classList.toggle("active", vpIsFullscreen);
+});
+
+// Landscape toggle
+function vpToggleLandscape() {
+  vpIsLandscape = !vpIsLandscape;
+  if (vpIsLandscape) {
+    document.body.classList.add("vp-landscape");
+    document.getElementById("vp-btn-landscape").classList.add("active");
+    if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(function() {});
+    if (!vpIsFullscreen && !document.fullscreenElement && !document.webkitFullscreenElement) vpEnterFullscreen();
+  } else {
+    document.body.classList.remove("vp-landscape");
+    document.getElementById("vp-btn-landscape").classList.remove("active");
+    if (screen.orientation && screen.orientation.unlock) try { screen.orientation.unlock(); } catch(e) {}
+    if (vpIsFullscreen || document.fullscreenElement || document.webkitFullscreenElement) vpExitFullscreen();
+  }
+}
+document.getElementById("vp-btn-landscape").addEventListener("click", function(e) {
+  e.stopPropagation();
+  vpToggleLandscape();
+  vpShowControlsFn();
+});
+
+// Auto mode - auto landscape in fullscreen
+document.getElementById("vp-btn-auto").addEventListener("click", function(e) {
+  e.stopPropagation();
+  vpAutoMode = !vpAutoMode;
+  document.getElementById("vp-btn-auto").classList.toggle("active", vpAutoMode);
+  vpShowControlsFn();
+});
+
+// Auto-detect orientation
 window.addEventListener("orientationchange", function() {
   setTimeout(function() {
     var isLand = window.innerWidth > window.innerHeight;
     if (isLand && !vpIsLandscape && document.getElementById("vp-overlay").classList.contains("open")) {
-      vpIsLandscape = true;
-      document.body.classList.add("vp-landscape");
-      document.getElementById("vp-cc-landscape").classList.add("active");
-      if (!vpIsFullscreen && !document.fullscreenElement && !document.webkitFullscreenElement) {
-        vpEnterFullscreen();
+      if (vpAutoMode) {
+        vpIsLandscape = true;
+        document.body.classList.add("vp-landscape");
+        document.getElementById("vp-btn-landscape").classList.add("active");
+        if (!vpIsFullscreen && !document.fullscreenElement && !document.webkitFullscreenElement) vpEnterFullscreen();
       }
     } else if (!isLand && vpIsLandscape) {
       vpIsLandscape = false;
       document.body.classList.remove("vp-landscape");
-      document.getElementById("vp-cc-landscape").classList.remove("active");
-      if (vpIsFullscreen || document.fullscreenElement || document.webkitFullscreenElement) {
-        vpExitFullscreen();
-      }
+      document.getElementById("vp-btn-landscape").classList.remove("active");
+      if (vpIsFullscreen || document.fullscreenElement || document.webkitFullscreenElement) vpExitFullscreen();
     }
   }, 300);
 });
 
+// Progress bar seek
+document.getElementById("vp-progress-track").addEventListener("click", function(e) {
+  e.stopPropagation();
+  if (vpVideoDuration <= 0) return;
+  var rect = this.getBoundingClientRect();
+  var pct = (e.clientX - rect.left) / rect.width;
+  var seekTime = pct * vpVideoDuration;
+  vpVideoElapsed = seekTime;
+  vpStartTime = Date.now() - (seekTime * 1000);
+  document.getElementById("vp-progress-fill").style.width = (pct * 100) + "%";
+  document.getElementById("vp-time-current").textContent = vpFmtTime(seekTime);
+  // Seek iframe by reloading with timestamp
+  var currentSrc = vpIframe.src;
+  if (currentSrc) {
+    var newSrc = currentSrc.replace(/&t=\d+/g, "") + "&t=" + Math.floor(seekTime);
+    vpIframe.src = newSrc;
+  }
+  vpShowControlsFn();
+});
 
 
 /* ===== Jukebox (Audio Player) ===== */
