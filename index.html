@@ -1666,7 +1666,7 @@ body.vp-landscape .vp-iframe-container { max-width:none; width:100vw; height:100
             fetch(reg.active.scriptURL + "?v=" + Date.now()).then(function(r) {
               if (r.ok) {
                 r.text().then(function(txt) {
-                  if (txt.indexOf("dyqp-v1.5.3") === -1) {
+                  if (txt.indexOf("dyqp-v1.5.4") === -1) {
                     reg.unregister().then(function() { location.reload(); });
                   }
                 });
