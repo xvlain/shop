@@ -1345,7 +1345,13 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       返回社区
     </button>
     <div id="vp-cover" style="max-width:900px;margin:0 auto;padding:0 22px;display:none"></div>
-    <div class="vp-player"><iframe id="vp-iframe" allowfullscreen webkitallowfullscreen mozallowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture; accelerometer; gyroscope" frameborder="0" scrolling="no"></iframe></div>
+    <div class="vp-player" id="vp-player-wrap" style="position:relative">
+      <iframe id="vp-iframe" playsinline webkit-playsinline x5-playsinline allowfullscreen webkitallowfullscreen mozallowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture; accelerometer; gyroscope; xr-spatial-tracking" frameborder="0" scrolling="no"></iframe>
+      <button id="vp-fullscreen-btn" style="position:absolute;bottom:14px;right:14px;z-index:10;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;backdrop-filter:blur(4px);display:flex;align-items:center;gap:6px" aria-label="全屏">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        全屏
+      </button>
+    </div>
     <div class="vp-info">
       <div class="vp-title" id="vp-title"></div>
       <div class="vp-meta" id="vp-meta"></div>
@@ -2405,15 +2411,23 @@ function openAfterSalesModal(orderId) {
 }
 
 /* ===== Community (Video) ===== */
-var communityData = {"games":{"崩坏：星穹铁道":[{"title":"《崩坏：星穹铁道》白厄角色PV——「日冕」","bvid":"BV1HfKiz3Ezf","aid":"","desc":"「看见那圈白色光晕了么？它叫做日冕，是太阳炽烈的皇冠。」\n「那为什么平时我们看不见它呢？」\n「因为太阳总是过于刺眼。而只有在他一片漆黑的时候，你方能得见他的冠冕。」","cover":"https://i0.hdslb.com/bfs/archive/361e099fd6d34fcc870fbedb4cc6313bc5fc1d58.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》EP：「希望有羽毛和翅膀」","bvid":"BV1Tf421m7iW","aid":"","desc":"希望在我的灵魂中筑巢栖息，\n唱着没有词的歌曲，\n似乎永远不会停息。","cover":"https://i0.hdslb.com/bfs/archive/60ac7666c6ed96880ffdcb2f483ac0857c9d412f.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》花火角色PV——「独角戏」","bvid":"BV1mW421A7nM","aid":"","desc":"「这世界上根本没有不麻烦的人哦？」\n「陪我一起把全部都搅乱的话，我就让你成为我的东西吧。」","cover":"https://i0.hdslb.com/bfs/archive/ac2c1c7a46c0ed7bbbe88a0281aafcfdacecd15c.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》OP：「不眠之夜」","bvid":"BV1me411n7eu","aid":"","desc":"梦境里那个声音笑着说：「带我离开。」\n但我却亲手杀死了睡眠、忘记了时间。\n\n中文演唱者：张杰\n英文演唱者：Jake Miller","cover":"https://i2.hdslb.com/bfs/archive/987f433d2fcc8f6f4fb685d8a10d38fbe468d6e5.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》OP：「星间旅行」","bvid":"BV1rh4y1n77f","aid":"","desc":"把星球当作沿途站台，去开拓一个时代。\n这旅途危机多过意外，但星辰唾手可摘。","cover":"https://i2.hdslb.com/bfs/archive/5e8870128205a2a1a4f45269b06a2086f9e394e7.jpg","added_at":"2026-08-24"}],"原神":[],"异环":[],"绝区零":[]}};
+var communityData = {"games":{"崩坏：星穹铁道":[{"title":"《崩坏：星穹铁道》千星纪游PV——「众声之外」","bvid":"BV1Vj8K6DEFM","aid":"","desc":"万千声音曾试图将她描述，为她命名。\n当所有的喧嚣都归于寂静，她听见了来自胸膛深处的共鸣。","cover":"http://i0.hdslb.com/bfs/archive/193aa670f4f3091179dd9a96af88298eb7a3bcb6.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》走近星穹——「知更鸟•晴歌：快乐的小鸟」","bvid":"BV1GB8j6jEGF","aid":"","desc":"「哥哥，你也来啦？新歌听了吗？」\n「当然，很好听。你最近很忙吧？在忙什么？」\n「最近在做IP改编游戏，《快乐的小鸟》。」","cover":"http://i0.hdslb.com/bfs/archive/5286e8d7ee8cd16958f1e8e9ee93732fe1530553.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》4.5版本「挥掷千星的筹码」前瞻特别节目","bvid":"BV1HigA6kEzh","aid":"","desc":"《崩坏：星穹铁道》4.5版本「挥掷千星的筹码」将于2026年8月26日上线，感谢开拓者的支持与陪伴~","cover":"http://i1.hdslb.com/bfs/archive/26f85e46d47ee125061c10c83c5bd969d635fd32.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》4.5版本PV：「挥掷千星的筹码」","bvid":"BV19qgK6qEb6","aid":"","desc":"以何代价，可换取乐园一息尚存？以何声响，能引来琥珀垂落目光？\n天平已悄然校准，而你，唯有孤注一掷。","cover":"http://i1.hdslb.com/bfs/archive/8161381dca3ed55a611eff92839b1d5543d9a037.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》× Fate[UBW] 联动PV——「别来无恙」","bvid":"BV1ThgD6nEie","aid":"","desc":"「哈哈哈哈哈，管你是无能女神还是魔术师，把本王的圣杯交出来！」\n「话太多了，你这金闪闪！关键时刻的我可是很靠谱的~」","cover":"http://i2.hdslb.com/bfs/archive/ad4efbb63d4d65efa768efc7ccbe94bbbb309460.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》走近星穹——「吉尔伽美什：我为你的喜悦而喜悦」","bvid":"BV1uVKb6UE9T","aid":"","desc":"「来吧，」金发男人昂首睥睨，「向本王踏出一步吧。难道你是一个卑微的畏缩者吗？」","cover":"http://i1.hdslb.com/bfs/archive/25f81e195536611b3545d9345e8179e30155382b.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》走近星穹——「远坂凛：如何在宇宙时代学会智能机」","bvid":"BV1xSKp6fEm8","aid":"","desc":"「注册账号的第一步，是设置密码。」灰发的年轻人认真地说。\n「然后输入一下你的个人信息。」红衣的青年继续道。","cover":"http://i0.hdslb.com/bfs/archive/c09952b222eedba30ebb2b0de0287e25348aaeef.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》公益第二卷：「当一颗星照亮夜空」","bvid":"BV1WQKn6SEaP","aid":"","desc":"「齐乐绒绒大冒险」是《崩坏：星穹铁道》发起的一项公益行动。\n项目组以开拓者的名义向中国儿童少年基金会捐赠115万元。","cover":"http://i2.hdslb.com/bfs/archive/86e7c9e41e09052a3037cd0be0eb140a3dd458e2.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》EP：「下一站」","bvid":"BV1JqKM6rELh","aid":"","desc":"寻求归葬的过客，带去警告的旅者，人们前往流淌古老忘川的画中尽头，目睹过往的悲喜从中浮现……","cover":"http://i0.hdslb.com/bfs/archive/048eebba6f9dbb454803bbfef844c0c257a01a56.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》姬子•启行角色PV——「启明星于今夜坠落」","bvid":"BV1XwNX6JEoF","aid":"","desc":"听说，群星的光芒是很久以前的东西。跨越无数星霜，过去的光芒才能传递过来。\n于是，她们的过去与未来互相交错，归结于现在。","cover":"http://i1.hdslb.com/bfs/archive/949f0fdb23ab81e148e93f689b6087fc62a990a9.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》动画短片——「你的终点，我的起点」","bvid":"BV1kZNN6iEPq","aid":"","desc":"我时常会梦见那场幻月游戏的结局。\n如果当初活下来的是你…现在一定能做得比我更好吧?\n素子，我回来了。","cover":"http://i0.hdslb.com/bfs/archive/b88429d957c0477bafa84d180f2f00779b3a9c2c.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》走近星穹——「姬子•启行：咖啡因来自咖啡果」","bvid":"BV1qdM76TEBH","aid":"","desc":"摘录自某绝灭大君截获的通话记录：\n「杨叔！你和那只臭浣熊怎么跑得这么快！置我和丹恒于不顾！太过分了！」","cover":"http://i0.hdslb.com/bfs/archive/e7999cd7462e10ef3a8e0c88c4e0c546d8892d04.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》即兴巡演PV——「致仰望者」","bvid":"BV1MHMe6vE94","aid":"","desc":"姬子，我做了一个梦，一位银河旅人在敲敲打打，黑暗中迸溅几粒火星。\n火星点燃了列车的引擎，也照亮了旅人的脸。","cover":"http://i0.hdslb.com/bfs/archive/91a1953e8f61d44748c9b298a64f2e35ed1133ee.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》4.4版本「鸣笛于归寂之时」前瞻特别节目","bvid":"BV1TkTs6TEN2","aid":"","desc":"《崩坏：星穹铁道》4.4版本「鸣笛于归寂之时」将于2026年7月15日上线，感谢开拓者的支持与陪伴~","cover":"http://i0.hdslb.com/bfs/archive/e78cede84b569598f92959c88ceafc6bd9a34634.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》4.4版本PV：「鸣笛于归寂之时」","bvid":"BV1CBTE6yEVR","aid":"","desc":"领航者绘出通往末日的航图。哀切的鸣笛响彻，唯有开拓之人才能寻得跨越死境的生路……","cover":"http://i0.hdslb.com/bfs/archive/fa5a04fdbce5f95dfd3ccebf697f0e1f7cf184d5.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》白厄角色PV——「日冕」","bvid":"BV1HfKiz3Ezf","aid":"","desc":"「看见那圈白色光晕了么？它叫做日冕，是太阳炽烈的皇冠。」","cover":"http://i0.hdslb.com/bfs/archive/361e099fd6d34fcc870fbedb4cc6313bc5fc1d58.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》EP：「希望有羽毛和翅膀」","bvid":"BV1Tf421m7iW","aid":"","desc":"希望在我的灵魂中筑巢栖息，\n唱着没有词的歌曲，\n似乎永远不会停息。","cover":"http://i0.hdslb.com/bfs/archive/60ac7666c6ed96880ffdcb2f483ac0857c9d412f.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》花火角色PV——「独角戏」","bvid":"BV1mW421A7nM","aid":"","desc":"「这世界上根本没有不麻烦的人哦？」\n「陪我一起把全部都搅乱的话，我就让你成为我的东西吧。」","cover":"http://i0.hdslb.com/bfs/archive/ac2c1c7a46c0ed7bbbe88a0281aafcfdacecd15c.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》OP：「不眠之夜」","bvid":"BV1me411n7eu","aid":"","desc":"梦境里那个声音笑着说：「带我离开。」\n但我却亲手杀死了睡眠、忘记了时间。","cover":"http://i2.hdslb.com/bfs/archive/987f433d2fcc8f6f4fb685d8a10d38fbe468d6e5.jpg","added_at":"2026-08-24"},{"title":"《崩坏：星穹铁道》OP：「星间旅行」","bvid":"BV1rh4y1n77f","aid":"","desc":"把星球当作沿途站台，去开拓一个时代。\n这旅途危机多过意外，但星辰唾手可摘。","cover":"http://i2.hdslb.com/bfs/archive/5e8870128205a2a1a4f45269b06a2086f9e394e7.jpg","added_at":"2026-08-24"}],"原神":[],"异环":[],"绝区零":[]}};
 var communityLoaded = false;
+
+/* Helper: proxy Bilibili cover images via images.weserv.nl to bypass hotlink blocking */
+function _coverUrl(u) {
+  if (!u) return "";
+  if (u.indexOf("hdslb.com") === -1) return u;
+  var clean = u.replace(/^https?:/, "");
+  return "https://images.weserv.nl/?url=" + encodeURIComponent(clean) + "&w=640&q=80";
+}
 
 function initCommunity() {
   if (!communityLoaded) {
     communityLoaded = true;
     renderCommunity();
     // 后台刷新最新数据
-    fetch("community_data.json?v=20260824").then(function(r) { return r.json(); }).then(function(d) {
+    fetch("community_data.json?v=20260824v2").then(function(r) { return r.json(); }).then(function(d) {
       if (d && d.games) { communityData = d; renderCommunity(); }
     }).catch(function() {});
   } else { renderCommunity(); }
@@ -2447,8 +2461,8 @@ function renderCommunity() {
   }
   gridEl.innerHTML = videos.map(function(v, i) {
     var thumb = v.cover
-      ? '<img src="' + v.cover + '" alt="" loading="lazy">'
-      : '<div class="thumb-ph">▶</div>';
+      ? '<img src="' + _coverUrl(v.cover) + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=v.cover">'
+      : '<div class="thumb-ph">\u25b6</div>';
     return '<div class="comm-card" data-idx="' + i + '">' +
       '<div class="comm-card-thumb">' + thumb + '</div>' +
       '<div class="comm-card-info"><div class="comm-card-title">' + v.title + '</div><div class="comm-card-game">' + v.game + '</div></div></div>';
@@ -2469,7 +2483,7 @@ function openVideo(v) {
   var coverEl = document.getElementById("vp-cover");
   if (v.cover) {
     coverEl.style.display = "block";
-    coverEl.innerHTML = '<img src="' + v.cover + '" alt="" style="width:100%;display:block;border-radius:12px 12px 0 0">';
+    coverEl.innerHTML = '<img src="' + _coverUrl(v.cover) + '" alt="" style="width:100%;display:block;border-radius:12px 12px 0 0" onerror="this.onerror=null;this.src=v.cover">';
   } else {
     coverEl.style.display = "none";
   }
@@ -2488,7 +2502,7 @@ function openVideo(v) {
           document.getElementById("vp-desc").textContent = j.data.desc || v.desc || "暂无简介";
           if (j.data.pic && !v.cover) {
             coverEl.style.display = "block";
-            coverEl.innerHTML = '<img src="' + j.data.pic + '" alt="" style="width:100%;display:block;border-radius:12px 12px 0 0">';
+            coverEl.innerHTML = '<img src="' + _coverUrl(j.data.pic) + '" alt="" style="width:100%;display:block;border-radius:12px 12px 0 0" onerror="this.onerror=null;this.src=j.data.pic">';
           }
           // Update meta with view count
           var stat = j.data.stat || {};
@@ -2507,6 +2521,28 @@ function closeVideo() {
 }
 
 document.getElementById("vp-back").addEventListener("click", closeVideo);
+
+/* Fullscreen button handler */
+(function() {
+  var btn = document.getElementById("vp-fullscreen-btn");
+  var wrap = document.getElementById("vp-player-wrap");
+  var iframe = document.getElementById("vp-iframe");
+  function goFS(el) {
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.webkitEnterFullscreen) el.webkitEnterFullscreen(); // iOS Safari (video)
+    else if (el.msRequestFullscreen) el.msRequestFullscreen();
+  }
+  btn && btn.addEventListener("click", function(e) {
+    e.stopPropagation();
+    // Try iframe first (so Bilibili player takes over), fall back to wrapper
+    try {
+      goFS(iframe);
+    } catch(err) {
+      goFS(wrap);
+    }
+  });
+})();
 
 /* ===== Jukebox (Audio Player) ===== */
 var jukeboxData = {"games":{"崩坏：星穹铁道":[],"原神":[],"异环":[],"绝区零":[]}};
