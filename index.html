@@ -553,6 +553,7 @@ body::before {
 .vp-title { font-size:18px; font-weight:800; color:var(--ink); margin-bottom:8px; }
 .vp-meta { font-size:12px; color:var(--ink-faint); margin-bottom:16px; }
 .vp-desc { background:var(--panel); border:1.5px solid var(--line); border-radius:12px; padding:16px; font-size:13px; line-height:1.8; color:var(--ink-dim); white-space:pre-wrap; }
+#vp-cover img { max-height:300px; object-fit:cover; }
 
 /* ===== jukebox section ===== */
 .jb-settings { background:var(--panel); border:1.5px solid var(--line); border-radius:12px; padding:14px 18px; margin:16px 0; }
@@ -2432,13 +2433,43 @@ function renderCommunity() {
 }
 
 function openVideo(v) {
-  document.getElementById("vp-title").textContent = v.title;
+  // Show data from local first
+  document.getElementById("vp-title").textContent = v.title || "加载中…";
   document.getElementById("vp-meta").textContent = v.game;
   document.getElementById("vp-desc").textContent = v.desc || "暂无简介";
+  // Show cover if available
+  var coverEl = document.getElementById("vp-cover");
+  if (v.cover) {
+    coverEl.style.display = "block";
+    coverEl.innerHTML = '<img src="' + v.cover + '" alt="" style="width:100%;display:block;border-radius:12px 12px 0 0">';
+  } else {
+    coverEl.style.display = "none";
+  }
+  // Build video URL
   var vidParam = v.bvid ? "bvid=" + v.bvid : "aid=" + (v.aid || "");
   document.getElementById("vp-iframe").src = "//player.bilibili.com/player.html?" + vidParam + "&high_quality=1&danmaku=0&autoplay=0";
   document.getElementById("vp-overlay").classList.add("open");
   document.body.style.overflow = "hidden";
+  // Fetch fresh info from Bilibili API to update title/desc/cover
+  if (v.bvid) {
+    fetch("https://api.bilibili.com/x/web-interface/view?bvid=" + v.bvid)
+      .then(function(r) { return r.json(); })
+      .then(function(j) {
+        if (j && j.code === 0 && j.data) {
+          document.getElementById("vp-title").textContent = j.data.title || v.title;
+          document.getElementById("vp-desc").textContent = j.data.desc || v.desc || "暂无简介";
+          if (j.data.pic && !v.cover) {
+            coverEl.style.display = "block";
+            coverEl.innerHTML = '<img src="' + j.data.pic + '" alt="" style="width:100%;display:block;border-radius:12px 12px 0 0">';
+          }
+          // Update meta with view count
+          var stat = j.data.stat || {};
+          var meta = v.game;
+          if (stat.view) meta += " · " + (stat.view >= 10000 ? (stat.view/10000).toFixed(1)+"万播放" : stat.view+"播放");
+          document.getElementById("vp-meta").textContent = meta;
+        }
+      }).catch(function() {});
+  }
 }
 
 function closeVideo() {
