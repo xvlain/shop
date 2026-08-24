@@ -2376,14 +2376,17 @@ function openAfterSalesModal(orderId) {
 }
 
 /* ===== Community (Video) ===== */
-var communityData = {"games":{"崩坏：星穹铁道":[],"原神":[],"异环":[],"绝区零":[]}};
+var communityData = {"games":{"崩坏：星穹铁道":[{"title":"《崩坏：星穹铁道》官方视频","bvid":"","aid":"1340190821","desc":"崩坏：星穹铁道官方宣传视频","cover":"","added_at":"2026-08-24"}],"原神":[],"异环":[],"绝区零":[]}};
 var communityLoaded = false;
 
 function initCommunity() {
   if (!communityLoaded) {
+    communityLoaded = true;
+    renderCommunity();
+    // 后台刷新最新数据
     fetch("community_data.json").then(function(r) { return r.json(); }).then(function(d) {
-      communityData = d; communityLoaded = true; renderCommunity();
-    }).catch(function() { communityLoaded = true; renderCommunity(); });
+      if (d && d.games) { communityData = d; renderCommunity(); }
+    }).catch(function() {});
   } else { renderCommunity(); }
 }
 
