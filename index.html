@@ -1430,6 +1430,30 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   </div>
 
 <script>
+/* ===== force cache refresh (v1.4.0) ===== */
+(function() {
+  try {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        regs.forEach(function(reg) {
+          if (reg.installing || reg.waiting) return;
+          if (reg.active && reg.active.scriptURL) {
+            fetch(reg.active.scriptURL + "?v=" + Date.now()).then(function(r) {
+              if (r.ok) {
+                r.text().then(function(txt) {
+                  if (txt.indexOf("dyqp-v1.4") === -1) {
+                    reg.unregister().then(function() { location.reload(); });
+                  }
+                });
+              }
+            }).catch(function() {});
+          }
+        });
+      });
+    }
+  } catch(e) {}
+})();
+
 /* ===== site data ===== */
 var SITE_TOTAL = 19;
 var SITE_SYNCED = "2026-08-21 13:43";
