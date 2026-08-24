@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dyqp-v1.2.0';
+const CACHE_NAME = 'dyqp-v1.3.0';
 const ASSETS = [
   '/shop/',
   '/shop/index.html',
