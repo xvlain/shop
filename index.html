@@ -3055,6 +3055,313 @@ if ("serviceWorker" in navigator) {
     console.warn("SW registration failed:", err);
   });
 }
+
+/* ===== Community Video Player ===== */
+var COMMUNITY_VIDEOS = [{"idx": 0, "game": "崩坏：星穹铁道", "category": "版本", "title": "《崩坏：星穹铁道》4.5版本「挥掷千星的筹码」前瞻特别节目", "bvid": "BV1HigA6kEzh", "desc": "《崩坏：星穹铁道》4.5版本「挥掷千星的筹码」将于2026年8月26日上线，感谢开拓者的支持与陪伴~", "cover": "http://i1.hdslb.com/bfs/archive/26f85e46d47ee125061c10c83c5bd969d635fd32.jpg", "date": "2026-08-24"}, {"idx": 1, "game": "崩坏：星穹铁道", "category": "版本", "title": "《崩坏：星穹铁道》4.5版本PV：「挥掷千星的筹码」", "bvid": "BV19qgK6qEb6", "desc": "以何代价，可换取乐园一息尚存？以何声响，能引来琥珀垂落目光？\n天平已悄然校准，而你，唯有孤注一掷。", "cover": "http://i1.hdslb.com/bfs/archive/8161381dca3ed55a611eff92839b1d5543d9a037.jpg", "date": "2026-08-24"}, {"idx": 2, "game": "崩坏：星穹铁道", "category": "版本", "title": "《崩坏：星穹铁道》4.4版本「鸣笛于归寂之时」前瞻特别节目", "bvid": "BV1TkTs6TEN2", "desc": "《崩坏：星穹铁道》4.4版本「鸣笛于归寂之时」将于2026年7月15日上线，感谢开拓者的支持与陪伴~", "cover": "http://i0.hdslb.com/bfs/archive/e78cede84b569598f92959c88ceafc6bd9a34634.jpg", "date": "2026-08-24"}, {"idx": 3, "game": "崩坏：星穹铁道", "category": "版本", "title": "《崩坏：星穹铁道》4.4版本PV：「鸣笛于归寂之时」", "bvid": "BV1CBTE6yEVR", "desc": "领航者绘出通往末日的航图。哀切的鸣笛响彻，唯有开拓之人才能寻得跨越死境的生路……", "cover": "http://i0.hdslb.com/bfs/archive/fa5a04fdbce5f95dfd3ccebf697f0e1f7cf184d5.jpg", "date": "2026-08-24"}, {"idx": 4, "game": "崩坏：星穹铁道", "category": "角色", "title": "《崩坏：星穹铁道》走近星穹——「知更鸟•晴歌：快乐的小鸟」", "bvid": "BV1GB8j6jEGF", "desc": "「哥哥，你也来啦？新歌听了吗？」\n「当然，很好听。你最近很忙吧？在忙什么？」\n「最近在做IP改编游戏，《快乐的小鸟》。」", "cover": "http://i0.hdslb.com/bfs/archive/5286e8d7ee8cd16958f1e8e9ee93732fe1530553.jpg", "date": "2026-08-24"}, {"idx": 5, "game": "崩坏：星穹铁道", "category": "角色", "title": "《崩坏：星穹铁道》走近星穹——「吉尔伽美什：我为你的喜悦而喜悦」", "bvid": "BV1uVKb6UE9T", "desc": "「来吧，」金发男人昂首睥睨，「向本王踏出一步吧。难道你是一个卑微的畏缩者吗？」", "cover": "http://i1.hdslb.com/bfs/archive/25f81e195536611b3545d9345e8179e30155382b.jpg", "date": "2026-08-24"}, {"idx": 6, "game": "崩坏：星穹铁道", "category": "角色", "title": "《崩坏：星穹铁道》走近星穹——「远坂凛：如何在宇宙时代学会智能机」", "bvid": "BV1xSKp6fEm8", "desc": "「注册账号的第一步，是设置密码。」灰发的年轻人认真地说。\n「然后输入一下你的个人信息。」红衣的青年继续道。", "cover": "http://i0.hdslb.com/bfs/archive/c09952b222eedba30ebb2b0de0287e25348aaeef.jpg", "date": "2026-08-24"}, {"idx": 7, "game": "崩坏：星穹铁道", "category": "角色", "title": "《崩坏：星穹铁道》姬子•启行角色PV——「启明星于今夜坠落」", "bvid": "BV1XwNX6JEoF", "desc": "听说，群星的光芒是很久以前的东西。跨越无数星霜，过去的光芒才能传递过来。\n于是，她们的过去与未来互相交错，归结于现在。", "cover": "http://i1.hdslb.com/bfs/archive/949f0fdb23ab81e148e93f689b6087fc62a990a9.jpg", "date": "2026-08-24"}, {"idx": 8, "game": "崩坏：星穹铁道", "category": "角色", "title": "《崩坏：星穹铁道》走近星穹——「姬子•启行：咖啡因来自咖啡果」", "bvid": "BV1qdM76TEBH", "desc": "摘录自某绝灭大君截获的通话记录：\n「杨叔！你和那只臭浣熊怎么跑得这么快！置我和丹恒于不顾！太过分了！」", "cover": "http://i0.hdslb.com/bfs/archive/e7999cd7462e10ef3a8e0c88c4e0c546d8892d04.jpg", "date": "2026-08-24"}, {"idx": 9, "game": "崩坏：星穹铁道", "category": "角色", "title": "《崩坏：星穹铁道》白厄角色PV——「日冕」", "bvid": "BV1HfKiz3Ezf", "desc": "「看见那圈白色光晕了么？它叫做日冕，是太阳炽烈的皇冠。」", "cover": "http://i0.hdslb.com/bfs/archive/361e099fd6d34fcc870fbedb4cc6313bc5fc1d58.jpg", "date": "2026-08-24"}, {"idx": 10, "game": "崩坏：星穹铁道", "category": "角色", "title": "《崩坏：星穹铁道》花火角色PV——「独角戏」", "bvid": "BV1mW421A7nM", "desc": "「这世界上根本没有不麻烦的人哦？」\n「陪我一起把全部都搅乱的话，我就让你成为我的东西吧。」", "cover": "http://i0.hdslb.com/bfs/archive/ac2c1c7a46c0ed7bbbe88a0281aafcfdacecd15c.jpg", "date": "2026-08-24"}, {"idx": 11, "game": "崩坏：星穹铁道", "category": "动画", "title": "《崩坏：星穹铁道》动画短片——「你的终点，我的起点」", "bvid": "BV1kZNN6iEPq", "desc": "我时常会梦见那场幻月游戏的结局。\n如果当初活下来的是你…现在一定能做得比我更好吧?\n素子，我回来了。", "cover": "http://i0.hdslb.com/bfs/archive/b88429d957c0477bafa84d180f2f00779b3a9c2c.jpg", "date": "2026-08-24"}, {"idx": 12, "game": "崩坏：星穹铁道", "category": "音乐", "title": "《崩坏：星穹铁道》EP：「下一站」", "bvid": "BV1JqKM6rELh", "desc": "寻求归葬的过客，带去警告的旅者，人们前往流淌古老忘川的画中尽头，目睹过往的悲喜从中浮现……", "cover": "http://i0.hdslb.com/bfs/archive/048eebba6f9dbb454803bbfef844c0c257a01a56.jpg", "date": "2026-08-24"}, {"idx": 13, "game": "崩坏：星穹铁道", "category": "音乐", "title": "《崩坏：星穹铁道》EP：「希望有羽毛和翅膀」", "bvid": "BV1Tf421m7iW", "desc": "希望在我的灵魂中筑巢栖息，\n唱着没有词的歌曲，\n似乎永远不会停息。", "cover": "http://i0.hdslb.com/bfs/archive/60ac7666c6ed96880ffdcb2f483ac0857c9d412f.jpg", "date": "2026-08-24"}, {"idx": 14, "game": "崩坏：星穹铁道", "category": "音乐", "title": "《崩坏：星穹铁道》OP：「不眠之夜」", "bvid": "BV1me411n7eu", "desc": "梦境里那个声音笑着说：「带我离开。」\n但我却亲手杀死了睡眠、忘记了时间。", "cover": "http://i2.hdslb.com/bfs/archive/987f433d2fcc8f6f4fb685d8a10d38fbe468d6e5.jpg", "date": "2026-08-24"}, {"idx": 15, "game": "崩坏：星穹铁道", "category": "音乐", "title": "《崩坏：星穹铁道》OP：「星间旅行」", "bvid": "BV1rh4y1n77f", "desc": "把星球当作沿途站台，去开拓一个时代。\n这旅途危机多过意外，但星辰唾手可摘。", "cover": "http://i2.hdslb.com/bfs/archive/5e8870128205a2a1a4f45269b06a2086f9e394e7.jpg", "date": "2026-08-24"}, {"idx": 16, "game": "崩坏：星穹铁道", "category": "活动", "title": "《崩坏：星穹铁道》× Fate[UBW] 联动PV——「别来无恙」", "bvid": "BV1ThgD6nEie", "desc": "「哈哈哈哈哈，管你是无能女神还是魔术师，把本王的圣杯交出来！」\n「话太多了，你这金闪闪！关键时刻的我可是很靠谱的~」", "cover": "http://i2.hdslb.com/bfs/archive/ad4efbb63d4d65efa768efc7ccbe94bbbb309460.jpg", "date": "2026-08-24"}, {"idx": 17, "game": "崩坏：星穹铁道", "category": "活动", "title": "《崩坏：星穹铁道》公益第二卷：「当一颗星照亮夜空」", "bvid": "BV1WQKn6SEaP", "desc": "「齐乐绒绒大冒险」是《崩坏：星穹铁道》发起的一项公益行动。\n项目组以开拓者的名义向中国儿童少年基金会捐赠115万元。", "cover": "http://i2.hdslb.com/bfs/archive/86e7c9e41e09052a3037cd0be0eb140a3dd458e2.jpg", "date": "2026-08-24"}, {"idx": 18, "game": "崩坏：星穹铁道", "category": "其他", "title": "《崩坏：星穹铁道》千星纪游PV——「众声之外」", "bvid": "BV1Vj8K6DEFM", "desc": "万千声音曾试图将她描述，为她命名。\n当所有的喧嚣都归于寂静，她听见了来自胸膛深处的共鸣。", "cover": "http://i0.hdslb.com/bfs/archive/193aa670f4f3091179dd9a96af88298eb7a3bcb6.jpg", "date": "2026-08-24"}, {"idx": 19, "game": "崩坏：星穹铁道", "category": "其他", "title": "《崩坏：星穹铁道》即兴巡演PV——「致仰望者」", "bvid": "BV1MHMe6vE94", "desc": "姬子，我做了一个梦，一位银河旅人在敲敲打打，黑暗中迸溅几粒火星。\n火星点燃了列车的引擎，也照亮了旅人的脸。", "cover": "http://i0.hdslb.com/bfs/archive/91a1953e8f61d44748c9b298a64f2e35ed1133ee.jpg", "date": "2026-08-24"}, {"idx": 20, "game": "原神", "category": "版本", "title": "《原神》7.0版本「无神怜爱的雪国」前瞻特别节目", "bvid": "BV1k5GA6CE3r", "desc": "《原神》7.0版本「无神怜爱的雪国」将于2026年8月12日上线。\n感谢各位旅行者的支持与陪伴，我们将为大家带来更多7.0版本的最新消息~\n \n本次兑换码将于2026年8月3日12:00:00失效，记得尽快兑换哦~\n\n《原神》bilibili服下载地址： https://www.biligame.com/detail/?id=103496", "cover": "https://i1.hdslb.com/bfs/archive/62a6e3a01c9024a28dfc9320cf39cc1f79386f00.jpg", "date": "2026-08-24"}, {"idx": 21, "game": "原神", "category": "版本", "title": "《原神》7.0版本「无神怜爱的雪国」活动汇总", "bvid": "BV1aiGA6bETa", "desc": "《原神》7.0版本「无神怜爱的雪国」将于2026年8月12日上线，感谢各位旅行者的支持与陪伴~\n（*开发中内容，请以实际上线内容为准）\n\n《原神》bilibili服下载地址： https://www.biligame.com/detail/?id=103496", "cover": "https://i2.hdslb.com/bfs/archive/53a0560e0d3ad921d296570bd0cc775eebbdd5ec.jpg", "date": "2026-08-24"}, {"idx": 22, "game": "原神", "category": "版本", "title": "《原神》7.0版本PV：「无神怜爱的雪国」", "bvid": "BV1EpGA6uEDX", "desc": "死亡寻访每一个无人看管的寒夜，留下魂灵哀然而泣。\n哭泣这世间所有的眷恋，也哭泣与那美梦的别离。\n \n中文CV：\n空——鹿喑\n「丑角」皮耶罗——符冲\n米提亚——苏尚卿\n奥黛塔——潘丹妮\n阿罗夏——王辅平\n「富人」潘塔罗涅——梁达伟\n「公子」达达利亚——李春胤\n「公鸡」普契涅拉——王肖兵\n薇斯纳——龟娘\n达妮卡——朱婧\n「死之执政」若娜瓦——Selene\n沃雅妮莎——苏婉\n安娜丝塔夏·费奥多罗夫娜·雪", "cover": "https://i0.hdslb.com/bfs/archive/172e2684ddfd4262be18aa5770062ace20179a6c.jpg", "date": "2026-08-24"}, {"idx": 23, "game": "原神", "category": "角色", "title": "《原神》角色预告-「奥黛塔：天真的挽歌」", "bvid": "BV1sxui6eEGH", "desc": "道别吧，向温暖的炉火与窗畔的梦致歉。\n因你将行的路，指向那冷白的晨霜。\n \n中文CV：\n奥黛塔——潘丹妮\n\n日文CV：\n奥黛塔——上坂堇\n\n《原神》bilibili服下载地址： https://www.biligame.com/detail/?id=103496", "cover": "https://i2.hdslb.com/bfs/archive/c45b3c81c78f89d67348e65abe761e6ed3ee6021.jpg", "date": "2026-08-24"}, {"idx": 24, "game": "原神", "category": "角色", "title": "《原神》角色预告-「阿罗夏：冬狩之围」", "bvid": "BV1fZuU6FEox", "desc": "或许大部分人都觉得，雪原是块贫瘠的土地。\n但在合格的猎手眼中，这里遍布慷慨的馈赠，只是需要一些手段去夺取。\n \n中文CV：\n阿罗夏——王辅平\n\n日文CV：\n阿罗夏——佐藤元\n\n《原神》bilibili服下载地址： https://www.biligame.com/detail/?id=103496", "cover": "https://i1.hdslb.com/bfs/archive/aae90ce1b955023d6ba302c77f16a6ce550732aa.jpg", "date": "2026-08-24"}, {"idx": 25, "game": "原神", "category": "角色", "title": "《原神》奥黛塔角色PV——「柔雪的幻象」", "bvid": "BV1wZMy6DE31", "desc": "她的一生如一只水鸟的舞。\n等她不再困于湖冰的寒锋，才能将白羽带上苍穹。\n \n中文CV：\n奥黛塔——潘丹妮\n\n日文CV：\n奥黛塔——上坂堇\n\n《原神》bilibili服下载地址： https://www.biligame.com/detail/?id=103496", "cover": "https://i2.hdslb.com/bfs/archive/740a9b04ec6880e1ffbc1cf6535b886b26000b43.jpg", "date": "2026-08-24"}, {"idx": 26, "game": "原神", "category": "动画", "title": "《原神》过场动画-「凯旋」", "bvid": "BV1PY8i6HEqE", "desc": "冻土之上的王座仿若永恒。胜利并非她所渴求的荣耀，而是通往理想的必经之途。\n \n中文CV：\n派蒙——多多\n空——鹿喑\n薇斯纳——龟娘\n达妮卡——朱婧\n安娜丝塔夏·费奥多罗夫娜·雪奈茨娜娅——刘校妤\n\n日文CV：\n派蒙——古贺葵\n空——堀江瞬\n薇斯纳——平野绫\n达妮卡——原由实\n安娜丝塔夏·费奥多罗夫娜·雪奈茨娜娅——户松遥\n\n《原神》bilibili服下载地址： https://www.biliga", "cover": "https://i2.hdslb.com/bfs/archive/4ed0a8bfcebf79c3eb258860716ac5faedbe6f1f.jpg", "date": "2026-08-24"}, {"idx": 27, "game": "原神", "category": "动画", "title": "《原神》剧情PV-「冰中余烬」", "bvid": "BV1tK8q6fEU4", "desc": "温暖与冰冷可以来自同一份回忆，等待着接纳它的那颗心。\n歌与舞曲或有终幕，但她的脚步不会停止向前。\n \n中文CV：\n「女士」席诺拉——林之之\n「仆人」阿蕾奇诺——黄莺\n奥黛塔——潘丹妮\n\n日文CV：\n「女士」席诺拉——庄子裕衣\n「仆人」阿蕾奇诺——森奈奈子\n奥黛塔——上坂堇\n\n《原神》bilibili服下载地址： https://www.biligame.com/detail/?id=103496", "cover": "https://i0.hdslb.com/bfs/archive/e69725e21bd84c69f36811298b2ac9c03a331c4c.jpg", "date": "2026-08-24"}, {"idx": 28, "game": "原神", "category": "动画", "title": "《原神》过场动画-「『复活』之时将至」", "bvid": "BV1UP8q6FEmU", "desc": "她将死亡视作工具，便永远无法理解人对生命与热爱的执着。\n \n中文CV：\n「死之执政」若娜瓦——Selene\n空——鹿喑\n「丑角」皮耶罗——符冲\n米提亚——苏尚卿\n派蒙——多多\n\n日文CV：\n「死之执政」若娜瓦——折笠富美子\n空——堀江瞬\n「丑角」皮耶罗——间宫康弘\n米提亚——小林裕介\n派蒙——古贺葵\n\n《原神》bilibili服下载地址： https://www.biligame.com/deta", "cover": "https://i2.hdslb.com/bfs/archive/22bde5aa8cb2a91f0975352335c2f56df7afdeb7.jpg", "date": "2026-08-24"}, {"idx": 29, "game": "原神", "category": "动画", "title": "《原神》过场动画-「『死亡』已在身边」", "bvid": "BV11G8q69EwV", "desc": "死亡从不讲道理，但也不得不直面生者的愤怒。\n她注视着死后的世界，也必将受困于死亡的限制。\n \n中文CV：\n米提亚——苏尚卿\n「死之执政」若娜瓦——Selene\n空——鹿喑\n奥黛塔——潘丹妮\n瓦列里——淦子齐\n\n日文CV：\n米提亚——小林裕介\n「死之执政」若娜瓦——折笠富美子\n空——堀江瞬\n奥黛塔——上坂堇\n瓦列里——古川慎\n\n《原神》bilibili服下载地址： https://www.bilig", "cover": "https://i2.hdslb.com/bfs/archive/456d176b63c32085d7383ebbb6b03411dd80d23c.jpg", "date": "2026-08-24"}, {"idx": 30, "game": "原神", "category": "动画", "title": "《原神》过场动画-「星锋」", "bvid": "BV1e58P65EmC", "desc": "不知何时出现在手中的长剑，闪耀着苍星的光芒。\n \n中文CV：\n空——鹿喑\n奥黛塔——潘丹妮\n\n日文CV：\n空——堀江瞬\n奥黛塔——上坂堇\n\n《原神》bilibili服下载地址： https://www.biligame.com/detail/?id=103496", "cover": "https://i0.hdslb.com/bfs/archive/012a6b57007e55511d6facfcfcc30a8fb55f7301.jpg", "date": "2026-08-24"}, {"idx": 31, "game": "原神", "category": "动画", "title": "《原神》至冬探索短片——雪国的冒险", "bvid": "BV1YvGA6FE3v", "desc": "在雪国的冰原上探索，你需要一些出行的装备，再加一点巧妙的灵感，便能开启一段有趣的冒险。\n\n《原神》bilibili服下载地址： https://www.biligame.com/detail/?id=103496", "cover": "https://i0.hdslb.com/bfs/archive/0fc61f7c569ad4e6425ff6dec021b0c04709bce5.jpg", "date": "2026-08-24"}, {"idx": 32, "game": "原神", "category": "动画", "title": "《原神》过场动画-「若我们再次相见」", "bvid": "BV1JvME66Eej", "desc": "「看来，这部映影有了个好结局呢。」\n \n中文CV：\n「木偶」桑多涅——洪海天\n茜特菈莉——柳知萧\n空——鹿喑\n派蒙——多多\n「月之少女」哥伦比娅——杨梦露\n芙宁娜——钱琛\n千织——陈阳\n夏洛蒂——阮从青\n\n日文CV：\n「木偶」桑多涅——本多真梨子\n茜特菈莉——田野麻美\n空——堀江瞬\n派蒙——古贺葵\n「月之少女」哥伦比娅——Lynn\n芙宁娜——水濑祈\n千织——竹达彩奈\n夏洛蒂——和气杏未\n\n《原神》", "cover": "https://i1.hdslb.com/bfs/archive/a4f2c1bfb51946bb0e8765c6eb51a2d22c6e76c6.jpg", "date": "2026-08-24"}, {"idx": 33, "game": "原神", "category": "动画", "title": "《原神》过场动画-「安眠于众水」", "bvid": "BV1NUMg6fEt3", "desc": "滤清淤积的过往，我们认清了灵魂原本的模样。\n是时候道别了，去往更为安宁的归处。\n \n中文CV：\n派蒙——多多\n空——鹿喑\n茜特菈莉——柳知萧\n「木偶」桑多涅——洪海天\n\n日文CV：\n派蒙——古贺葵\n空——堀江瞬\n茜特菈莉——田野麻美\n「木偶」桑多涅——本多真梨子\n\n《原神》bilibili服下载地址： https://www.biligame.com/detail/?id=103496", "cover": "https://i1.hdslb.com/bfs/archive/4218a28625737ebfd7c54a8683024d4aaec8be2d.jpg", "date": "2026-08-24"}, {"idx": 34, "game": "原神", "category": "动画", "title": "《原神》剧情PV-「何物映自身于镜水」", "bvid": "BV11pM86EE93", "desc": "用镜面分隔未来与过去，却发现镜中映出相同的景象。\n这并非禁锢与回环，而是自我的统一。\n \n中文CV：\n「木偶」桑多涅——洪海天\n\n日文CV：\n「木偶」桑多涅——本多真梨子\n\n《原神》bilibili服下载地址： https://www.biligame.com/detail/?id=103496", "cover": "https://i2.hdslb.com/bfs/archive/404c8c35d189b98252f71075b3d9b13c86458919.jpg", "date": "2026-08-24"}, {"idx": 35, "game": "原神", "category": "音乐", "title": "《原神》至冬交响音乐现场", "bvid": "BV1riGw6zELu", "desc": "本次至冬交响音乐现场包含《至冬 Snezhnaya》与《冰湖的凯旋礼 Triumph on the Ice》两首由HOYO-MiX出品的《原神》游戏主题音乐，由钢琴演奏家Polina Osetinskaya、指挥家Robert Ziegler、伦敦交响乐团、London Voices合唱团和民乐演奏家们共同演绎。\n‌\n感谢TAKEOFF Studios的协作支持，感谢Stagecast提供的拍摄制", "cover": "https://i0.hdslb.com/bfs/archive/f5d4eaa017f5888b976e1da452a885d6f584d3c3.jpg", "date": "2026-08-24"}, {"idx": 36, "game": "原神", "category": "其他", "title": "《原神》千星奇域 - 7.0版本传说套装PV - 诙奇幻演", "bvid": "BV1JS316dELY", "desc": "以「欺骗星空」为目标的幻术大师曾穿着这套礼服登上至为崇高的舞台，庄重与优雅皆是戏法的一环。\n\n*奇偶妆容及动作仅供搭配参考，最终请以实机表现为准。", "cover": "https://i2.hdslb.com/bfs/archive/fe292424571b62c436d900405d7b76d3892e75af.jpg", "date": "2026-08-24"}, {"idx": 37, "game": "异环", "category": "版本", "title": "《异环》1.3版本PV「雾中朔望星回」", "bvid": "BV1egM16kE9D", "desc": "「你最渴望的，我早已为你备好。」\n「规则已递交，可以入场了。」\n「来吧，赢下游戏。」\n\n超自然都市开放世界RPG《异环》全新版本「雾中朔望星回」即将开启！立刻下载>>>https://www.biligame.com/detail/?id=111795", "cover": "https://i0.hdslb.com/bfs/archive/7426a41a596da8eaa0bf45ce7792f98a3d79e0d4.jpg", "date": "2026-08-24"}, {"idx": 38, "game": "异环", "category": "版本", "title": "《异环》1.3版本前瞻特别节目回顾", "bvid": "BV1NUMy6oEgd", "desc": "《异环》1.3版本「雾中朔望星回」将于8月13日版本更新后开启！\n1.3版本前瞻特别节目现已结束，感谢各位鉴定师的收看~\n\n超自然都市开放世界RPG《异环》全新版本「雾中朔望星回」即将开启！立刻下载>>>https://www.biligame.com/detail/?id=111795", "cover": "https://i1.hdslb.com/bfs/archive/859105ebaa8eacce9cd3f9ffb6012521992bd6e4.jpg", "date": "2026-08-24"}, {"idx": 39, "game": "异环", "category": "角色", "title": "《异环》残虹角色PV丨惑心谲影", "bvid": "BV1y1uq6zEud", "desc": "「这世界并非只有光鲜的一面，在属于弱肉强食的阴影里，曾有许多双眼睛觊觎着伊南娜的财富。」\n「而我所做的，就是将她的对手清理干净……当然，大多也是她的同类。」\n静谧的庄园里，一支佣兵小队趁着夜色悄然潜入，一场针对庄园主人的猎杀即将开始。\n然而，刀口舔血的猎手们全然不知……在她的猎场里，他们才是猎物。", "cover": "https://i2.hdslb.com/bfs/archive/8071261c0aedeb6b97912c65930d2e92b1012f27.jpg", "date": "2026-08-24"}, {"idx": 40, "game": "异环", "category": "角色", "title": "《异环》角色实机战斗丨残虹", "bvid": "BV15gM16kE1g", "desc": "超自然都市开放世界RPG《异环》全新版本「雾中朔望星回」即将开启！立刻下载>>>https://www.biligame.com/detail/?id=111795\n\n「溺毙于永恒的噩梦之中……」", "cover": "https://i2.hdslb.com/bfs/archive/810dc66bf0fd6107043cf0f8f6d92d40d0e669bc.jpg", "date": "2026-08-24"}, {"idx": 41, "game": "异环", "category": "角色", "title": "《异环》残虹角色短片丨灵魂的颜色", "bvid": "BV1RgM16rEe6", "desc": "超自然都市开放世界RPG《异环》全新版本「雾中朔望星回」即将开启！立刻下载>>>https://www.biligame.com/detail/?id=111795\n\n我曾以为，人的灵魂和血肉是相同的颜色；\n直到那抹高洁的火焰映入我的眼中。\n「……在你眼里，我的灵魂是什么颜色？」", "cover": "https://i0.hdslb.com/bfs/archive/9ceb719370fe641eb9781fe9f1d8e99c162aa4f8.jpg", "date": "2026-08-24"}, {"idx": 42, "game": "异环", "category": "角色", "title": "《异环》伊洛伊角色PV丨想做什么梦？", "bvid": "BV1VVKH6vEnH", "desc": "小朋友们，欢迎参观……嗯，参观哪里呢？\n异象管理局有点严肃，城市上空倒还不错，或者就去度假村吧，那最有趣了。\n——其实，哪里都行，怎样都好。\n只要「你」愿意，「我」会带「你」去任何地方。\n\n超自然都市开放世界RPG《异环》全新版本「九百九十九夜」现已开启！立刻下载>>>https://www.biligame.com/detail/?id=111795", "cover": "https://i1.hdslb.com/bfs/archive/18bf8c4887b2f28f3d7e17d66d00a51bb1575518.jpg", "date": "2026-08-24"}, {"idx": 43, "game": "异环", "category": "角色", "title": "《异环》角色实机战斗丨伊洛伊", "bvid": "BV1YLKH6PEPP", "desc": "超自然都市开放世界RPG《异环》全新版本「九百九十九夜」现已开启！立刻下载>>>https://www.biligame.com/detail/?id=111795\n\n要等到什么时候，「你」才愿意自己走到阳光下呢？\n「我」会等着「你」的。", "cover": "https://i0.hdslb.com/bfs/archive/025185dec4e1d5224ee7381e3a3ffec1c7c28013.jpg", "date": "2026-08-24"}, {"idx": 44, "game": "异环", "category": "角色", "title": "《异环》真红角色PV丨梦的边缘", "bvid": "BV12iKU6eEyj", "desc": "超自然都市开放世界RPG《异环》全新版本「九百九十九夜」即将开启！立刻下载>>>https://www.biligame.com/detail/?id=111795\n\n这次不一样，我绝不会让那天的事再次发生！\n所以我——\n「一定会保护你。」", "cover": "https://i0.hdslb.com/bfs/archive/0cfdd4611d0e7d0c43e490ffcfe90e6f99aeb58f.jpg", "date": "2026-08-24"}, {"idx": 45, "game": "异环", "category": "音乐", "title": "《异环》残虹EP丨Seven Shades of Red", "bvid": "BV1W1uq6zEdG", "desc": "望进我眼底，七重绯红渊\n吟唱着猩红谎言\n你的恐惧是我的甜点\n你的怒火斟满酒盏", "cover": "https://i1.hdslb.com/bfs/archive/35c6ce7238125c4f4d5a18130147d2fd78be3cdd.jpg", "date": "2026-08-24"}, {"idx": 46, "game": "异环", "category": "音乐", "title": "《异环》伊洛伊EP丨Lullaby", "bvid": "BV1YVKH6vEdg", "desc": "别害怕嘛，把心敞开\n请你进入我的世界\n梦幻国就在眼前，快跟我来吧\n愿你今夜嘴角弯弯\n超自然都市开放世界RPG《异环》全新版本「九百九十九夜」现已开启！立刻下载>>>https://www.biligame.com/detail/?id=111795", "cover": "https://i0.hdslb.com/bfs/archive/a19b062535102f9d2daa26b0402ae02b0dcf286f.jpg", "date": "2026-08-24"}, {"idx": 47, "game": "异环", "category": "音乐", "title": "《异环》真红EP丨Whatever It Says", "bvid": "BV1xiKU6eED2", "desc": "超自然都市开放世界RPG《异环》全新版本「九百九十九夜」现已开启！立刻下载>>>https://www.biligame.com/detail/?id=111795\n\n当那场雨紧随身后，我弃绝它的寒意\n月光中蛰伏的冲动，已不再能侵扰内心\n最终我会再次展开这双残损的翅膀振翼翱翔——\n然后回到等候着我的人们身边。", "cover": "https://i1.hdslb.com/bfs/archive/ed331b688c3c4110a916dca509b713acb06e2d7f.jpg", "date": "2026-08-24"}, {"idx": 48, "game": "异环", "category": "其他", "title": "《异环》剧情过场 | 雾巢游戏", "bvid": "BV15DgA6wEyF", "desc": "超自然都市开放世界RPG《异环》全新版本「雾中朔望星回」现已开启！立刻下载>>>https://www.biligame.com/detail/?id=111795\n\n「你的眼睛……你的生命……都是属于我的！」", "cover": "https://i2.hdslb.com/bfs/archive/65184edf8ae750b23b9f18dcc5e432c47feee6d7.jpg", "date": "2026-08-24"}, {"idx": 49, "game": "异环", "category": "其他", "title": "《异环》剧情过场 | 我心倒影/镜中对决", "bvid": "BV1adTj6sEU1", "desc": "超自然都市开放世界RPG《异环》全新版本「九百九十九夜」现已开启！立刻下载>>>https://www.biligame.com/detail/?id=111795\n\n也许我没法打败你，但我也不需要那样做。\n我会试着接纳你，接纳完整的自己……\n——与伙伴们一起！", "cover": "https://i0.hdslb.com/bfs/archive/940fd2dd265d9bb4268bf3ad75fa9ac2bd2d38da.jpg", "date": "2026-08-24"}, {"idx": 50, "game": "绝区零", "category": "版本", "title": "《绝区零》3.1版本「漫长的告别」前瞻特别节目", "bvid": "BV191NR6ZEXx", "desc": "故事新章即将开启，初代虚狩「蕾米埃尔」、全新代理人「希格莉德」即将登场！3.1版本期间，登录即可领取限定S级代理人、限定S级音擎和1600菲林，更有加密母带*20、周年庆头像及称号等奖励免费获取~7月29日，不见不散！\n\n本次特别节目中的一切人物、故事、设定仅为节目包装，均与《绝区零》原作无关，展示画面与奖励等均为开发中内容，实际内容请以正式上线为准。\n另外，本次特别节目中的兑换码将于7月19日 ", "cover": "https://i1.hdslb.com/bfs/archive/6a72573197f6927f2684eeae6e6e6dbdaa55b5af.jpg", "date": "2026-08-24"}, {"idx": 51, "game": "绝区零", "category": "角色", "title": "《绝区零》希格莉德角色PV | 小马希莉", "bvid": "BV1Qfb86LEC5", "desc": "无论面对何人，战士都绝不可犹豫！\n无论身处何地，战士都绝不可失仪！\n英姿神骏，横扫千军！\n\n希格莉德CV\n中：贺若帆\n日：甲斐田裕子\n\n—— 欢迎来到罗斯凯利法！——\n▼ 《绝区零》二周年版本「漫长的告别」现已上线！\n限定S级代理人虚狩「蕾米埃尔」&「爱芮」现已加入调频&复刻。\n版本期间，登录可领限定S级代理人&音擎5选1以及1600菲林，参与签到共计可领取加密母带×20，参与活动还可免费领取露西", "cover": "https://i0.hdslb.com/bfs/archive/7a260dfe8b0fe9bdaaf600953ed796d95659b4c2.jpg", "date": "2026-08-24"}, {"idx": 52, "game": "绝区零", "category": "角色", "title": "《绝区零》希格莉德角色展示 | 好马识途", "bvid": "BV1bWgA6SEnT", "desc": "五十米后左转…\n请保持直行…\n请继续保持直行…\n您已偏航…\n正在为您重新规划路线。\n\n「不对劲吧？」\n\n希格莉德CV\n中：贺若帆\n日：甲斐田裕子\n\n—— 欢迎来到罗斯凯利法！——\n▼ 《绝区零》二周年版本「漫长的告别」现已上线！\n限定S级代理人虚狩「蕾米埃尔」&「爱芮」现已加入调频&复刻。\n版本期间，登录可领限定S级代理人&音擎5选1以及1600菲林，参与签到共计可领取加密母带×20，参与活动还可", "cover": "https://i2.hdslb.com/bfs/archive/85c7f8234788aa9c516d69b42b13c815eb470aea.jpg", "date": "2026-08-24"}, {"idx": 53, "game": "绝区零", "category": "角色", "title": "《绝区零》蕾米埃尔角色展示 | 恰如往昔", "bvid": "BV11Aga6oENR", "desc": "「时至今日，我才终于明白。」\n「或许…我从未认识过真正的你。」\n\n蕾米埃尔·丹CV \n中：醋醋\n日：大西沙织\n\n挽昼女士CV\n中：张若瑜\n日：大原沙耶香\n \n艾尔妲·挽昼CV\n中：张若瑜\n日：大原沙耶香\n\n—— 欢迎来到罗斯凯利法！——\n▼ 《绝区零》二周年版本「漫长的告别」将于7月29日上线！\n版本期间，登录可领限定S级代理人&音擎5选1以及1600菲林，参与签到共计可领取加密母带×20，参与活", "cover": "https://i0.hdslb.com/bfs/archive/36a3d4b0b4c3e4dac71910441e3de64565f81c5b.jpg", "date": "2026-08-24"}, {"idx": 54, "game": "绝区零", "category": "角色", "title": "《绝区零》诺姆角色展示 | 大嗯呐假说", "bvid": "BV1W1Tp6xEhT", "desc": "「怎么样？喜欢这副能干的新身体吗？」\n「不要害怕~ 生长痛是每位小朋友必经的烦恼嘛~」\n\n诺姆CV\n中：王晓彤\n日：和泉风花\n\n—— 欢迎来到罗斯凯利法！——\n▼ 3.0版本「某个梦游者的自白」现已上线！\n限定S级代理人「维琳娜」&「叶瞬光」现已加入调频&复刻。\n3.0版本期间，登录可领1600菲林，免费赠送主角代理人「佩洛伊斯」、专属音擎及其影画，以及全新主角时装&配饰。\nbilibili安卓端", "cover": "https://i0.hdslb.com/bfs/archive/acc549823994e7046c81408dfc91705aa6b0fed8.jpg", "date": "2026-08-24"}, {"idx": 55, "game": "绝区零", "category": "动画", "title": "《绝区零》蕾米埃尔动画短片 | 静默之日", "bvid": "BV1fk3E61Eu5", "desc": "「那时，我们都以为…这会是奇迹的另一个起点。」\n「可到头来，我们所得到的…却不过只是一些以生命为代价的谎言。」\n\n蕾米埃尔·丹CV\n中：醋醋\n日：大西沙织\n\n贝莉奥拉·维克CV\n中：唐雅菁\n日：佐仓绫音\n\n「故事的讲述者」CV\n中：美加\n日：八卷安菜\n\n—— 欢迎来到罗斯凯利法！——\n▼ 《绝区零》二周年版本「漫长的告别」将于7月29日上线！\n版本期间，登录可领限定S级代理人&音擎5选1以及160", "cover": "https://i1.hdslb.com/bfs/archive/f5abb9a175f82b0491ae84157eb3851dfcd0bee9.jpg", "date": "2026-08-24"}, {"idx": 56, "game": "绝区零", "category": "音乐", "title": "《绝区零》蕾米埃尔EP | Two to Tango 交缠舞步", "bvid": "BV1jhgf6pEJw", "desc": "天使还是恶魔，你掌握着定义权\n我不属于暗影，也不会步入光明\n与你一直回旋，任时序流转\n直到永远…\n\n▼ 制作名单\n制作人：杨武韬\n演唱：E1and\n作词：雷十一/Jesscia Nathania\n作曲：杨武韬\n编曲：杨武韬\n铜管编写：杨武韬/王铭基\n萨克斯：李世海\n小号：胡丹峰\n长号：曹侃\n铜管录制：上海升赫录音棚@Soundhub Studios\n录音师：潘俊宇@52Hz Studio\n混音母带", "cover": "https://i0.hdslb.com/bfs/archive/aca4ee6607e39b696138167cd70bf73932cf39fd.jpg", "date": "2026-08-24"}, {"idx": 57, "game": "绝区零", "category": "音乐", "title": "《绝区零》二周年主题曲MV | 预言", "bvid": "BV1QRKJ6ZEzC", "desc": "那时万物 不过一场初醒之梦\n\n制作人：雷声\n作曲/编曲：雷声\n作词：雷雨心\n演唱：Gin Wigmore\n人声录音师：Simon Gooding\n和声：Ai Mori/David Briand/Gin Wigmore/雷雨心/李振宇/Philip Strand/三Z-Studio/YMIR/于梓贝\n和声编写：雷声\n管弦乐编写：雷声/王铭基\n吉他/贝斯：张星\n混音：雷声\n母带：Simon Li\n\n—", "cover": "https://i2.hdslb.com/bfs/archive/8cee5aed5850feddbce0af528c9947d64b4bb5c6.jpg", "date": "2026-08-24"}, {"idx": 58, "game": "绝区零", "category": "音乐", "title": "《绝区零》诺姆EP｜chaos.exe", "bvid": "BV1WdTS6eECV", "desc": "一点火花，连锁反应\n迫不及待想看个究竟💥⚠️⚠️\n\n声明：本片拍摄过程中未对邦布造成伤害。\n\n制作人：余宗儒\n编曲：余宗儒\n作词：han.irl <3\n作曲：余宗儒/han.irl <3\n演唱者：han.irl <3\n混音：余宗儒\n母带：余宗儒\n\n—— 欢迎来到罗斯凯利法！——\n▼ 3.0版本「某个梦游者的自白」现已上线！\n限定S级代理人「维琳娜」&「叶瞬光」现已加入调频&复刻。\n3.0版本期间，", "cover": "https://i1.hdslb.com/bfs/archive/10af69e0944cd72cc18cb5f44a43efd38301d361.jpg", "date": "2026-08-24"}, {"idx": 59, "game": "绝区零", "category": "活动", "title": "决战时刻 | 翼刃出鞘", "bvid": "BV1SY3m6LEyh", "desc": "「久违的空中战…这可是我最擅长的领域。」\n「让我看看你还能怎么反抗吧，基塔布鲁！」\n\n—— 欢迎来到罗斯凯利法！——\n▼ 《绝区零》二周年版本「漫长的告别」现已上线！\n限定S级代理人虚狩「蕾米埃尔」&「爱芮」现已加入调频&复刻。\n版本期间，登录可领限定S级代理人&音擎5选1以及1600菲林，参与签到共计可领取加密母带×20，参与活动还可免费领取露西时装「公主假日」。\nbilibili安卓端下载地址", "cover": "https://i0.hdslb.com/bfs/archive/e6b2a17aa1a91edcea9ca489ce621a358690ac38.jpg", "date": "2026-08-24"}, {"idx": 60, "game": "绝区零", "category": "活动", "title": "ZTALK | 蕾米埃尔设计幕后", "bvid": "BV1jm3r6rEif", "desc": "初代虚狩「蕾米埃尔」，正式回归！\n项目组的开发同学将在节目中为大家揭秘「蕾米埃尔」的设计历程，分享制作中的幕后趣闻。\n欢迎各位绳匠观看~\n\n—— 欢迎来到罗斯凯利法！——\n▼ 《绝区零》二周年版本「漫长的告别」现已上线！\n限定S级代理人虚狩「蕾米埃尔」&「爱芮」现已加入调频&复刻。\n版本期间，登录可领限定S级代理人&音擎5选1以及1600菲林，参与签到共计可领取加密母带×20，参与活动还可免费领取", "cover": "https://i0.hdslb.com/bfs/archive/84e622605bf185a004cbf3381571c3558670f1d2.jpg", "date": "2026-08-24"}, {"idx": 61, "game": "绝区零", "category": "活动", "title": "绝区零 x KFC联动PV：美味与灵感一同降临", "bvid": "BV1kbKK6uEDN", "desc": "是美味的时刻，是闪亮的时刻，更是妄想的时刻！\n速来观看妄想天使美味首演现场>>>\n\n—— 欢迎来到新艾利都！——", "cover": "https://i0.hdslb.com/bfs/archive/39c41946f380022347c2f09c8f1e3ba149ba0863.jpg", "date": "2026-08-24"}, {"idx": 62, "game": "绝区零", "category": "活动", "title": "雅迪x绝区零联动PV丨高能进击，骑行委托已接取", "bvid": "BV1X5Ni6TEDY", "desc": "委托目标已确认，路线规划已完成。\n雅迪将携手艾莲、莱卡恩，和绳匠一起穿梭街区，完成委托任务！\n另：最强人工智能助手Fairy，将随时为您提供导航支持！\n愿这段相伴骑行的旅途，成为我们共同的珍贵回忆。\n\n—— 欢迎来到新艾利都！——", "cover": "https://i1.hdslb.com/bfs/archive/009bee76a4f96c6cba226a6ea23c1e476d34dd63.jpg", "date": "2026-08-24"}];
+var vpState = {
+  open: false,
+  idx: -1,
+  landscape: false,
+  autoFit: false,
+  controlsVisible: true,
+  hideTimer: null,
+  quality: 64,
+  startTime: 0,
+  elapsed: 0,
+  timerInterval: null,
+};
+
+function openVideo(idx) {
+  var v = COMMUNITY_VIDEOS[idx];
+  if (!v) return;
+  vpState.open = true;
+  vpState.idx = idx;
+  vpState.startTime = 0;
+  vpState.elapsed = 0;
+  
+  var overlay = document.getElementById('vp-overlay');
+  var iframe = document.getElementById('vp-iframe');
+  var title = document.getElementById('vp-title');
+  
+  title.textContent = v.title;
+  iframe.src = '//player.bilibili.com/player.html?bvid=' + v.bvid + 
+    '&high_quality=1&danmaku=0&autoplay=1&t=0&quality=' + vpState.quality;
+  
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  
+  // Start progress timer
+  clearInterval(vpState.timerInterval);
+  vpState.timerInterval = setInterval(updateProgress, 1000);
+  
+  showControls();
+}
+
+function closeVideo() {
+  vpState.open = false;
+  var overlay = document.getElementById('vp-overlay');
+  var iframe = document.getElementById('vp-iframe');
+  
+  overlay.classList.remove('open');
+  overlay.classList.remove('landscape');
+  iframe.src = '';
+  document.body.style.overflow = '';
+  clearInterval(vpState.timerInterval);
+  
+  // Exit fullscreen if active
+  if (document.fullscreenElement || document.webkitFullscreenElement) {
+    (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
+  }
+  // Unlock orientation
+  if (screen.orientation && screen.orientation.unlock) {
+    try { screen.orientation.unlock(); } catch(e) {}
+  }
+  vpState.landscape = false;
+  vpState.autoFit = false;
+}
+
+function updateProgress() {
+  if (!vpState.open) return;
+  vpState.elapsed++;
+  var el = vpState.elapsed;
+  var m = Math.floor(el / 60);
+  var s = el % 60;
+  var timeStr = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  document.getElementById('vp-time').textContent = timeStr + ' / --:--';
+  
+  // Update progress bar (assume 3 min average video)
+  var pct = Math.min(100, (el / 180) * 100);
+  document.getElementById('vp-progress-fill').style.width = pct + '%';
+  document.getElementById('vp-thumb').style.left = pct + '%';
+}
+
+function showControls() {
+  vpState.controlsVisible = true;
+  document.getElementById('vp-controls').classList.remove('hidden');
+  document.getElementById('vp-top-bar').style.opacity = '1';
+  document.getElementById('vp-show-ctrl').classList.remove('show');
+  
+  clearTimeout(vpState.hideTimer);
+  vpState.hideTimer = setTimeout(hideControls, 5000);
+}
+
+function hideControls() {
+  if (!vpState.open) return;
+  vpState.controlsVisible = false;
+  document.getElementById('vp-controls').classList.add('hidden');
+  document.getElementById('vp-top-bar').style.opacity = '0';
+  document.getElementById('vp-show-ctrl').classList.add('show');
+}
+
+function toggleControls() {
+  if (vpState.controlsVisible) hideControls();
+  else showControls();
+}
+
+/* Progress bar seek */
+document.getElementById('vp-progress').addEventListener('click', function(e) {
+  // Calculate seek position
+  var rect = this.getBoundingClientRect();
+  var pct = (e.clientX - rect.left) / rect.width;
+  pct = Math.max(0, Math.min(1, pct));
+  
+  // Seek by reloading with time parameter
+  var v = COMMUNITY_VIDEOS[vpState.idx];
+  if (!v) return;
+  
+  // Estimate total duration (we don't know exact, so use 180s as reference)
+  var seekTo = Math.floor(pct * 180);
+  vpState.elapsed = seekTo;
+  
+  var iframe = document.getElementById('vp-iframe');
+  iframe.src = '//player.bilibili.com/player.html?bvid=' + v.bvid + 
+    '&high_quality=1&danmaku=0&autoplay=1&t=' + seekTo + '&quality=' + vpState.quality;
+  
+  // Update progress bar
+  var fillPct = pct * 100;
+  document.getElementById('vp-progress-fill').style.width = fillPct + '%';
+  document.getElementById('vp-thumb').style.left = fillPct + '%';
+  
+  showControls();
+});
+
+/* Back button */
+document.getElementById('vp-back-btn').addEventListener('click', closeVideo);
+
+/* Video area tap to toggle controls */
+document.getElementById('vp-video-area').addEventListener('click', function(e) {
+  // Don't toggle if clicking on controls
+  if (e.target.closest('.vp-controls') || e.target.closest('.vp-show-ctrl-btn')) return;
+  toggleControls();
+});
+
+/* Show controls button */
+document.getElementById('vp-show-ctrl').addEventListener('click', function(e) {
+  e.stopPropagation();
+  showControls();
+});
+
+/* Fullscreen */
+document.getElementById('vp-fullscreen-btn').addEventListener('click', function() {
+  var overlay = document.getElementById('vp-overlay');
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    (overlay.requestFullscreen || overlay.webkitRequestFullscreen || function(){}).call(overlay);
+    this.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>';
+  } else {
+    (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
+    this.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>';
+  }
+  showControls();
+});
+
+/* Landscape mode - rotate video 90 degrees */
+document.getElementById('vp-landscape-btn').addEventListener('click', function() {
+  var overlay = document.getElementById('vp-overlay');
+  vpState.landscape = !vpState.landscape;
+  
+  if (vpState.landscape) {
+    overlay.classList.add('landscape');
+    this.classList.add('active');
+    // Enter fullscreen first
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      (overlay.requestFullscreen || overlay.webkitRequestFullscreen || function(){}).call(overlay);
+    }
+    // Lock landscape orientation
+    if (screen.orientation && screen.orientation.lock) {
+      try { screen.orientation.lock('landscape').catch(function(){}); } catch(e) {}
+    }
+  } else {
+    overlay.classList.remove('landscape');
+    this.classList.remove('active');
+    if (screen.orientation && screen.orientation.unlock) {
+      try { screen.orientation.unlock(); } catch(e) {}
+    }
+  }
+  showControls();
+});
+
+/* Auto-fit mode - auto-detect orientation */
+document.getElementById('vp-autofit-btn').addEventListener('click', function() {
+  vpState.autoFit = !vpState.autoFit;
+  this.classList.toggle('active', vpState.autoFit);
+  
+  if (vpState.autoFit) {
+    checkOrientation();
+    window.addEventListener('orientationchange', checkOrientation);
+    window.addEventListener('resize', checkOrientation);
+  } else {
+    window.removeEventListener('orientationchange', checkOrientation);
+    window.removeEventListener('resize', checkOrientation);
+    // Reset to portrait
+    var overlay = document.getElementById('vp-overlay');
+    overlay.classList.remove('landscape');
+    document.getElementById('vp-landscape-btn').classList.remove('active');
+  }
+  showControls();
+});
+
+function checkOrientation() {
+  if (!vpState.autoFit || !vpState.open) return;
+  var isLandscape = window.innerWidth > window.innerHeight;
+  var overlay = document.getElementById('vp-overlay');
+  var landscapeBtn = document.getElementById('vp-landscape-btn');
+  
+  if (isLandscape && !vpState.landscape) {
+    vpState.landscape = true;
+    overlay.classList.add('landscape');
+    landscapeBtn.classList.add('active');
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      (overlay.requestFullscreen || overlay.webkitRequestFullscreen || function(){}).call(overlay);
+    }
+  } else if (!isLandscape && vpState.landscape) {
+    vpState.landscape = false;
+    overlay.classList.remove('landscape');
+    landscapeBtn.classList.remove('active');
+  }
+}
+
+/* Quality dropdown */
+document.getElementById('vp-quality-btn').addEventListener('click', function(e) {
+  e.stopPropagation();
+  var menu = document.getElementById('vp-quality-menu');
+  menu.classList.toggle('open');
+});
+
+document.querySelectorAll('#vp-quality-menu .vp-drop-item').forEach(function(item) {
+  item.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var q = parseInt(this.getAttribute('data-q'));
+    vpState.quality = q;
+    
+    // Update active state
+    document.querySelectorAll('#vp-quality-menu .vp-drop-item').forEach(function(i) {
+      i.classList.remove('active');
+    });
+    this.classList.add('active');
+    
+    // Update button label
+    var labels = {16:'360P', 32:'480P', 64:'720P', 80:'1080P'};
+    document.getElementById('vp-quality-btn').textContent = labels[q] || '720P';
+    
+    // Reload iframe with new quality
+    var v = COMMUNITY_VIDEOS[vpState.idx];
+    if (v) {
+      var iframe = document.getElementById('vp-iframe');
+      iframe.src = '//player.bilibili.com/player.html?bvid=' + v.bvid + 
+        '&high_quality=1&danmaku=0&autoplay=1&t=' + vpState.elapsed + '&quality=' + q;
+    }
+    
+    document.getElementById('vp-quality-menu').classList.remove('open');
+    showControls();
+  });
+});
+
+// Close quality menu when clicking elsewhere
+document.addEventListener('click', function() {
+  document.getElementById('vp-quality-menu').classList.remove('open');
+});
+
+/* ===== Community tab filtering ===== */
+document.querySelectorAll('.community-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.community-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+    filterCommunity();
+  });
+});
+
+document.querySelectorAll('.community-cat').forEach(function(cat) {
+  cat.addEventListener('click', function() {
+    document.querySelectorAll('.community-cat').forEach(function(c) { c.classList.remove('active'); });
+    cat.classList.add('active');
+    filterCommunity();
+  });
+});
+
+function filterCommunity() {
+  var activeGame = document.querySelector('.community-tab.active');
+  var activeCat = document.querySelector('.community-cat.active');
+  var gameFilter = activeGame ? activeGame.getAttribute('data-game') : 'all';
+  var catFilter = activeCat ? activeCat.getAttribute('data-cat') : 'all';
+  
+  document.querySelectorAll('.video-card').forEach(function(card) {
+    var game = card.getAttribute('data-game');
+    var cat = card.getAttribute('data-cat');
+    var show = (gameFilter === 'all' || game === gameFilter) && 
+               (catFilter === 'all' || cat === catFilter);
+    card.style.display = show ? '' : 'none';
+  });
+}
+
+/* ===== Keyboard shortcuts ===== */
+document.addEventListener('keydown', function(e) {
+  if (!vpState.open) return;
+  if (e.key === 'Escape') closeVideo();
+  else if (e.key === ' ') { e.preventDefault(); toggleControls(); }
+  else if (e.key === 'f') document.getElementById('vp-fullscreen-btn').click();
+  else if (e.key === 'l') document.getElementById('vp-landscape-btn').click();
+});
+
 </script>
 
   <!-- ===== Video Player Overlay ===== -->
