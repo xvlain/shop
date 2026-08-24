@@ -525,6 +525,72 @@ body::before {
 .sidebar-item svg { width:20px; height:20px; flex-shrink:0; }
 .sidebar-close { position:absolute; top:16px; right:16px; background:none; border:none; cursor:pointer; color:var(--ink-dim); font-size:22px; line-height:1; }
 .sidebar-badge { background:var(--accent); color:#fff; font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; margin-left:auto; }
+.sidebar-divider { height:1px; background:var(--line); margin:12px 0 8px; }
+
+/* ===== community section ===== */
+.comm-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:16px 0; }
+.comm-tab { padding:6px 16px; border-radius:20px; border:1.5px solid var(--line); background:var(--panel); color:var(--ink-dim); font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .2s; }
+.comm-tab.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+.comm-tab:hover:not(.active) { border-color:var(--accent-soft); color:var(--accent-deep); }
+.comm-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; margin-top:12px; }
+.comm-card { background:var(--panel); border:1.5px solid var(--line); border-radius:12px; overflow:hidden; cursor:pointer; transition:all .2s; }
+.comm-card:hover { border-color:var(--accent-soft); transform:translateY(-2px); box-shadow:0 4px 16px color-mix(in srgb,var(--accent) 10%,transparent); }
+.comm-card-thumb { position:relative; width:100%; padding-top:56.25%; background:var(--bg); overflow:hidden; }
+.comm-card-thumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.comm-card-thumb .thumb-ph { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--ink-faint); font-size:40px; }
+.comm-card-dur { position:absolute; bottom:6px; right:6px; background:rgba(0,0,0,.7); color:#fff; font-size:11px; padding:2px 6px; border-radius:4px; font-family:monospace; }
+.comm-card-info { padding:10px 12px; }
+.comm-card-title { font-size:14px; font-weight:700; color:var(--ink); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.comm-card-game { font-size:11px; color:var(--accent-deep); margin-top:4px; font-weight:600; }
+.comm-empty { text-align:center; padding:60px 20px; color:var(--ink-faint); }
+.comm-empty-icon { font-size:48px; margin-bottom:12px; opacity:.5; }
+.vp-overlay { position:fixed; inset:0; z-index:300; background:var(--bg); overflow-y:auto; transform:translateY(100%); transition:transform .35s cubic-bezier(.4,0,.2,1); }
+.vp-overlay.open { transform:translateY(0); }
+.vp-back { display:flex; align-items:center; gap:8px; padding:14px 22px; background:none; border:none; color:var(--accent-deep); font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
+.vp-player { width:100%; max-width:900px; margin:0 auto; padding:0 22px; }
+.vp-player iframe { width:100%; aspect-ratio:16/9; border:none; border-radius:12px; background:#000; }
+.vp-info { max-width:900px; margin:0 auto; padding:16px 22px 40px; }
+.vp-title { font-size:18px; font-weight:800; color:var(--ink); margin-bottom:8px; }
+.vp-meta { font-size:12px; color:var(--ink-faint); margin-bottom:16px; }
+.vp-desc { background:var(--panel); border:1.5px solid var(--line); border-radius:12px; padding:16px; font-size:13px; line-height:1.8; color:var(--ink-dim); white-space:pre-wrap; }
+
+/* ===== jukebox section ===== */
+.jb-settings { background:var(--panel); border:1.5px solid var(--line); border-radius:12px; padding:14px 18px; margin:16px 0; }
+.jb-settings-title { font-size:13px; font-weight:700; color:var(--accent-deep); margin-bottom:10px; }
+.jb-setting-row { display:flex; align-items:center; justify-content:space-between; padding:6px 0; }
+.jb-setting-label { font-size:13px; color:var(--ink); }
+.jb-toggle { position:relative; width:44px; height:24px; border-radius:12px; background:var(--line); cursor:pointer; transition:background .2s; border:none; padding:0; flex-shrink:0; }
+.jb-toggle.on { background:var(--accent); }
+.jb-toggle::after { content:""; position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%; background:#fff; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
+.jb-toggle.on::after { left:22px; }
+.jb-list { margin-top:12px; }
+.jb-track { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px; cursor:pointer; transition:background .15s; margin-bottom:2px; }
+.jb-track:hover { background:var(--accent-pale); }
+.jb-track.playing { background:var(--accent-pale); }
+.jb-track-num { width:24px; text-align:center; font-size:13px; color:var(--ink-faint); font-family:monospace; flex-shrink:0; }
+.jb-track.playing .jb-track-num { color:var(--accent); }
+.jb-track-info { flex:1; min-width:0; }
+.jb-track-name { font-size:14px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.jb-track-game { font-size:11px; color:var(--ink-faint); }
+.jb-track-dur { font-size:12px; color:var(--ink-faint); font-family:monospace; flex-shrink:0; }
+.jb-player { position:fixed; bottom:56px; left:0; right:0; z-index:150; background:var(--panel); border-top:1.5px solid var(--line); padding:8px 16px; display:none; box-shadow:0 -2px 12px rgba(0,0,0,.06); }
+.jb-player.show { display:block; }
+.jb-player.has-bnav { bottom:56px; }
+.jb-prog-wrap { width:100%; height:16px; display:flex; align-items:center; cursor:pointer; margin-bottom:4px; }
+.jb-prog-bar { width:100%; height:4px; background:var(--line); border-radius:2px; position:relative; }
+.jb-prog-fill { height:100%; background:var(--accent); border-radius:2px; width:0; transition:width .1s linear; }
+.jb-prog-fill::after { content:""; position:absolute; right:-5px; top:-3px; width:10px; height:10px; background:var(--accent); border-radius:50%; box-shadow:0 0 4px rgba(0,0,0,.2); }
+.jb-ctrl { display:flex; align-items:center; gap:12px; }
+.jb-now { flex:1; min-width:0; }
+.jb-now-name { font-size:13px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.jb-now-game { font-size:11px; color:var(--ink-faint); }
+.jb-btn { width:36px; height:36px; border-radius:50%; border:none; background:var(--accent-pale); color:var(--accent-deep); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s; flex-shrink:0; }
+.jb-btn:hover { background:var(--accent-soft); }
+.jb-btn svg { width:16px; height:16px; }
+.jb-btn-main { width:42px; height:42px; background:var(--accent); color:#fff; }
+.jb-btn-main:hover { background:var(--accent-deep); color:#fff; }
+.jb-btn-main svg { width:18px; height:18px; }
+.jb-time { font-size:11px; color:var(--ink-faint); font-family:monospace; flex-shrink:0; min-width:70px; text-align:right; }
 
 /* ===== shop section ===== */
 .shop-intro { text-align:center; padding:20px 0 10px; color:var(--ink-dim); font-size:14px; line-height:1.8; }
@@ -629,6 +695,16 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
     <button class="sidebar-item" data-sidebar="inbox" id="sb-inbox">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
       邮箱 <span class="sidebar-badge" id="inbox-badge" style="display:none">0</span>
+    </button>
+    <div class="sidebar-divider"></div>
+    <h3>探索</h3>
+    <button class="sidebar-item" data-sidebar="community" id="sb-community">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      社区
+    </button>
+    <button class="sidebar-item" data-sidebar="jukebox" id="sb-jukebox">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      留声机
     </button>
   </div>
 
@@ -1118,6 +1194,41 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       </div>
     </section>
 
+    <!-- ===== COMMUNITY ===== -->
+    <section class="section-panel hidden" id="sec-community">
+      <div class="section-head">
+        <h2>社区</h2>
+        <span class="desc">视频合集，按游戏分类</span>
+      </div>
+      <div class="comm-tabs" id="comm-tabs"></div>
+      <div class="comm-grid" id="comm-grid"></div>
+    </section>
+
+    <!-- ===== JUKEBOX ===== -->
+    <section class="section-panel hidden" id="sec-jukebox">
+      <div class="section-head">
+        <h2>留声机</h2>
+        <span class="desc">游戏音乐，随时聆听</span>
+      </div>
+      <div class="jb-settings">
+        <div class="jb-settings-title">播放设置</div>
+        <div class="jb-setting-row">
+          <span class="jb-setting-label">后台播放</span>
+          <button class="jb-toggle on" id="jb-bg-play"></button>
+        </div>
+        <div class="jb-setting-row">
+          <span class="jb-setting-label">记住播放进度</span>
+          <button class="jb-toggle on" id="jb-remember"></button>
+        </div>
+        <div class="jb-setting-row">
+          <span class="jb-setting-label">进入时自动播放</span>
+          <button class="jb-toggle" id="jb-autoplay"></button>
+        </div>
+      </div>
+      <div class="comm-tabs" id="jb-tabs"></div>
+      <div class="jb-list" id="jb-list"></div>
+    </section>
+
     <!-- ===== MY ORDERS ===== -->
     <section class="section-panel hidden" id="sec-orders">
       <div class="section-head">
@@ -1222,6 +1333,35 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
       </button>
     </div>
   </nav>
+
+  <!-- ===== Video Player Overlay ===== -->
+  <div class="vp-overlay" id="vp-overlay">
+    <button class="vp-back" id="vp-back">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      返回社区
+    </button>
+    <div class="vp-player"><iframe id="vp-iframe" allowfullscreen="true" sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts" allow="autoplay; fullscreen"></iframe></div>
+    <div class="vp-info">
+      <div class="vp-title" id="vp-title"></div>
+      <div class="vp-meta" id="vp-meta"></div>
+      <div class="vp-desc" id="vp-desc"></div>
+    </div>
+  </div>
+
+  <!-- ===== Jukebox Player Bar ===== -->
+  <div class="jb-player" id="jb-player">
+    <div class="jb-prog-wrap" id="jb-prog-wrap">
+      <div class="jb-prog-bar"><div class="jb-prog-fill" id="jb-prog-fill"></div></div>
+    </div>
+    <div class="jb-ctrl">
+      <div class="jb-now"><div class="jb-now-name" id="jb-now-name">—</div><div class="jb-now-game" id="jb-now-game"></div></div>
+      <span class="jb-time" id="jb-time">0:00 / 0:00</span>
+      <button class="jb-btn" id="jb-prev"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+      <button class="jb-btn jb-btn-main" id="jb-play-pause"><svg viewBox="0 0 24 24" fill="currentColor" id="jb-play-icon"><polygon points="5,3 19,12 5,21"/></svg></button>
+      <button class="jb-btn" id="jb-next"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 18h2V6h-2zM6 18l8.5-6L6 6z"/></svg></button>
+    </div>
+  </div>
+  <audio id="jb-audio" preload="metadata"></audio>
 
   <!-- ===== Settings Panel ===== -->
   <div id="settings-overlay"></div>
@@ -1472,7 +1612,7 @@ document.getElementById("settings-overlay").addEventListener("click", function()
 
 function showTab(which) {
   toggleSettings(false);
-  var tabs = ["home", "preview", "archive", "redeem", "shop", "inbox", "orders"];
+  var tabs = ["home", "preview", "archive", "redeem", "shop", "inbox", "orders", "community", "jukebox"];
   tabs.forEach(function(t) {
     var el = document.getElementById("sec-" + t);
     if (el) el.classList.toggle("hidden", t !== which);
@@ -1801,6 +1941,8 @@ document.querySelectorAll(".sidebar-item").forEach(function(btn) {
     else if (target === "redeem") { showTab("redeem"); }
     else if (target === "inbox") { showTab("inbox"); loadInbox(); }
     else if (target === "orders") { showTab("orders"); loadMyOrders(); }
+    else if (target === "community") { showTab("community"); initCommunity(); }
+    else if (target === "jukebox") { showTab("jukebox"); initJukebox(); }
   });
 });
 
@@ -2232,6 +2374,257 @@ function openAfterSalesModal(orderId) {
     });
   });
 }
+
+/* ===== Community (Video) ===== */
+var communityData = {"games":{"崩坏：星穹铁道":[],"原神":[],"异环":[],"绝区零":[]}};
+var communityLoaded = false;
+
+function initCommunity() {
+  if (!communityLoaded) {
+    fetch("community_data.json").then(function(r) { return r.json(); }).then(function(d) {
+      communityData = d; communityLoaded = true; renderCommunity();
+    }).catch(function() { communityLoaded = true; renderCommunity(); });
+  } else { renderCommunity(); }
+}
+
+function renderCommunity() {
+  var games = communityData.games || {};
+  var gameNames = Object.keys(games);
+  var tabsEl = document.getElementById("comm-tabs");
+  var gridEl = document.getElementById("comm-grid");
+  var activeGame = tabsEl.getAttribute("data-active") || "全部";
+  var tabs = ["全部"].concat(gameNames);
+  tabsEl.innerHTML = tabs.map(function(g) {
+    return '<button class="comm-tab' + (g === activeGame ? ' active' : '') + '" data-game="' + g + '">' + g + '</button>';
+  }).join("");
+  tabsEl.querySelectorAll(".comm-tab").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      tabsEl.setAttribute("data-active", btn.getAttribute("data-game"));
+      renderCommunity();
+    });
+  });
+  var videos = [];
+  gameNames.forEach(function(g) {
+    if (activeGame === "全部" || g === activeGame) {
+      (games[g] || []).forEach(function(v) { videos.push(Object.assign({}, v, { game: g })); });
+    }
+  });
+  if (!videos.length) {
+    gridEl.innerHTML = '<div class="comm-empty"><div class="comm-empty-icon">🎬</div><div>暂无视频内容</div><div style="font-size:13px;margin-top:8px">店主正在准备中，敬请期待</div></div>';
+    return;
+  }
+  gridEl.innerHTML = videos.map(function(v, i) {
+    var thumb = v.cover
+      ? '<img src="' + v.cover + '" alt="" loading="lazy">'
+      : '<div class="thumb-ph">▶</div>';
+    return '<div class="comm-card" data-idx="' + i + '">' +
+      '<div class="comm-card-thumb">' + thumb + '</div>' +
+      '<div class="comm-card-info"><div class="comm-card-title">' + v.title + '</div><div class="comm-card-game">' + v.game + '</div></div></div>';
+  }).join("");
+  gridEl.querySelectorAll(".comm-card").forEach(function(card) {
+    card.addEventListener("click", function() {
+      openVideo(videos[parseInt(card.getAttribute("data-idx"))]);
+    });
+  });
+}
+
+function openVideo(v) {
+  document.getElementById("vp-title").textContent = v.title;
+  document.getElementById("vp-meta").textContent = v.game;
+  document.getElementById("vp-desc").textContent = v.desc || "暂无简介";
+  document.getElementById("vp-iframe").src = "//player.bilibili.com/player.html?bvid=" + v.bvid + "&high_quality=1&danmaku=0";
+  document.getElementById("vp-overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeVideo() {
+  document.getElementById("vp-overlay").classList.remove("open");
+  document.getElementById("vp-iframe").src = "";
+  document.body.style.overflow = "";
+}
+
+document.getElementById("vp-back").addEventListener("click", closeVideo);
+
+/* ===== Jukebox (Audio Player) ===== */
+var jukeboxData = {"games":{"崩坏：星穹铁道":[],"原神":[],"异环":[],"绝区零":[]}};
+var jukeboxLoaded = false;
+var jbCurrentIdx = -1;
+var jbPlaying = false;
+var jbAllTracks = [];
+var jbAudio = document.getElementById("jb-audio");
+var jbSettings = { bgPlay: true, remember: true, autoPlay: false };
+
+// Load settings
+try {
+  var saved = JSON.parse(localStorage.getItem("jb_settings") || "{}");
+  if (saved.bgPlay !== undefined) jbSettings.bgPlay = saved.bgPlay;
+  if (saved.remember !== undefined) jbSettings.remember = saved.remember;
+  if (saved.autoPlay !== undefined) jbSettings.autoPlay = saved.autoPlay;
+} catch(e) {}
+
+function saveJbSettings() {
+  try { localStorage.setItem("jb_settings", JSON.stringify(jbSettings)); } catch(e) {}
+}
+
+function initJukebox() {
+  if (!jukeboxLoaded) {
+    fetch("jukebox_data.json").then(function(r) { return r.json(); }).then(function(d) {
+      jukeboxData = d; jukeboxLoaded = true; buildTrackList(); renderJukebox(); restoreJbProgress();
+    }).catch(function() { jukeboxLoaded = true; buildTrackList(); renderJukebox(); });
+  } else { renderJukebox(); }
+}
+
+function buildTrackList() {
+  jbAllTracks = [];
+  var games = jukeboxData.games || {};
+  Object.keys(games).forEach(function(g) {
+    (games[g] || []).forEach(function(t) { jbAllTracks.push(Object.assign({}, t, { game: g })); });
+  });
+}
+
+// Audio events
+jbAudio.addEventListener("timeupdate", function() {
+  if (!jbAudio.duration) return;
+  var pct = (jbAudio.currentTime / jbAudio.duration) * 100;
+  document.getElementById("jb-prog-fill").style.width = pct + "%";
+  document.getElementById("jb-time").textContent = fmtTime(jbAudio.currentTime) + " / " + fmtTime(jbAudio.duration);
+});
+jbAudio.addEventListener("ended", function() { jbNext(); });
+jbAudio.addEventListener("play", function() {
+  jbPlaying = true;
+  document.getElementById("jb-play-icon").innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+});
+jbAudio.addEventListener("pause", function() {
+  jbPlaying = false;
+  document.getElementById("jb-play-icon").innerHTML = '<polygon points="5,3 19,12 5,21"/>';
+});
+
+// Progress bar click
+document.getElementById("jb-prog-wrap").addEventListener("click", function(e) {
+  if (!jbAudio.duration) return;
+  var rect = this.getBoundingClientRect();
+  var pct = (e.clientX - rect.left) / rect.width;
+  jbAudio.currentTime = pct * jbAudio.duration;
+});
+
+// Play/Pause
+document.getElementById("jb-play-pause").addEventListener("click", function() {
+  if (jbCurrentIdx < 0 && jbAllTracks.length) { jbPlayTrack(0); return; }
+  if (jbPlaying) jbAudio.pause(); else jbAudio.play().catch(function(){});
+});
+document.getElementById("jb-prev").addEventListener("click", function() { jbPrev(); });
+document.getElementById("jb-next").addEventListener("click", function() { jbNext(); });
+
+function fmtTime(s) {
+  var m = Math.floor(s / 60); var sec = Math.floor(s % 60);
+  return m + ":" + (sec < 10 ? "0" : "") + sec;
+}
+
+function jbPlayTrack(idx) {
+  if (idx < 0 || idx >= jbAllTracks.length) return;
+  jbCurrentIdx = idx;
+  var track = jbAllTracks[idx];
+  jbAudio.src = track.url;
+  jbAudio.play().catch(function(){});
+  document.getElementById("jb-now-name").textContent = track.name;
+  document.getElementById("jb-now-game").textContent = track.game;
+  document.getElementById("jb-player").classList.add("show");
+  renderJukebox();
+  saveJbProgress();
+}
+
+function jbNext() {
+  if (!jbAllTracks.length) return;
+  jbPlayTrack((jbCurrentIdx + 1) % jbAllTracks.length);
+}
+function jbPrev() {
+  if (!jbAllTracks.length) return;
+  jbPlayTrack((jbCurrentIdx - 1 + jbAllTracks.length) % jbAllTracks.length);
+}
+
+function renderJukebox() {
+  var games = jukeboxData.games || {};
+  var gameNames = Object.keys(games);
+  var tabsEl = document.getElementById("jb-tabs");
+  var listEl = document.getElementById("jb-list");
+  var activeGame = tabsEl.getAttribute("data-active") || "全部";
+  var tabs = ["全部"].concat(gameNames);
+  tabsEl.innerHTML = tabs.map(function(g) {
+    return '<button class="comm-tab' + (g === activeGame ? ' active' : '') + '" data-game="' + g + '">' + g + '</button>';
+  }).join("");
+  tabsEl.querySelectorAll(".comm-tab").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      tabsEl.setAttribute("data-active", btn.getAttribute("data-game"));
+      renderJukebox();
+    });
+  });
+  var tracks = [];
+  jbAllTracks.forEach(function(t, i) {
+    if (activeGame === "全部" || t.game === activeGame) tracks.push(Object.assign({}, t, { globalIdx: i }));
+  });
+  if (!tracks.length) {
+    listEl.innerHTML = '<div class="comm-empty"><div class="comm-empty-icon">🎵</div><div>暂无音乐内容</div><div style="font-size:13px;margin-top:8px">店主正在准备中，敬请期待</div></div>';
+    return;
+  }
+  listEl.innerHTML = tracks.map(function(t, i) {
+    var playing = t.globalIdx === jbCurrentIdx;
+    return '<div class="jb-track' + (playing ? ' playing' : '') + '" data-gidx="' + t.globalIdx + '">' +
+      '<div class="jb-track-num">' + (playing ? '♫' : (i + 1)) + '</div>' +
+      '<div class="jb-track-info"><div class="jb-track-name">' + t.name + '</div><div class="jb-track-game">' + t.game + '</div></div>' +
+      '<div class="jb-track-dur">' + (t.duration || "") + '</div></div>';
+  }).join("");
+  listEl.querySelectorAll(".jb-track").forEach(function(el) {
+    el.addEventListener("click", function() { jbPlayTrack(parseInt(el.getAttribute("data-gidx"))); });
+  });
+}
+
+// Settings toggles
+["jb-bg-play", "jb-remember", "jb-autoplay"].forEach(function(id) {
+  var el = document.getElementById(id);
+  var key = id === "jb-bg-play" ? "bgPlay" : (id === "jb-remember" ? "remember" : "autoPlay");
+  if (jbSettings[key]) el.classList.add("on"); else el.classList.remove("on");
+  el.addEventListener("click", function() {
+    jbSettings[key] = !jbSettings[key];
+    el.classList.toggle("on", jbSettings[key]);
+    saveJbSettings();
+  });
+});
+
+// Save/restore progress
+function saveJbProgress() {
+  if (!jbSettings.remember) return;
+  try { localStorage.setItem("jb_progress", JSON.stringify({ idx: jbCurrentIdx, position: jbAudio.currentTime || 0 })); } catch(e) {}
+}
+jbAudio.addEventListener("timeupdate", function() {
+  if (jbSettings.remember && jbCurrentIdx >= 0) {
+    try { localStorage.setItem("jb_progress", JSON.stringify({ idx: jbCurrentIdx, position: jbAudio.currentTime })); } catch(e) {}
+  }
+});
+
+function restoreJbProgress() {
+  if (!jbSettings.remember || !jbAllTracks.length) return;
+  try {
+    var p = JSON.parse(localStorage.getItem("jb_progress") || "{}");
+    if (p.idx !== undefined && p.idx >= 0 && p.idx < jbAllTracks.length) {
+      var track = jbAllTracks[p.idx];
+      jbCurrentIdx = p.idx;
+      jbAudio.src = track.url;
+      jbAudio.currentTime = p.position || 0;
+      document.getElementById("jb-now-name").textContent = track.name;
+      document.getElementById("jb-now-game").textContent = track.game;
+      document.getElementById("jb-player").classList.add("show");
+      renderJukebox();
+      if (jbSettings.autoPlay) jbAudio.play().catch(function(){});
+    }
+  } catch(e) {}
+}
+
+// Pause when leaving jukebox (unless bg play enabled)
+var _origShowTab = showTab;
+showTab = function(which) {
+  if (which !== "jukebox" && jbPlaying && !jbSettings.bgPlay) { jbAudio.pause(); }
+  _origShowTab(which);
+};
 
 /* ===== Service Worker ===== */
 if ("serviceWorker" in navigator) {
