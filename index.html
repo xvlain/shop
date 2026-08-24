@@ -2432,7 +2432,8 @@ function openVideo(v) {
   document.getElementById("vp-title").textContent = v.title;
   document.getElementById("vp-meta").textContent = v.game;
   document.getElementById("vp-desc").textContent = v.desc || "暂无简介";
-  document.getElementById("vp-iframe").src = "//player.bilibili.com/player.html?bvid=" + v.bvid + "&high_quality=1&danmaku=0";
+  var vidParam = v.bvid ? "bvid=" + v.bvid : "aid=" + (v.aid || "");
+  document.getElementById("vp-iframe").src = "//player.bilibili.com/player.html?" + vidParam + "&high_quality=1&danmaku=0";
   document.getElementById("vp-overlay").classList.add("open");
   document.body.style.overflow = "hidden";
 }
