@@ -685,6 +685,7 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   aspect-ratio:16/9; border-radius:14px; overflow:hidden;
   background:#1a1a2e; position:relative;
   box-shadow:0 4px 20px rgba(0,0,0,.12);
+  padding:0 16px; box-sizing:content-box;
 }
 .vd-cover-wrap img { width:100%; height:100%; object-fit:cover; }
 .vd-play-btn {
@@ -910,9 +911,10 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   .vp-btn { width:32px; height:32px; }
   .vp-btn svg { width:18px; height:18px; }
   .vp-drop-btn { font-size:11px; padding:3px 8px; }
-  .vd-cover-wrap { margin:12px 16px 0; border-radius:10px; }
+  .vd-cover-wrap { margin:12px auto 0; border-radius:10px; padding:0 16px; }
   .vd-body { padding:16px 18px 30px; }
   .vd-title { font-size:17px; }
+  .vd-header { padding:16px 56px 16px 20px; }
 }
 
 </style>
@@ -3209,8 +3211,8 @@ function closeVideoDetail() {
   document.body.style.overflow = '';
 }
 
-document.getElementById('vd-back-btn').addEventListener('click', closeVideoDetail);
-document.getElementById('vd-play-btn').addEventListener('click', function() {
+document.getElementById('vd-back-btn')?.addEventListener('click', closeVideoDetail);
+document.getElementById('vd-play-btn')?.addEventListener('click', function() {
   closeVideoDetail();
   openVideoPlayer(vpState.idx);
 });
