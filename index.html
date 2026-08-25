@@ -778,24 +778,24 @@ html { overflow-x:hidden; }
 @keyframes vp-spin { to { transform:rotate(360deg); } }
 .vp-loading.hide { display:none; }
 
-/* FIX #5: Heavier bottom mask to hide B站 native controls */
+/* Lighter bottom mask — let B站 native controls show through */
 .vp-iframe-wrap::after {
-  content:""; position:absolute; bottom:0; left:0; right:0; height:52px;
-  background:linear-gradient(0deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,.5) 50%, transparent 100%);
+  content:""; position:absolute; bottom:0; left:0; right:0; height:48px;
+  background:linear-gradient(0deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.25) 60%, transparent 100%);
   z-index:2; pointer-events:none;
 }
-/* Top title bar mask */
+/* Lighter top mask */
 .vp-iframe-wrap::before {
-  content:""; position:absolute; top:0; left:0; right:0; height:44px;
-  background:linear-gradient(180deg, rgba(0,0,0,.55) 0%, transparent 100%);
+  content:""; position:absolute; top:0; left:0; right:0; height:40px;
+  background:linear-gradient(180deg, rgba(0,0,0,.35) 0%, transparent 100%);
   z-index:2; pointer-events:none;
 }
 
-/* ===== Custom Controls (B站-style bottom bar) ===== */
+/* ===== Custom Controls (top-right bar) ===== */
 .vp-controls {
   position:absolute; bottom:0; left:0; right:0; z-index:515;
-  background:linear-gradient(0deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.55) 60%, transparent 100%);
-  padding:24px 14px 12px;
+  background:linear-gradient(0deg, rgba(0,0,0,.65) 0%, rgba(0,0,0,.35) 60%, transparent 100%);
+  padding:16px 14px 12px;
   padding-bottom:calc(12px + env(safe-area-inset-bottom));
   transition:opacity .3s, transform .3s;
   pointer-events:auto;
@@ -804,32 +804,36 @@ html { overflow-x:hidden; }
   opacity:0; transform:translateY(8px); pointer-events:none;
 }
 
-/* Progress bar */
-.vp-progress {
-  width:100%; height:20px; cursor:pointer; position:relative;
-  display:flex; align-items:center; margin-bottom:6px;
+/* Fullscreen / landscape: move controls to top-right */
+#vp-overlay:-webkit-full-screen .vp-controls,
+#vp-overlay:fullscreen .vp-controls {
+  top:0; bottom:auto;
+  padding:calc(12px + env(safe-area-inset-top)) 16px 16px;
+  background:linear-gradient(180deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,.3) 60%, transparent 100%);
 }
-.vp-progress-track {
-  width:100%; height:3px; background:rgba(255,255,255,.25); border-radius:2px;
-  position:relative; transition:height .15s;
+#vp-overlay:-webkit-full-screen .vp-controls.hidden,
+#vp-overlay:fullscreen .vp-controls.hidden {
+  transform:translateY(-8px);
 }
-.vp-progress:hover .vp-progress-track { height:5px; }
-.vp-progress-buffered {
-  position:absolute; top:0; left:0; height:100%;
-  background:rgba(255,255,255,.15); border-radius:2px;
+/* Fullscreen: back button in top-left, synced with controls */
+#vp-overlay:-webkit-full-screen .vp-top-bar,
+#vp-overlay:fullscreen .vp-top-bar {
+  display:flex;
 }
-.vp-progress-fill {
-  position:absolute; top:0; left:0; height:100%;
-  background:#fb7299; border-radius:2px; transition:width .3s linear;
+#vp-overlay:-webkit-full-screen .vp-back-btn,
+#vp-overlay:fullscreen .vp-back-btn {
+  display:flex;
 }
-.vp-progress-thumb {
-  position:absolute; top:50%; transform:translate(-50%, -50%);
-  width:14px; height:14px; border-radius:50%;
-  background:#fb7299; border:2px solid #fff;
-  box-shadow:0 0 4px rgba(0,0,0,.3);
-  opacity:0; transition:opacity .15s;
+
+/* Landscape: controls at top, back button visible */
+#vp-overlay.landscape .vp-top-bar { display:flex; }
+#vp-overlay.landscape .vp-back-btn { display:flex; }
+#vp-overlay.landscape .vp-controls {
+  position:absolute; top:0; left:auto; right:0; bottom:auto;
+  padding:calc(12px + env(safe-area-inset-top)) 16px 14px;
+  max-width:320px;
+  background:linear-gradient(180deg, rgba(0,0,0,.55) 0%, transparent 100%);
 }
-.vp-progress:hover .vp-progress-thumb { opacity:1; }
 
 /* Control buttons row */
 .vp-ctrl-row {
@@ -880,14 +884,7 @@ html { overflow-x:hidden; }
 
 
 /* Landscape — orientation lock mode (browser handles layout natively) */
-#vp-overlay.landscape .vp-top-bar { display:none; }
-#vp-overlay.landscape .vp-controls {
-  position:absolute; left:0; right:0; bottom:0;
-  padding:14px 24px;
-  padding-bottom:calc(14px + env(safe-area-inset-right));
-}
 #vp-overlay.landscape .vp-ctrl-row { gap:8px; }
-#vp-overlay.landscape .vp-progress { margin-bottom:8px; }
 #vp-overlay.landscape .vp-btn { width:40px; height:40px; }
 #vp-overlay.landscape .vp-btn svg { width:24px; height:24px; }
 #vp-overlay.landscape .vp-time { font-size:13px; }
@@ -2263,15 +2260,18 @@ html { overflow-x:hidden; }
         <iframe id="vp-iframe" allowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture" referrerpolicy="no-referrer"></iframe>
       </div>
       <div class="vp-controls" id="vp-controls">
-        <div class="vp-progress" id="vp-progress">
-          <div class="vp-progress-track">
-            <div class="vp-progress-buffered" id="vp-buffered"></div>
-            <div class="vp-progress-fill" id="vp-progress-fill" style="width:0%"></div>
-            <div class="vp-progress-thumb" id="vp-thumb" style="left:0%"></div>
-          </div>
-        </div>
         <div class="vp-ctrl-row">
-          <span class="vp-time" id="vp-time">00:00 / --:--</span>
+          <div class="vp-dropdown" id="vp-speed-drop">
+            <button class="vp-drop-btn" id="vp-speed-btn">1x</button>
+            <div class="vp-drop-menu" id="vp-speed-menu">
+              <button class="vp-drop-item" data-speed="0.5">0.5x</button>
+              <button class="vp-drop-item" data-speed="0.75">0.75x</button>
+              <button class="vp-drop-item active" data-speed="1">1x</button>
+              <button class="vp-drop-item" data-speed="1.25">1.25x</button>
+              <button class="vp-drop-item" data-speed="1.5">1.5x</button>
+              <button class="vp-drop-item" data-speed="2">2x</button>
+            </div>
+          </div>
           <span class="vp-spacer"></span>
           <div class="vp-dropdown" id="vp-quality-drop">
             <button class="vp-drop-btn" id="vp-quality-btn">自动</button>
@@ -3259,8 +3259,7 @@ var vpState = {
   open: false, idx: -1,
   landscape: false, autoFit: false,
   controlsVisible: true, hideTimer: null,
-  quality: 64, elapsed: 0, timerInterval: null,
-  lastTap: 0
+  quality: 64, speed: 1, lastTap: 0
 };
 
 /* Helper: Set pixel dimensions for landscape rotation */
@@ -3291,8 +3290,9 @@ function _loadVideoIframe(bvid, seekTo, quality) {
   iframe.setAttribute('referrerpolicy', 'no-referrer');
   iframe.style.cssText = 'width:100%;height:100%;border:none;display:block';
   var qParam = quality || 64;
+  var speedParam = vpState.speed || 1;
   iframe.src = 'https://player.bilibili.com/player.html?bvid=' + bvid +
-    '&high_quality=1&danmaku=0&autoplay=1&t=' + (seekTo||0) + '&quality=' + qParam;
+    '&high_quality=1&danmaku=0&autoplay=1&t=' + (seekTo||0) + '&quality=' + qParam + '&speed=' + speedParam;
   iframe.onload = function() { if (loading) loading.classList.add('hide'); };
   wrap.appendChild(iframe);
   setTimeout(function() { if (loading) loading.classList.add('hide'); }, 8000);
@@ -3344,7 +3344,6 @@ function openVideoPlayer(idx) {
   if (!v) return;
   vpState.open = true;
   vpState.idx = idx;
-  vpState.elapsed = 0;
   var overlay = document.getElementById('vp-overlay');
   document.getElementById('vp-title').textContent = v.title;
   overlay.classList.add('open');
@@ -3354,8 +3353,6 @@ function openVideoPlayer(idx) {
       _loadVideoIframe(v.bvid, 0, vpState.quality || 64);
     }, 80);
   });
-  clearInterval(vpState.timerInterval);
-  vpState.timerInterval = setInterval(updateProgress, 1000);
   showControls();
 }
 
@@ -3372,7 +3369,6 @@ function closeVideoPlayer() {
   document.getElementById('vp-video-area').style.width = '';
   document.getElementById('vp-video-area').style.height = '';
   document.body.style.overflow = '';
-  clearInterval(vpState.timerInterval);
   if (document.fullscreenElement || document.webkitFullscreenElement) {
     (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
   }
@@ -3386,23 +3382,12 @@ function closeVideoPlayer() {
   window.removeEventListener('orientationchange', _onOrientationChange);
 }
 
-function updateProgress() {
-  if (!vpState.open) return;
-  vpState.elapsed++;
-  var el = vpState.elapsed;
-  var m = Math.floor(el / 60), s = el % 60;
-  document.getElementById('vp-time').textContent =
-    (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s + ' / --:--';
-  var pct = Math.min(100, (el / 180) * 100);
-  document.getElementById('vp-progress-fill').style.width = pct + '%';
-  document.getElementById('vp-thumb').style.left = pct + '%';
-}
-
 function showControls() {
   vpState.controlsVisible = true;
   document.getElementById('vp-controls').classList.remove('hidden');
   document.getElementById('vp-top-bar').style.opacity = '1';
   document.getElementById('vp-top-bar').style.pointerEvents = 'auto';
+  document.getElementById('vp-back-btn').style.display = '';
   document.getElementById('vp-show-ctrl').classList.remove('show');
   clearTimeout(vpState.hideTimer);
   vpState.hideTimer = setTimeout(hideControls, 5000);
@@ -3414,6 +3399,7 @@ function hideControls() {
   document.getElementById('vp-controls').classList.add('hidden');
   document.getElementById('vp-top-bar').style.opacity = '0';
   document.getElementById('vp-top-bar').style.pointerEvents = 'none';
+  document.getElementById('vp-back-btn').style.display = 'none';
   document.getElementById('vp-show-ctrl').classList.add('show');
 }
 
@@ -3424,30 +3410,27 @@ document.getElementById('vp-show-ctrl').addEventListener('click', function(ev) {
   ev.stopPropagation(); showControls();
 });
 
-document.getElementById('vp-video-area').addEventListener('click', function(ev) {
-  if (ev.target.closest('.vp-controls') || ev.target.closest('.vp-show-ctrl-btn') || ev.target.closest('.vp-top-bar')) return;
-  var now = Date.now();
-  if (now - vpState.lastTap < 350) { vpState.lastTap = 0; return; }
-  vpState.lastTap = now;
-  setTimeout(function() {
-    if (vpState.lastTap !== 0 && Date.now() - vpState.lastTap >= 340) {
-      if (vpState.controlsVisible) hideControls(); else showControls();
-    }
-  }, 360);
-});
-
-document.getElementById('vp-progress').addEventListener('click', function(ev) {
+/* Speed dropdown */
+document.getElementById('vp-speed-btn').addEventListener('click', function(ev) {
   ev.stopPropagation();
-  var rect = this.getBoundingClientRect();
-  var pct = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
-  var v = COMMUNITY_VIDEOS[vpState.idx];
-  if (!v) return;
-  var seekTo = Math.floor(pct * 180);
-  vpState.elapsed = seekTo;
-  _loadVideoIframe(v.bvid, seekTo, vpState.quality || 64);
-  document.getElementById('vp-progress-fill').style.width = (pct*100) + '%';
-  document.getElementById('vp-thumb').style.left = (pct*100) + '%';
-  showControls();
+  document.getElementById('vp-speed-menu').classList.toggle('open');
+  document.getElementById('vp-quality-menu').classList.remove('open');
+});
+document.querySelectorAll('#vp-speed-menu .vp-drop-item').forEach(function(item) {
+  item.addEventListener('click', function(ev) {
+    ev.stopPropagation();
+    var s = parseFloat(this.getAttribute('data-speed'));
+    vpState.speed = s;
+    document.querySelectorAll('#vp-speed-menu .vp-drop-item').forEach(function(i) { i.classList.remove('active'); });
+    this.classList.add('active');
+    document.getElementById('vp-speed-btn').textContent = s + 'x';
+    var v = COMMUNITY_VIDEOS[vpState.idx];
+    if (v) {
+      _loadVideoIframe(v.bvid, 0, vpState.quality || 64);
+    }
+    document.getElementById('vp-speed-menu').classList.remove('open');
+    showControls();
+  });
 });
 
 document.getElementById('vp-fullscreen-btn').addEventListener('click', function(ev) {
@@ -3565,6 +3548,7 @@ document.getElementById('vp-autofit-btn').addEventListener('click', function(ev)
 document.getElementById('vp-quality-btn').addEventListener('click', function(ev) {
   ev.stopPropagation();
   document.getElementById('vp-quality-menu').classList.toggle('open');
+  document.getElementById('vp-speed-menu').classList.remove('open');
 });
 document.querySelectorAll('#vp-quality-menu .vp-drop-item').forEach(function(item) {
   item.addEventListener('click', function(ev) {
@@ -3580,7 +3564,7 @@ document.querySelectorAll('#vp-quality-menu .vp-drop-item').forEach(function(ite
     var v = COMMUNITY_VIDEOS[vpState.idx];
     if (v) {
       var qParam = q > 0 ? q : 64;
-      _loadVideoIframe(v.bvid, vpState.elapsed, qParam);
+      _loadVideoIframe(v.bvid, 0, qParam);
     }
     document.getElementById('vp-quality-menu').classList.remove('open');
     showControls();
@@ -3588,6 +3572,7 @@ document.querySelectorAll('#vp-quality-menu .vp-drop-item').forEach(function(ite
 });
 document.addEventListener('click', function() {
   document.getElementById('vp-quality-menu').classList.remove('open');
+  document.getElementById('vp-speed-menu').classList.remove('open');
 });
 
 document.querySelectorAll('.community-tab').forEach(function(tab) {
