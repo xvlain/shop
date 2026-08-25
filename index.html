@@ -755,16 +755,17 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   position:relative; overflow:hidden;
 }
 .vp-iframe-wrap {
-  width:100%; height:100%; position:relative;
+  width:100%; aspect-ratio:16/9; position:relative;
   display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
 }
 .vp-iframe-wrap iframe {
-  width:100%; height:100%; border:none; display:block;
+  position:absolute; top:0; left:0; width:100%; height:100%; border:none; display:block;
 }
-/* FIX #5: Heavier bottom mask to hide B站 native controls */
+/* FIX #5: Mask B站 native controls — solid bar + gradient */
 .vp-iframe-wrap::after {
-  content:""; position:absolute; bottom:0; left:0; right:0; height:52px;
-  background:linear-gradient(0deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,.5) 50%, transparent 100%);
+  content:""; position:absolute; bottom:0; left:0; right:0; height:56px;
+  background:linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,.95) 30%, rgba(0,0,0,.5) 65%, transparent 100%);
   z-index:2; pointer-events:none;
 }
 /* Top title bar mask */
@@ -861,17 +862,28 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 .vp-drop-item:hover { background:rgba(255,255,255,.12); }
 .vp-drop-item.active { color:#fb7299; font-weight:700; }
 
-/* Landscape mode */
-#vp-overlay.landscape .vp-video-area { flex-direction:row; }
-#vp-overlay.landscape .vp-iframe-wrap {
-  width:100vh; height:100vw;
+/* Landscape mode — rotate entire video area, controls follow */
+#vp-overlay.landscape .vp-video-area {
+  position:absolute; inset:0;
   transform:rotate(90deg);
   transform-origin:center center;
 }
+#vp-overlay.landscape .vp-iframe-wrap {
+  width:100%; height:100%;
+}
 #vp-overlay.landscape .vp-top-bar { display:none; }
 #vp-overlay.landscape .vp-controls {
-  position:fixed; bottom:0; left:0; right:0;
+  position:absolute; left:0; right:0; bottom:0;
+  padding:14px 24px;
+  padding-bottom:calc(14px + env(safe-area-inset-right));
 }
+#vp-overlay.landscape .vp-ctrl-row { gap:8px; }
+#vp-overlay.landscape .vp-progress { margin-bottom:8px; }
+#vp-overlay.landscape .vp-btn { width:40px; height:40px; }
+#vp-overlay.landscape .vp-btn svg { width:24px; height:24px; }
+#vp-overlay.landscape .vp-time { font-size:13px; }
+#vp-overlay.landscape .vp-drop-btn { font-size:13px; padding:5px 12px; }
+#vp-overlay.landscape .vp-show-ctrl-btn { bottom:auto; left:16px; top:50%; transform:translateY(-50%); right:auto; }
 
 /* Fullscreen */
 #vp-overlay:-webkit-full-screen { width:100vw !important; height:100vh !important; }
@@ -2241,12 +2253,14 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
           <span class="vp-time" id="vp-time">00:00 / --:--</span>
           <span class="vp-spacer"></span>
           <div class="vp-dropdown" id="vp-quality-drop">
-            <button class="vp-drop-btn" id="vp-quality-btn">720P</button>
+            <button class="vp-drop-btn" id="vp-quality-btn">自动</button>
             <div class="vp-drop-menu" id="vp-quality-menu">
+              <button class="vp-drop-item active" data-q="0">自动</button>
               <button class="vp-drop-item" data-q="16">360P</button>
               <button class="vp-drop-item" data-q="32">480P</button>
-              <button class="vp-drop-item active" data-q="64">720P</button>
+              <button class="vp-drop-item" data-q="64">720P</button>
               <button class="vp-drop-item" data-q="80">1080P</button>
+              <div class="vp-drop-item" data-q="note" style="color:rgba(255,255,255,.4);font-size:10px;cursor:default;pointer-events:none">B站播放器内部控制清晰度</div>
             </div>
           </div>
           <button class="vp-btn" id="vp-landscape-btn" title="横屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="22" height="14" rx="2"/><path d="M7 9l4 3-4 3V9z" fill="currentColor" stroke="none"/></svg></button>
@@ -3223,9 +3237,20 @@ var vpState = {
   open: false, idx: -1,
   landscape: false, autoFit: false,
   controlsVisible: true, hideTimer: null,
-  quality: 64, elapsed: 0, timerInterval: null,
+  quality: 0, elapsed: 0, timerInterval: null,
   lastTap: 0  // FIX #6: double-tap detection
 };
+
+/* Helper: Set pixel dimensions for landscape rotation */
+function _updateLandscapeSize() {
+  if (!vpState.landscape) return;
+  var el = document.getElementById('vp-video-area');
+  if (el) {
+    el.style.width = window.innerHeight + 'px';
+    el.style.height = window.innerWidth + 'px';
+  }
+}
+window.addEventListener('resize', _updateLandscapeSize);
 
 /* ===== FIX #2: Video Detail Page ===== */
 function showVideoDetail(idx) {
@@ -3288,7 +3313,7 @@ function openVideoPlayer(idx) {
   
   iframe.referrerPolicy = 'no-referrer';
   iframe.src = 'https://player.bilibili.com/player.html?bvid=' + v.bvid +
-    '&high_quality=1&danmaku=0&autoplay=1&t=0&quality=' + vpState.quality;
+    '&high_quality=1&danmaku=0&autoplay=1&t=0&quality=' + (vpState.quality || 64);
   
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -3304,6 +3329,8 @@ function closeVideoPlayer() {
   overlay.classList.remove('open');
   overlay.classList.remove('landscape');
   document.getElementById('vp-iframe').src = '';
+  document.getElementById('vp-video-area').style.width = '';
+  document.getElementById('vp-video-area').style.height = '';
   document.body.style.overflow = '';
   clearInterval(vpState.timerInterval);
   
@@ -3395,42 +3422,64 @@ document.getElementById('vp-progress').addEventListener('click', function(ev) {
   vpState.elapsed = seekTo;
   document.getElementById('vp-iframe').src =
     'https://player.bilibili.com/player.html?bvid=' + v.bvid +
-    '&high_quality=1&danmaku=0&autoplay=1&t=' + seekTo + '&quality=' + vpState.quality;
+    '&high_quality=1&danmaku=0&autoplay=1&t=' + seekTo + '&quality=' + (vpState.quality || 64);
   document.getElementById('vp-progress-fill').style.width = (pct*100) + '%';
   document.getElementById('vp-thumb').style.left = (pct*100) + '%';
   showControls();
 });
 
-/* Fullscreen */
+/* Fullscreen — auto enter landscape for best experience */
 document.getElementById('vp-fullscreen-btn').addEventListener('click', function(ev) {
   ev.stopPropagation();
   var overlay = document.getElementById('vp-overlay');
   if (!document.fullscreenElement && !document.webkitFullscreenElement) {
     (overlay.requestFullscreen || overlay.webkitRequestFullscreen || function(){}).call(overlay);
     this.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>';
+    // Auto-enter landscape on fullscreen for best experience
+    if (!vpState.landscape) {
+      if (screen.orientation && screen.orientation.lock) {
+        try { screen.orientation.lock('portrait').catch(function(){}); } catch(e) {}
+      }
+      vpState.landscape = true;
+      overlay.classList.add('landscape');
+      document.getElementById('vp-landscape-btn').classList.add('active');
+      _updateLandscapeSize();
+    }
   } else {
     (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
     this.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>';
+    // Exit landscape too
+    if (vpState.landscape) {
+      vpState.landscape = false;
+      overlay.classList.remove('landscape');
+      document.getElementById('vp-landscape-btn').classList.remove('active');
+      document.getElementById('vp-video-area').style.width = '';
+      document.getElementById('vp-video-area').style.height = '';
+      if (screen.orientation && screen.orientation.unlock) {
+        try { screen.orientation.unlock(); } catch(e) {}
+      }
+    }
   }
   showControls();
 });
 
-/* Landscape — CSS rotate 90° */
+/* Landscape — lock portrait + CSS rotate 90° + pixel sizing */
 document.getElementById('vp-landscape-btn').addEventListener('click', function(ev) {
   ev.stopPropagation();
   var overlay = document.getElementById('vp-overlay');
   vpState.landscape = !vpState.landscape;
   if (vpState.landscape) {
-    // Lock to portrait FIRST so browser won't auto-rotate when phone turns
-    // CSS rotate(90deg) will then make the video appear landscape
     if (screen.orientation && screen.orientation.lock) {
       try { screen.orientation.lock('portrait').catch(function(){}); } catch(e) {}
     }
     overlay.classList.add('landscape');
     this.classList.add('active');
+    _updateLandscapeSize();
   } else {
     overlay.classList.remove('landscape');
     this.classList.remove('active');
+    document.getElementById('vp-video-area').style.width = '';
+    document.getElementById('vp-video-area').style.height = '';
     if (screen.orientation && screen.orientation.unlock) {
       try { screen.orientation.unlock(); } catch(e) {}
     }
@@ -3455,6 +3504,7 @@ var _onOrientationChange = function() {
     vpState.landscape = true;
     overlay.classList.add('landscape');
     landscapeBtn.classList.add('active');
+    _updateLandscapeSize();
   } else {
     if (screen.orientation && screen.orientation.unlock) {
       try { screen.orientation.unlock(); } catch(e) {}
@@ -3462,6 +3512,8 @@ var _onOrientationChange = function() {
     vpState.landscape = false;
     overlay.classList.remove('landscape');
     landscapeBtn.classList.remove('active');
+    document.getElementById('vp-video-area').style.width = '';
+    document.getElementById('vp-video-area').style.height = '';
   }
 };
 
@@ -3490,7 +3542,7 @@ document.getElementById('vp-autofit-btn').addEventListener('click', function(ev)
   showControls();
 });
 
-/* Quality dropdown */
+/* Quality dropdown — note: B站 iframe limits external quality control */
 document.getElementById('vp-quality-btn').addEventListener('click', function(ev) {
   ev.stopPropagation();
   document.getElementById('vp-quality-menu').classList.toggle('open');
@@ -3498,17 +3550,20 @@ document.getElementById('vp-quality-btn').addEventListener('click', function(ev)
 document.querySelectorAll('#vp-quality-menu .vp-drop-item').forEach(function(item) {
   item.addEventListener('click', function(ev) {
     ev.stopPropagation();
-    var q = parseInt(this.getAttribute('data-q'));
+    var dataQ = this.getAttribute('data-q');
+    if (dataQ === 'note') { document.getElementById('vp-quality-menu').classList.remove('open'); return; }
+    var q = parseInt(dataQ);
     vpState.quality = q;
     document.querySelectorAll('#vp-quality-menu .vp-drop-item').forEach(function(i) { i.classList.remove('active'); });
     this.classList.add('active');
-    var labels = {16:'360P',32:'480P',64:'720P',80:'1080P'};
-    document.getElementById('vp-quality-btn').textContent = labels[q] || '720P';
+    var labels = {0:'自动',16:'360P',32:'480P',64:'720P',80:'1080P'};
+    document.getElementById('vp-quality-btn').textContent = labels[q] || '自动';
     var v = COMMUNITY_VIDEOS[vpState.idx];
     if (v) {
+      var qParam = q > 0 ? q : 64;
       document.getElementById('vp-iframe').src =
         'https://player.bilibili.com/player.html?bvid=' + v.bvid +
-        '&high_quality=1&danmaku=0&autoplay=1&t=' + vpState.elapsed + '&quality=' + q;
+        '&high_quality=1&danmaku=0&autoplay=1&t=' + vpState.elapsed + '&quality=' + qParam;
     }
     document.getElementById('vp-quality-menu').classList.remove('open');
     showControls();
