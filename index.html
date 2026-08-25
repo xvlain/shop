@@ -3442,20 +3442,25 @@ var _onOrientationChange = function() {
   if (!vpState.autoFit || !vpState.open) return;
   var angle = (screen.orientation && screen.orientation.angle) || 0;
   var isLandscape = (angle === 90 || angle === -90 || angle === 270);
-  // Fallback for devices without orientation API
   if (!screen.orientation) isLandscape = window.innerWidth > window.innerHeight * 1.2;
   
   var overlay = document.getElementById('vp-overlay');
-  // Auto-fit: when phone is physically landscape, just go fullscreen (NO CSS rotation needed)
-  // When phone goes back to portrait, exit fullscreen
+  var landscapeBtn = document.getElementById('vp-landscape-btn');
   if (isLandscape) {
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-      (overlay.requestFullscreen || overlay.webkitRequestFullscreen || function(){}).call(overlay);
+    // Lock to portrait so browser doesn't auto-rotate, then CSS rotate handles the rest
+    if (screen.orientation && screen.orientation.lock) {
+      try { screen.orientation.lock('portrait').catch(function(){}); } catch(e) {}
     }
+    vpState.landscape = true;
+    overlay.classList.add('landscape');
+    landscapeBtn.classList.add('active');
   } else {
-    if (document.fullscreenElement || document.webkitFullscreenElement) {
-      (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
+    if (screen.orientation && screen.orientation.unlock) {
+      try { screen.orientation.unlock(); } catch(e) {}
     }
+    vpState.landscape = false;
+    overlay.classList.remove('landscape');
+    landscapeBtn.classList.remove('active');
   }
 };
 
@@ -3472,9 +3477,13 @@ document.getElementById('vp-autofit-btn').addEventListener('click', function(ev)
     _onOrientationChange();
   } else {
     window.removeEventListener('orientationchange', _onOrientationChange);
-    // Auto-fit off: exit fullscreen if in fullscreen
-    if (document.fullscreenElement || document.webkitFullscreenElement) {
-      (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
+    // Clean up: remove landscape, unlock orientation
+    var overlay = document.getElementById('vp-overlay');
+    overlay.classList.remove('landscape');
+    document.getElementById('vp-landscape-btn').classList.remove('active');
+    vpState.landscape = false;
+    if (screen.orientation && screen.orientation.unlock) {
+      try { screen.orientation.unlock(); } catch(e) {}
     }
   }
   showControls();
