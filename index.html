@@ -2219,6 +2219,69 @@ html { overflow-x:hidden; }
     </div>
   </div>
 
+
+  <div id="vd-overlay">
+    <div class="vd-header">
+      <button class="vd-back" id="vd-back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="vd-header-title" id="vd-header-title"></div>
+    </div>
+    <div class="vd-cover-wrap" id="vd-cover-wrap">
+      <img id="vd-cover-img" src="" alt="">
+      <button class="vd-play-btn" id="vd-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
+    </div>
+    <div class="vd-body">
+      <h1 class="vd-title" id="vd-title"></h1>
+      <div class="vd-meta" id="vd-meta"></div>
+      <div class="vd-desc" id="vd-desc"></div>
+      <div class="vd-disclaimer">视频来源于B站官方账号，版权归原作者所有<br>使用B站官方嵌入播放器播放，未对视频内容做任何修改</div>
+    </div>
+  </div>
+
+
+  <div id="vp-overlay">
+    <div class="vp-top-bar" id="vp-top-bar">
+      <button class="vp-back-btn" id="vp-back-btn" title="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="vp-top-title" id="vp-title"></div>
+    </div>
+    <div class="vp-video-area" id="vp-video-area">
+      <div class="vp-iframe-wrap" id="vp-iframe-wrap">
+        <div class="vp-loading" id="vp-loading">
+          <div class="vp-loading-spinner"></div>
+          <span>加载中…</span>
+        </div>
+        <iframe id="vp-iframe" allowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture" referrerpolicy="no-referrer"></iframe>
+      </div>
+      <div class="vp-controls" id="vp-controls">
+        <div class="vp-progress" id="vp-progress">
+          <div class="vp-progress-track">
+            <div class="vp-progress-buffered" id="vp-buffered"></div>
+            <div class="vp-progress-fill" id="vp-progress-fill" style="width:0%"></div>
+            <div class="vp-progress-thumb" id="vp-thumb" style="left:0%"></div>
+          </div>
+        </div>
+        <div class="vp-ctrl-row">
+          <span class="vp-time" id="vp-time">00:00 / --:--</span>
+          <span class="vp-spacer"></span>
+          <div class="vp-dropdown" id="vp-quality-drop">
+            <button class="vp-drop-btn" id="vp-quality-btn">自动</button>
+            <div class="vp-drop-menu" id="vp-quality-menu">
+              <button class="vp-drop-item active" data-q="0">自动</button>
+              <button class="vp-drop-item" data-q="16">360P</button>
+              <button class="vp-drop-item" data-q="32">480P</button>
+              <button class="vp-drop-item" data-q="64">720P</button>
+              <button class="vp-drop-item" data-q="80">1080P</button>
+              <div class="vp-drop-item" data-q="note" style="color:rgba(255,255,255,.4);font-size:10px;cursor:default;pointer-events:none">B站播放器内部控制清晰度</div>
+            </div>
+          </div>
+          <button class="vp-btn" id="vp-landscape-btn" title="横屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="22" height="14" rx="2"/><path d="M7 9l4 3-4 3V9z" fill="currentColor" stroke="none"/></svg></button>
+          <button class="vp-btn" id="vp-autofit-btn" title="自适应"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></button>
+          <button class="vp-btn" id="vp-fullscreen-btn" title="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <button class="vp-show-ctrl-btn" id="vp-show-ctrl"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
+  </div>
+
 <script>
 /* ===== site data ===== */
 var SITE_TOTAL = 19;
@@ -3528,68 +3591,5 @@ document.addEventListener('keydown', function(e) {
 
 
 </script>
-
-  <div id="vd-overlay">
-    <div class="vd-header">
-      <button class="vd-back" id="vd-back-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-      <div class="vd-header-title" id="vd-header-title"></div>
-    </div>
-    <div class="vd-cover-wrap" id="vd-cover-wrap">
-      <img id="vd-cover-img" src="" alt="">
-      <button class="vd-play-btn" id="vd-play-btn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></button>
-    </div>
-    <div class="vd-body">
-      <h1 class="vd-title" id="vd-title"></h1>
-      <div class="vd-meta" id="vd-meta"></div>
-      <div class="vd-desc" id="vd-desc"></div>
-      <div class="vd-disclaimer">视频来源于B站官方账号，版权归原作者所有<br>使用B站官方嵌入播放器播放，未对视频内容做任何修改</div>
-    </div>
-  </div>
-
-
-  <div id="vp-overlay">
-    <div class="vp-top-bar" id="vp-top-bar">
-      <button class="vp-back-btn" id="vp-back-btn" title="返回"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-      <div class="vp-top-title" id="vp-title"></div>
-    </div>
-    <div class="vp-video-area" id="vp-video-area">
-      <div class="vp-iframe-wrap" id="vp-iframe-wrap">
-        <div class="vp-loading" id="vp-loading">
-          <div class="vp-loading-spinner"></div>
-          <span>加载中…</span>
-        </div>
-        <iframe id="vp-iframe" allowfullscreen allow="autoplay; fullscreen; encrypted-media; picture-in-picture" referrerpolicy="no-referrer"></iframe>
-      </div>
-      <div class="vp-controls" id="vp-controls">
-        <div class="vp-progress" id="vp-progress">
-          <div class="vp-progress-track">
-            <div class="vp-progress-buffered" id="vp-buffered"></div>
-            <div class="vp-progress-fill" id="vp-progress-fill" style="width:0%"></div>
-            <div class="vp-progress-thumb" id="vp-thumb" style="left:0%"></div>
-          </div>
-        </div>
-        <div class="vp-ctrl-row">
-          <span class="vp-time" id="vp-time">00:00 / --:--</span>
-          <span class="vp-spacer"></span>
-          <div class="vp-dropdown" id="vp-quality-drop">
-            <button class="vp-drop-btn" id="vp-quality-btn">自动</button>
-            <div class="vp-drop-menu" id="vp-quality-menu">
-              <button class="vp-drop-item active" data-q="0">自动</button>
-              <button class="vp-drop-item" data-q="16">360P</button>
-              <button class="vp-drop-item" data-q="32">480P</button>
-              <button class="vp-drop-item" data-q="64">720P</button>
-              <button class="vp-drop-item" data-q="80">1080P</button>
-              <div class="vp-drop-item" data-q="note" style="color:rgba(255,255,255,.4);font-size:10px;cursor:default;pointer-events:none">B站播放器内部控制清晰度</div>
-            </div>
-          </div>
-          <button class="vp-btn" id="vp-landscape-btn" title="横屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="22" height="14" rx="2"/><path d="M7 9l4 3-4 3V9z" fill="currentColor" stroke="none"/></svg></button>
-          <button class="vp-btn" id="vp-autofit-btn" title="自适应"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></button>
-          <button class="vp-btn" id="vp-fullscreen-btn" title="全屏"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
-        </div>
-      </div>
-    </div>
-    <button class="vp-show-ctrl-btn" id="vp-show-ctrl"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></button>
-  </div>
-
 </body>
 </html>
