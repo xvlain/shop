@@ -715,7 +715,6 @@ html { overflow-x:hidden; }
   background:#1a1a2e; position:relative;
   box-shadow:0 4px 20px rgba(0,0,0,.12);
   padding:0 16px; box-sizing:border-box;
-  min-height:180px;
 }
 .vd-cover-wrap img { width:100%; height:100%; object-fit:cover; }
 .vd-play-btn {
@@ -782,30 +781,15 @@ html { overflow-x:hidden; }
 
 .vp-video-area {
   flex:1; display:flex; align-items:center; justify-content:center;
-  position:relative; overflow:hidden;
-  width:100%;
-  /* Fallback: if flex hasn't computed, use viewport-based sizing */
-  min-height:calc(100vw * 9 / 16);
-  height:auto;
+  position:relative; overflow:hidden; min-height:0;
 }
 .vp-iframe-wrap {
-  width:100%; position:relative;
+  width:100%; height:100%; position:relative;
   display:flex; align-items:center; justify-content:center;
-  /* Use aspect-ratio as primary sizing, not dependent on parent height */
-  aspect-ratio:16/9;
-  min-height:180px;
-}
-/* When parent has computed height, fill it */
-.vp-video-area[style*="height"] .vp-iframe-wrap,
-#vp-overlay.open .vp-iframe-wrap {
-  height:100%;
-}
-@media(max-width:600px) {
-  .vp-iframe-wrap { aspect-ratio:16/9; min-height:180px; }
+  min-height:200px;
 }
 .vp-iframe-wrap iframe {
   width:100%; height:100%; border:none; display:block;
-  background:#000;
 }
 /* Loading spinner */
 .vp-loading {
@@ -1145,7 +1129,7 @@ html { overflow-x:hidden; }
         <h3 data-i18n="aboutTitle">关于本站</h3>
         <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.4.0 「售后系统」</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutTotal">收录资料</span><span class="about-val font-mono">19 份</span></div>
-        <div class="about-row"><span class="about-label" data-i18n="aboutSync">最后同步</span><span class="about-val font-mono">2026-08-25 06:07</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutSync">最后同步</span><span class="about-val font-mono">2026-08-26 20:03</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutGames">收录游戏</span><span class="about-val">崩坏：星穹铁道、原神、异环、绝区零</span></div>
       </div>
 
@@ -9759,7 +9743,7 @@ html { overflow-x:hidden; }
       <img src="assets/icon-footer.png" alt="二游情报铺" class="footer-icon">
       <div class="f-row">
         <span class="sig" data-i18n-html="footerSig">—— 二游情报铺 · 情报常新，欢迎常来 ——</span>
-        <span data-i18n-html="footerMeta">共收录 19 份资料 · 同步于 2026-08-25 06:07</span>
+        <span data-i18n-html="footerMeta">共收录 19 份资料 · 同步于 2026-08-26 20:03</span>
       </div>
     </div>
   </footer>
@@ -9920,7 +9904,7 @@ html { overflow-x:hidden; }
 <script>
 /* ===== site data ===== */
 var SITE_TOTAL = 19;
-var SITE_SYNCED = "2026-08-25 06:07";
+var SITE_SYNCED = "2026-08-26 20:03";
 var PREVIEW_DATA = {"崩坏星穹铁道-4.5-角色": [{"name": "砂金•戏浪", "kind": "角色", "cover": "assets/cover-sandin.webp"}, {"name": "知更鸟•晴歌", "kind": "角色", "cover": "assets/cover-zhigengniao.webp"}], "崩坏星穹铁道-4.5-光锥": [{"name": "向浪花掷下盛夏", "kind": "光锥·5星", "cover": "assets/cover-xianglanghua.webp"}, {"name": "你将起身歌唱", "kind": "光锥·5星", "cover": "assets/cover-nijiangqishenggechang.webp"}, {"name": "向着地平线的终点", "kind": "光锥·4星", "cover": "assets/cover-xiangzhedipingxian.webp"}, {"name": "放个短假", "kind": "光锥·4星", "cover": "assets/cover-fanggeduanjia.webp"}], "原神-7.1-角色": [{"name": "沃雅妮莎", "kind": "角色", "cover": "assets/cover-woyanisha.webp"}, {"name": "薇斯纳", "kind": "角色", "cover": "assets/cover-weisina.webp"}], "原神-7.1-武器": [{"name": "蝶变-单手剑", "kind": "武器", "cover": "assets/icon-diebian.webp"}, {"name": "漩流颂歌-法器", "kind": "武器", "cover": "assets/cover-xuanliusonge.webp"}], "异环-1.3-角色": [{"name": "灵可", "kind": "角色", "cover": "assets/cover-lingke-new.webp"}, {"name": "残虹", "kind": "角色", "cover": "assets/cover-canhong.webp"}], "异环-1.3-武器": [{"name": "远行者之声", "kind": "武器", "cover": "assets/cover-yuanxingzhe.webp"}, {"name": "噬心诡刃", "kind": "武器", "cover": "assets/cover-shixin.webp"}], "绝区零-3.2-代理人": [{"name": "珂蕾妲", "kind": "角色", "cover": "assets/cover-keleida.webp"}, {"name": "洛克茜", "kind": "角色", "cover": ""}, {"name": "克拉蕾", "kind": "角色", "cover": ""}], "绝区零-3.2-音擎": [{"name": "…-击破", "kind": "音擎", "cover": "assets/cover-jipo.webp"}, {"name": "腥红渴望", "kind": "音擎", "cover": "assets/cover-xinghong.webp"}]};
 
 /* ===== i18n ===== */
@@ -10896,7 +10880,6 @@ function _updateLandscapeSize() {
   if (el) {
     el.style.width = window.innerHeight + 'px';
     el.style.height = window.innerWidth + 'px';
-    el.style.minHeight = window.innerWidth + 'px';
   }
 }
 window.addEventListener('resize', _updateLandscapeSize);
@@ -10941,15 +10924,10 @@ function showVideoDetail(idx) {
   var coverUrl = v.cover || '';
   if (coverUrl && coverUrl.indexOf('http://') === 0) coverUrl = 'https://' + coverUrl.substring(7);
   if (coverUrl) {
+    var proxyUrl = 'https://images.weserv.nl/?url=' + coverUrl.replace('http://','').replace('https://','') + '&w=720&q=75';
     var img = document.getElementById('vd-cover-img');
-    // Try direct HTTPS first (hdslb supports it), fallback to proxy
-    img.src = coverUrl;
-    img.onerror = function() {
-      if (!this.dataset.fb) {
-        this.dataset.fb = '1';
-        this.src = 'https://images.weserv.nl/?url=' + coverUrl.replace('https://','') + '&w=720&q=75';
-      }
-    };
+    img.src = proxyUrl;
+    img.onerror = function() { this.onerror=null; this.src=coverUrl; };
   }
   document.getElementById('vd-meta').innerHTML =
     '<span>' + v.category + '</span><span>' + v.game + '</span><span>' + v.date + '</span>';
@@ -10976,25 +10954,13 @@ function openVideoPlayer(idx) {
   vpState.open = true;
   vpState.idx = idx;
   var overlay = document.getElementById('vp-overlay');
-  var videoArea = document.getElementById('vp-video-area');
   document.getElementById('vp-title').textContent = v.title;
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-  // Force explicit pixel dimensions so iframe always has a real container
-  var h = window.innerHeight;
-  var topBarH = 56;
-  var ctrlH = 52;
-  var availH = h - topBarH - ctrlH;
-  if (availH < 200) availH = Math.round(window.innerWidth * 9 / 16);
-  videoArea.style.height = availH + 'px';
-  videoArea.style.minHeight = availH + 'px';
-  void overlay.offsetHeight;
   requestAnimationFrame(function() {
-    requestAnimationFrame(function() {
-      setTimeout(function() {
-        _loadVideoIframe(v.bvid, 0, vpState.quality || 64);
-      }, 200);
-    });
+    setTimeout(function() {
+      _loadVideoIframe(v.bvid, 0, vpState.quality || 64);
+    }, 80);
   });
   showControls();
 }
@@ -11009,10 +10975,8 @@ function closeVideoPlayer() {
   if (iframe) iframe.remove();
   var loading = document.getElementById('vp-loading');
   if (loading) loading.classList.remove('hide');
-  var va = document.getElementById('vp-video-area');
-  va.style.width = '';
-  va.style.height = '';
-  va.style.minHeight = '';
+  document.getElementById('vp-video-area').style.width = '';
+  document.getElementById('vp-video-area').style.height = '';
   document.body.style.overflow = '';
   if (document.fullscreenElement || document.webkitFullscreenElement) {
     (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
@@ -11141,10 +11105,8 @@ function _exitLandscape() {
   overlay.classList.remove('landscape');
   overlay.classList.remove('landscape-css');
   document.getElementById('vp-landscape-btn').classList.remove('active');
-  var va2 = document.getElementById('vp-video-area');
-  va2.style.width = '';
-  va2.style.height = '';
-  va2.style.minHeight = '';
+  document.getElementById('vp-video-area').style.width = '';
+  document.getElementById('vp-video-area').style.height = '';
   
   // Exit fullscreen
   if (document.fullscreenElement || document.webkitFullscreenElement) {
