@@ -666,9 +666,10 @@ html { overflow-x:hidden; }
 }
 .video-card:hover { border-color:var(--accent-soft); transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.06); }
 .vc-cover {
-  width:100%; aspect-ratio:16/9; background:#1a1a2e; position:relative; overflow:hidden;
+  width:100%; background:#1a1a2e; position:relative; overflow:hidden;
 }
-.vc-cover img { width:100%; height:100%; object-fit:cover; transition:transform .3s; }
+.vc-cover::before { content:""; display:block; padding-top:56.25%; }
+.vc-cover img { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transition:transform .3s; }
 .video-card:hover .vc-cover img { transform:scale(1.03); }
 .vc-cover .vc-play-icon {
   position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
@@ -686,7 +687,7 @@ html { overflow-x:hidden; }
 
 /* ===== Video Detail Page (before playing) ===== */
 #vd-overlay {
-  position:fixed; inset:0; z-index:490;
+  position:fixed; top:0; right:0; bottom:0; left:0; z-index:490;
   background:var(--bg); overflow-y:auto; overflow-x:hidden;
   display:none; flex-direction:column;
 }
@@ -753,10 +754,10 @@ html { overflow-x:hidden; }
 
 /* ===== Video Player Overlay ===== */
 #vp-overlay {
-  position:fixed; inset:0; z-index:500; background:#000;
-  display:none; flex-direction:column; overflow:hidden;
+  position:fixed; top:0; right:0; bottom:0; left:0; z-index:500; background:#000;
+  display:none; overflow:hidden;
 }
-#vp-overlay.open { display:flex; }
+#vp-overlay.open { display:block; }
 
 .vp-top-bar {
   position:absolute; top:0; left:0; right:0; z-index:512;
@@ -930,7 +931,7 @@ html { overflow-x:hidden; }
 }
 /* Landscape-css — fallback: CSS rotation when orientation lock not supported */
 #vp-overlay.landscape-css .vp-video-area {
-  position:absolute; inset:0;
+  position:absolute; top:0; right:0; bottom:0; left:0;
   transform:rotate(90deg);
   transform-origin:center center;
 }
@@ -10955,6 +10956,11 @@ function openVideoPlayer(idx) {
   vpState.idx = idx;
   var overlay = document.getElementById('vp-overlay');
   document.getElementById('vp-title').textContent = v.title;
+  /* Force explicit pixel dimensions — fixes Huawei browser layout collapse */
+  overlay.style.width = window.innerWidth + 'px';
+  overlay.style.height = window.innerHeight + 'px';
+  var va = document.getElementById('vp-video-area');
+  if (va) { va.style.width = window.innerWidth + 'px'; va.style.height = window.innerHeight + 'px'; }
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
   requestAnimationFrame(function() {
@@ -10971,12 +10977,14 @@ function closeVideoPlayer() {
   overlay.classList.remove('open');
   overlay.classList.remove('landscape');
   overlay.classList.remove('landscape-css');
+  overlay.style.width = '';
+  overlay.style.height = '';
   var iframe = document.getElementById('vp-iframe');
   if (iframe) iframe.remove();
   var loading = document.getElementById('vp-loading');
   if (loading) loading.classList.remove('hide');
-  document.getElementById('vp-video-area').style.width = '';
-  document.getElementById('vp-video-area').style.height = '';
+  var va = document.getElementById('vp-video-area');
+  if (va) { va.style.width = ''; va.style.height = ''; }
   document.body.style.overflow = '';
   if (document.fullscreenElement || document.webkitFullscreenElement) {
     (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
@@ -11105,8 +11113,14 @@ function _exitLandscape() {
   overlay.classList.remove('landscape');
   overlay.classList.remove('landscape-css');
   document.getElementById('vp-landscape-btn').classList.remove('active');
-  document.getElementById('vp-video-area').style.width = '';
-  document.getElementById('vp-video-area').style.height = '';
+  /* Reset to portrait fullscreen dimensions */
+  overlay.style.width = window.innerWidth + 'px';
+  overlay.style.height = window.innerHeight + 'px';
+  var va = document.getElementById('vp-video-area');
+  if (va) {
+    va.style.width = window.innerWidth + 'px';
+    va.style.height = window.innerHeight + 'px';
+  }
   
   // Exit fullscreen
   if (document.fullscreenElement || document.webkitFullscreenElement) {
