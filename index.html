@@ -1600,6 +1600,43 @@ html { overflow-x:hidden; }
       </div>
     </section>
 
+    <!-- ===== MINE (我的) ===== -->
+    <section class="section-panel hidden" id="sec-mine">
+      <div class="section-head">
+        <h2>我的</h2>
+        <span class="desc">个人信息与快捷入口</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:18px">
+          <div style="font-size:13px;color:var(--ink-dim);margin-bottom:6px">设备码</div>
+          <div style="font-family:Consolas,monospace;font-size:14px;font-weight:700;color:var(--accent-deep);word-break:break-all" id="mine-device-code">—</div>
+          <button id="mine-copy-device" style="margin-top:8px;padding:5px 14px;border-radius:8px;border:1.5px solid var(--accent-soft);background:var(--accent-pale);color:var(--accent-deep);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">复制设备码</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <button class="mine-shortcut" data-goto="orders" style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;font-family:inherit">
+            <div style="font-size:24px;margin-bottom:4px">📋</div>
+            <div style="font-size:14px;font-weight:700;color:var(--ink)">我的订单</div>
+          </button>
+          <button class="mine-shortcut" data-goto="inbox" style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;font-family:inherit">
+            <div style="font-size:24px;margin-bottom:4px">📬</div>
+            <div style="font-size:14px;font-weight:700;color:var(--ink)">邮箱</div>
+          </button>
+          <button class="mine-shortcut" data-goto="redeem" style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;font-family:inherit">
+            <div style="font-size:24px;margin-bottom:4px">🔑</div>
+            <div style="font-size:14px;font-weight:700;color:var(--ink)">兑换</div>
+          </button>
+          <button class="mine-shortcut" data-goto="shop" style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;font-family:inherit">
+            <div style="font-size:24px;margin-bottom:4px">🛒</div>
+            <div style="font-size:14px;font-weight:700;color:var(--ink)">商城</div>
+          </button>
+        </div>
+        <div style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px">
+          <div style="font-size:13px;color:var(--ink-dim);margin-bottom:8px">已解锁资料库</div>
+          <div id="mine-unlocked-list" style="font-size:13px;color:var(--ink-faint)">加载中…</div>
+        </div>
+      </div>
+    </section>
+
     <!-- ===== MY ORDERS ===== -->
     <section class="section-panel hidden" id="sec-orders">
       <div class="section-head">
@@ -9786,6 +9823,10 @@ html { overflow-x:hidden; }
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <span class="bnav-label">商城</span>
       </button>
+      <button class="bnav-item" data-tab="mine">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="bnav-label">我的</span>
+      </button>
       <button class="bnav-item" data-tab="settings">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         <span class="bnav-label" data-i18n="navSettings">设置</span>
@@ -10108,7 +10149,7 @@ document.getElementById("settings-overlay").addEventListener("click", function()
 
 function showTab(which) {
   toggleSettings(false);
-  var tabs = ["home", "preview", "archive", "community", "jukebox", "redeem", "shop", "inbox", "orders"];
+  var tabs = ["home", "preview", "archive", "redeem", "shop", "mine", "inbox", "orders"];
   tabs.forEach(function(t) {
     var el = document.getElementById("sec-" + t);
     if (el) el.classList.toggle("hidden", t !== which);
@@ -10124,6 +10165,7 @@ document.querySelectorAll(".bnav-item").forEach(function(btn) {
   btn.addEventListener("click", function() {
     var tab = btn.getAttribute("data-tab");
     if (tab === "settings") { toggleSettings(); }
+    else if (tab === "mine") { showTab("mine"); initMinePage(); }
     else { showTab(tab); }
   });
 });
@@ -10595,9 +10637,8 @@ document.getElementById("cart-submit").addEventListener("click", function() {
     sbRpc("shop_submit_order", { p_device: myDeviceCode, p_items: items, p_group_id: gid }).then(function(res) {
       btn.disabled = false; btn.textContent = "提交订单";
       if (res && res.ok) {
-        if (res.unlocked_gids && res.unlocked_gids.length > 0) { res.unlocked_gids.forEach(function(ugid) { unlockGroup(ugid); }); checkPurchased(); }
         if (gid && res.group_ready === false) toast("订单已提交！拼团进行中（" + (res.item_count || 0) + "/3商品）");
-        else toast("订单已提交！兑换码已自动分配");
+        else toast("订单已提交！等待店主确认");
         cart = []; updateCartUI(); document.getElementById("cart-overlay").classList.remove("open"); renderShop(); updateInboxBadge();
       } else { toast("提交失败: " + (res && res.error || "未知错误")); }
     });
@@ -10626,8 +10667,21 @@ function loadInbox() {
     if (markBtn) {
       markBtn.style.display = hasUnread ? '' : 'none';
       markBtn.onclick = function() {
+        markBtn.disabled = true; markBtn.textContent = "标记中…";
         sbRpc("shop_inbox_mark_read", { p_device: myDeviceCode }).then(function(r) {
-          if (r && r.ok) { updateInboxBadge(); loadInbox(); }
+          markBtn.disabled = false; markBtn.textContent = "一键已读";
+          if (r && r.ok) {
+            var badge = document.getElementById("inbox-badge");
+            if (badge) badge.style.display = "none";
+            var hBadge = document.getElementById("hamburger-badge");
+            if (hBadge) hBadge.classList.remove("show");
+            loadInbox();
+          } else {
+            toast("标记失败，请重试");
+          }
+        }).catch(function() {
+          markBtn.disabled = false; markBtn.textContent = "一键已读";
+          toast("网络错误，请重试");
         });
       };
     }
@@ -10663,6 +10717,43 @@ function updateInboxBadge() {
   });
 }
 setInterval(updateInboxBadge, 30000);
+
+function initMinePage() {
+  var dcEl = document.getElementById("mine-device-code");
+  if (dcEl && myDeviceCode) dcEl.textContent = myDeviceCode;
+  var copyBtn = document.getElementById("mine-copy-device");
+  if (copyBtn) {
+    copyBtn.onclick = function() {
+      if (navigator.clipboard) navigator.clipboard.writeText(myDeviceCode || "");
+      else { var t=document.createElement("textarea"); t.value=myDeviceCode||""; t.style.position="fixed"; t.style.opacity="0"; document.body.appendChild(t); t.select(); try{document.execCommand("copy");}catch(e){} document.body.removeChild(t); }
+      copyBtn.textContent = "已复制 ✓"; setTimeout(function() { copyBtn.textContent = "复制设备码"; }, 1500);
+    };
+  }
+  // Load unlocked libraries
+  sbRpc("check_unlocks", { p_device: myDeviceCode }).then(function(res) {
+    var el = document.getElementById("mine-unlocked-list");
+    if (!el) return;
+    if (res && res.ok && res.unlocked && res.unlocked.length > 0) {
+      el.innerHTML = res.unlocked.map(function(gid) {
+        return '<div style="padding:4px 0;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink)">✅ ' + gid.replace(/-/g, " / ") + '</div>';
+      }).join("");
+    } else {
+      el.innerHTML = '<div style="color:var(--ink-faint)">暂无已解锁的资料库</div>';
+    }
+  });
+}
+document.querySelectorAll(".mine-shortcut").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    var target = btn.getAttribute("data-goto");
+    if (target === "shop") { showTab("shop"); }
+    else if (target === "orders") { showTab("orders"); loadMyOrders(); }
+    else if (target === "community") { showTab("community"); }
+    else if (target === "jukebox") { showTab("jukebox"); }
+
+    else if (target === "inbox") { showTab("inbox"); loadInbox(); }
+    else if (target === "redeem") { showTab("redeem"); }
+  });
+});
 
 function toast(msg) { var t = document.createElement("div"); t.style.cssText = "position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#2d2a32;color:#fff;padding:10px 22px;border-radius:999px;font-size:13px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none"; t.textContent = msg; document.body.appendChild(t); setTimeout(function() { t.style.opacity = "1"; }, 10); setTimeout(function() { t.style.opacity = "0"; setTimeout(function() { document.body.removeChild(t); }, 300); }, 2000); }
 
@@ -10730,9 +10821,12 @@ function loadMyOrders() {
       var items = (o.items || []).map(function(it) {
         return '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:13px"><span>' + it.product_name + '</span><span style="color:var(--accent-deep);font-weight:600">' + (it.line_total || 0) + '元</span></div>';
       }).join("");
-      var codes = (o.codes || []).map(function(c) {
-        return '<div style="font-size:12px;font-family:Consolas,monospace;margin-top:2px">' + c.product_code + ': <b>' + c.redemption_code + '</b></div>';
-      }).join("");
+      var codes = "";
+      if (o.status === "completed") {
+        codes = (o.codes || []).map(function(c) {
+          return '<div style="font-size:12px;font-family:Consolas,monospace;margin-top:2px">' + c.product_code + ': <b>' + c.redemption_code + '</b></div>';
+        }).join("");
+      }
 
       // After-sales button logic
       var canApplyAfterSales = o.status === 'pending' && !o.after_sales_status && !isBlacklisted;
@@ -10750,7 +10844,7 @@ function loadMyOrders() {
         '</div>' +
         '<div style="font-size:12px;color:var(--ink-faint);margin-top:6px">' + new Date(o.created_at).toLocaleString("zh-CN") + '</div>' +
         '<div style="margin-top:10px;border-top:1px solid var(--line);padding-top:10px">' + items + '</div>' +
-        (codes ? '<div style="margin-top:8px;padding:10px;background:var(--accent-pale);border-radius:8px"><div style="font-size:12px;font-weight:700;margin-bottom:4px">兑换码</div>' + codes + '</div>' : '') +
+        (codes ? '<div style="margin-top:8px;padding:10px;background:var(--accent-pale);border-radius:8px"><div style="font-size:12px;font-weight:700;margin-bottom:4px">兑换码</div>' + codes + '</div>' : (o.status === 'pending' ? '<div style="margin-top:8px;font-size:12px;color:var(--ink-faint);padding:6px 0">兑换码将在店主确认订单后通过邮箱发送</div>' : '')) +
         (canApplyAfterSales ? '<div style="margin-top:12px;text-align:right"><button class="btn-apply-as" data-order="' + o.id + '" style="padding:8px 18px;border-radius:999px;border:1.5px solid var(--accent-soft);background:var(--accent-pale);color:var(--accent-deep);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">申请售后</button></div>' : '') +
         (afterSalesLabel ? '<div style="margin-top:8px;font-size:12px;color:var(--ink-dim);text-align:right">' + afterSalesLabel + '</div>' : '') +
       '</div>';
