@@ -10664,7 +10664,7 @@ function renderShop() {
         cart = cart.filter(function(c) { return c.product_code !== code; });
       } else {
         var product = shopProducts.find(function(pp) { return pp.code === code; });
-        if (product) cart.push({ product_code: code, name: product.name, price: product.price, quantity: 1, category: product.category, game_group: product.game_group });
+        if (product) cart.push({ product_code: code, name: product.name, price: product.price, group_price: product.group_price, quantity: 1, category: product.category, game_group: product.game_group, game_name: product.game_name, ver: product.ver });
       }
       updateCartUI();
       renderShop();
@@ -10680,11 +10680,56 @@ function updateCartUI() {
 }
 
 function calcCartTotal() {
-  var total = 0;
+  if (!cart.length) return { total: 0, groupTotal: 0, isGroup: false, regularTotal: 0 };
+
+  // 按 game_group 分组
+  var groups = {};
   cart.forEach(function(item) {
-    total += item.price * item.quantity;
+    var k = item.game_group || '_';
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(item);
   });
-  return { total: total };
+
+  var regularTotal = 0;
+  var groupTotal = 0;
+  var details = [];
+
+  Object.keys(groups).forEach(function(k) {
+    var items = groups[k];
+    var hasChar = items.some(function(i) { return i.category === 'character'; });
+
+    items.forEach(function(item) {
+      var regPrice = item.price;
+      var grpPrice = item.group_price != null ? item.group_price : item.price;
+
+      // 捆绑优惠：同游戏同版本有角色时，武器免费
+      var bundleFree = (item.category !== 'character' && hasChar);
+
+      regularTotal += bundleFree ? 0 : regPrice;
+      groupTotal += bundleFree ? 0 : grpPrice;
+
+      details.push({
+        name: item.name,
+        regPrice: bundleFree ? 0 : regPrice,
+        grpPrice: bundleFree ? 0 : grpPrice,
+        bundleFree: bundleFree
+      });
+    });
+  });
+
+  // 判断是否选择了拼团
+  var radio = document.querySelector('input[name="gb-type"]:checked');
+  var isGroup = radio && radio.value !== 'none';
+
+  var displayTotal = isGroup ? groupTotal : regularTotal;
+
+  return {
+    total: displayTotal,
+    regularTotal: regularTotal,
+    groupTotal: groupTotal,
+    isGroup: isGroup,
+    details: details
+  };
 }
 
 function openCart() {
@@ -10705,13 +10750,33 @@ function renderCart() {
   }
   var calc = calcCartTotal();
   var html = "";
+  // 按 game_group 分组显示
+  var groups = {};
   cart.forEach(function(item) {
-    html += '<div class="cart-item"><span class="ci-name">' + item.name + '</span><span class="ci-price">' + item.price + '元</span><button class="ci-remove" data-code="' + item.product_code + '">&times;</button></div>';
+    var k = item.game_group || '_';
+    if (!groups[k]) groups[k] = [];
+    groups[k].push(item);
+  });
+  Object.keys(groups).forEach(function(k) {
+    var items = groups[k];
+    var hasChar = items.some(function(i) { return i.category === 'character'; });
+    items.forEach(function(item) {
+      var bundleFree = (item.category !== 'character' && hasChar);
+      var priceStr = '';
+      if (bundleFree) {
+        priceStr = '<span style="text-decoration:line-through;color:var(--ink-faint);margin-right:4px">' + item.price + '元</span><span style="color:var(--success);font-weight:700">0元</span>';
+      } else if (item.group_price != null && item.group_price !== item.price) {
+        priceStr = '<span style="margin-right:4px">' + item.price + '元</span><span style="color:var(--accent-deep);font-weight:700;font-size:12px">拼团 ' + item.group_price + '元</span>';
+      } else {
+        priceStr = item.price + '元';
+      }
+      html += '<div class="cart-item"><span class="ci-name">' + item.name + (bundleFree ? ' <span style="font-size:11px;color:var(--success)">捆绑优惠</span>' : '') + '</span><span class="ci-price">' + priceStr + '</span><button class="ci-remove" data-code="' + item.product_code + '">&times;</button></div>';
+    });
   });
   html += '<div class="gb-options" style="margin-top:16px;padding:14px;background:var(--panel);border:1.5px solid var(--line);border-radius:12px">';
   html += '<div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--accent-deep)">拼团方式</div>';
-  html += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="none" checked style="accent-color:var(--accent)"> 普通购买（不拼团）</label>';
-  html += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="create" style="accent-color:var(--accent)"> 发起拼团（总商品数满3店主才收到）</label>';
+  html += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="none" checked style="accent-color:var(--accent)"> 普通购买（不拼团）<span style="margin-left:auto;color:var(--ink-dim);font-size:12px">' + calc.regularTotal + '元</span></label>';
+  html += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="create" style="accent-color:var(--accent)"> 发起拼团（总商品数满3店主才收到）<span style="margin-left:auto;color:var(--accent-deep);font-weight:700;font-size:12px">' + calc.groupTotal + '元</span></label>';
   html += '<div id="gb-public-list" style="margin-top:8px"></div>';
   html += '</div>';
   el.innerHTML = html;
@@ -10721,6 +10786,13 @@ function renderCart() {
     btn.addEventListener("click", function() {
       cart = cart.filter(function(c) { return c.product_code !== btn.getAttribute("data-code"); });
       updateCartUI(); renderCart(); renderShop();
+    });
+  });
+  // 拼团选项切换时重新计算价格
+  el.querySelectorAll('input[name="gb-type"]').forEach(function(radio) {
+    radio.addEventListener("change", function() {
+      var newCalc = calcCartTotal();
+      document.getElementById("cart-amount").textContent = newCalc.total + '元';
     });
   });
   loadPublicGroups();
@@ -10741,6 +10813,13 @@ function loadPublicGroups() {
       h += '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;cursor:pointer"><input type="radio" name="gb-type" value="join-' + g.id + '" style="accent-color:var(--accent)"> 加入 ' + (g.name || '拼团#' + g.id) + ' <span style="color:var(--ink-dim);font-size:12px">(' + g.device_count + '人 / ' + g.order_count + '单 / ' + (g.item_count || 0) + '商品)</span></label>';
     });
     listEl.innerHTML = h;
+    // 给动态加入的拼团选项也绑定切换事件
+    listEl.querySelectorAll('input[name="gb-type"]').forEach(function(radio) {
+      radio.addEventListener("change", function() {
+        var newCalc = calcCartTotal();
+        document.getElementById("cart-amount").textContent = newCalc.total + '元';
+      });
+    });
   });
 }
 
