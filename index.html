@@ -369,6 +369,10 @@ body::before {
   border-top:1px solid var(--line);
   display:flex; justify-content:center;
   padding-bottom:env(safe-area-inset-bottom);
+  transition:transform .3s cubic-bezier(.4,0,.2,1), opacity .25s;
+}
+#bnav.hide {
+  transform:translateY(100%); opacity:0; pointer-events:none;
 }
 .bnav-inner { display:flex; width:100%; max-width:520px; }
 .bnav-item {
@@ -515,6 +519,12 @@ body::before {
 .top-hamburger svg { width:20px; height:20px; }
 .hamburger-badge { position:absolute; top:-4px; right:-4px; background:#e05050; color:#fff; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:none; align-items:center; justify-content:center; line-height:1; }
 .hamburger-badge.show { display:flex; }
+/* ===== back button ===== */
+.back-btn { position:fixed; top:14px; left:18px; z-index:120; background:var(--panel); border:1.5px solid var(--line); border-radius:10px; width:40px; height:40px; display:none; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.06); transition:background .15s; }
+.back-btn:hover { background:var(--accent-pale); }
+.back-btn.show { display:flex; }
+.back-btn svg { width:20px; height:20px; }
+body.sub-page { padding-bottom:0 !important; }
 .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:200; opacity:0; pointer-events:none; transition:opacity .25s; }
 .sidebar-overlay.open { opacity:1; pointer-events:auto; }
 .sidebar { position:fixed; top:0; right:-300px; width:300px; height:100%; background:var(--panel); z-index:201; transition:right .3s cubic-bezier(.4,0,.2,1); padding:28px 22px; box-shadow:-4px 0 20px rgba(0,0,0,.1); overflow-y:auto; }
@@ -1064,6 +1074,9 @@ html { overflow-x:hidden; }
 <body data-theme="pink" data-cfont="cute" data-efont="sans">
 
   <!-- Sidebar (hamburger menu) -->
+  <button class="back-btn" id="btn-back" aria-label="返回">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
   <button class="top-hamburger" id="btn-sidebar" aria-label="菜单">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     <span class="hamburger-badge" id="hamburger-badge">0</span>
@@ -10099,12 +10112,23 @@ function showTab(which) {
     var el = document.getElementById("sec-" + t);
     if (el) el.classList.toggle("hidden", t !== which);
   });
+  var secondaryPages = ["community", "jukebox", "redeem", "inbox", "orders"];
+  var isSecondary = secondaryPages.indexOf(which) > -1;
+  var bnavEl = document.getElementById("bnav");
+  var backBtnEl = document.getElementById("btn-back");
+  bnavEl.classList.toggle("hide", isSecondary);
+  backBtnEl.classList.toggle("show", isSecondary);
+  document.body.classList.toggle("sub-page", isSecondary);
   document.querySelectorAll(".bnav-item").forEach(function(b) {
     var t = b.getAttribute("data-tab");
-    b.classList.toggle("active", t === which);
+    b.classList.toggle("active", !isSecondary && t === which);
   });
   window.scrollTo({top:0, behavior:"smooth"});
 }
+
+document.getElementById("btn-back").addEventListener("click", function() {
+  showTab("home");
+});
 
 document.querySelectorAll(".bnav-item").forEach(function(btn) {
   btn.addEventListener("click", function() {
@@ -10512,10 +10536,18 @@ function calcCartTotal() {
 
 function openCart() {
   document.getElementById("cart-overlay").classList.add("open");
+  document.getElementById("bnav").classList.add("hide");
   renderCart();
 }
 document.getElementById("cart-close").addEventListener("click", function() {
   document.getElementById("cart-overlay").classList.remove("open");
+  var secondaryPages = ["community", "jukebox", "redeem", "inbox", "orders"];
+  var currentVisible = null;
+  secondaryPages.forEach(function(p) {
+    var el = document.getElementById("sec-" + p);
+    if (el && !el.classList.contains("hidden")) currentVisible = p;
+  });
+  if (!currentVisible) document.getElementById("bnav").classList.remove("hide");
 });
 
 function renderCart() {
@@ -10584,7 +10616,7 @@ document.getElementById("cart-submit").addEventListener("click", function() {
         if (res.unlocked_gids && res.unlocked_gids.length > 0) { res.unlocked_gids.forEach(function(ugid) { unlockGroup(ugid); }); checkPurchased(); }
         if (gid && res.group_ready === false) toast("订单已提交！拼团进行中（" + (res.item_count || 0) + "/3商品）");
         else toast("订单已提交！兑换码已自动分配");
-        cart = []; updateCartUI(); document.getElementById("cart-overlay").classList.remove("open"); renderShop(); updateInboxBadge();
+        cart = []; updateCartUI(); document.getElementById("cart-overlay").classList.remove("open"); document.getElementById("bnav").classList.remove("hide"); renderShop(); updateInboxBadge();
       } else { toast("提交失败: " + (res && res.error || "未知错误")); }
     });
   }
