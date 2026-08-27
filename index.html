@@ -784,6 +784,11 @@ html { overflow-x:hidden; }
   flex:1; display:flex; align-items:center; justify-content:center;
   position:relative; overflow:hidden; min-height:0;
 }
+/* Landscape mode: video-area fills overlay via absolute positioning */
+#vp-overlay.landscape .vp-video-area {
+  position:absolute; top:0; left:0; right:0; bottom:0;
+  flex:none;
+}
 .vp-iframe-wrap {
   width:100%; height:100%; position:relative;
   display:flex; align-items:center; justify-content:center;
@@ -10874,19 +10879,47 @@ var vpState = {
 function _updateLandscapeSize() {
   if (!vpState.landscape) return;
   var overlay = document.getElementById('vp-overlay');
-  if (!overlay.classList.contains('landscape-css')) return;
-  // CSS fallback: swap width/height for overlay + video-area
-  var w = window.innerHeight;
-  var h = window.innerWidth;
-  overlay.style.width = w + 'px';
-  overlay.style.height = h + 'px';
-  var el = document.getElementById('vp-video-area');
-  if (el) {
-    el.style.width = w + 'px';
-    el.style.height = h + 'px';
+  var va = document.getElementById('vp-video-area');
+  var isInFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  
+  if (isInFullscreen) {
+    // In fullscreen mode: clear inline dimensions and let CSS handle layout
+    // overlay uses fullscreen CSS (100vw !important × 100vh !important)
+    overlay.style.width = '';
+    overlay.style.height = '';
+    // video-area: clear inline so absolute positioning fills fullscreen
+    if (va) {
+      va.style.width = '';
+      va.style.height = '';
+    }
+  }
+  
+  if (overlay.classList.contains('landscape-css')) {
+    // CSS fallback mode: manually swap dimensions
+    var w = Math.max(window.innerWidth, window.innerHeight);
+    var h = Math.min(window.innerWidth, window.innerHeight);
+    overlay.style.width = w + 'px';
+    overlay.style.height = h + 'px';
+    if (va) {
+      va.style.width = w + 'px';
+      va.style.height = h + 'px';
+    }
   }
 }
 window.addEventListener('resize', _updateLandscapeSize);
+// Update dimensions when entering/exiting fullscreen (async in some browsers)
+document.addEventListener('fullscreenchange', function() {
+  if (vpState.landscape) {
+    _updateLandscapeSize();
+    setTimeout(_updateLandscapeSize, 150);
+  }
+});
+document.addEventListener('webkitfullscreenchange', function() {
+  if (vpState.landscape) {
+    _updateLandscapeSize();
+    setTimeout(_updateLandscapeSize, 150);
+  }
+});
 
 /* Helper: create/recreate iframe */
 function _loadVideoIframe(bvid, seekTo, quality) {
@@ -11090,10 +11123,14 @@ function _enterLandscape() {
   if (screen.orientation && screen.orientation.lock) {
     screen.orientation.lock('landscape').then(function() {
       lockSucceeded = true;
+      // Call multiple times to handle async fullscreen entry
+      _updateLandscapeSize();
       setTimeout(_updateLandscapeSize, 150);
+      setTimeout(_updateLandscapeSize, 400);
+      setTimeout(_updateLandscapeSize, 800);
     }).catch(function() {
       if (!lockSucceeded) {
-        lockSucceeded = true; // prevent timeout fallback from double-firing
+        lockSucceeded = true;
         _applyCssRotationFallback();
       }
     });
@@ -11112,11 +11149,12 @@ function _enterLandscape() {
 function _applyCssRotationFallback() {
   var overlay = document.getElementById('vp-overlay');
   overlay.classList.add('landscape-css');
-  // Immediately swap dimensions
+  // Immediately update dimensions
   _updateLandscapeSize();
-  // Backup: re-apply after brief delay in case viewport hasn't settled
-  setTimeout(_updateLandscapeSize, 200);
-  setTimeout(_updateLandscapeSize, 500);
+  // Re-apply multiple times to handle async fullscreen entry
+  setTimeout(_updateLandscapeSize, 150);
+  setTimeout(_updateLandscapeSize, 400);
+  setTimeout(_updateLandscapeSize, 800);
 }
 
 function _exitLandscape() {
