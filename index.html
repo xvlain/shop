@@ -930,10 +930,9 @@ html { overflow-x:hidden; }
   max-height:calc(100vh - 80px); overflow-y:auto;
 }
 /* Landscape-css — fallback: CSS rotation when orientation lock not supported */
+/* landscape-css fallback: just fill overlay with absolute positioning, JS swaps dimensions */
 #vp-overlay.landscape-css .vp-video-area {
-  position:absolute; top:0; right:0; bottom:0; left:0;
-  transform:rotate(90deg);
-  transform-origin:center center;
+  position:absolute; top:0; left:0; right:0; bottom:0;
 }
 #vp-overlay.landscape-css .vp-iframe-wrap {
   width:100%; height:100%;
@@ -10876,11 +10875,15 @@ function _updateLandscapeSize() {
   if (!vpState.landscape) return;
   var overlay = document.getElementById('vp-overlay');
   if (!overlay.classList.contains('landscape-css')) return;
-  // CSS rotation fallback: swap dimensions for rotate(90deg)
+  // CSS fallback: swap width/height for overlay + video-area
+  var w = window.innerHeight;
+  var h = window.innerWidth;
+  overlay.style.width = w + 'px';
+  overlay.style.height = h + 'px';
   var el = document.getElementById('vp-video-area');
   if (el) {
-    el.style.width = window.innerHeight + 'px';
-    el.style.height = window.innerWidth + 'px';
+    el.style.width = w + 'px';
+    el.style.height = h + 'px';
   }
 }
 window.addEventListener('resize', _updateLandscapeSize);
@@ -11070,7 +11073,7 @@ document.getElementById('vp-fullscreen-btn').addEventListener('click', function(
 });
 
 
-/* Enter landscape: try orientation lock first, fall back to CSS rotation */
+/* Enter landscape: try orientation lock first, fall back to dimension swap */
 function _enterLandscape() {
   var overlay = document.getElementById('vp-overlay');
   vpState.landscape = true;
@@ -11083,16 +11086,25 @@ function _enterLandscape() {
   }
   
   // Try locking to landscape — browser handles layout natively
+  var lockSucceeded = false;
   if (screen.orientation && screen.orientation.lock) {
     screen.orientation.lock('landscape').then(function() {
-      // Lock succeeded — no CSS rotation needed
+      lockSucceeded = true;
       setTimeout(_updateLandscapeSize, 150);
     }).catch(function() {
-      // Lock failed — use CSS rotation fallback
-      _applyCssRotationFallback();
+      if (!lockSucceeded) {
+        lockSucceeded = true; // prevent timeout fallback from double-firing
+        _applyCssRotationFallback();
+      }
     });
+    // Safety net: if promise hangs for 800ms, force CSS fallback
+    setTimeout(function() {
+      if (!lockSucceeded) {
+        lockSucceeded = true;
+        _applyCssRotationFallback();
+      }
+    }, 800);
   } else {
-    // No orientation API — CSS rotation fallback
     _applyCssRotationFallback();
   }
 }
@@ -11100,11 +11112,11 @@ function _enterLandscape() {
 function _applyCssRotationFallback() {
   var overlay = document.getElementById('vp-overlay');
   overlay.classList.add('landscape-css');
-  // Lock to portrait so CSS rotate(90deg) = landscape on screen
-  if (screen.orientation && screen.orientation.lock) {
-    try { screen.orientation.lock('portrait').catch(function(){}); } catch(e) {}
-  }
+  // Immediately swap dimensions
   _updateLandscapeSize();
+  // Backup: re-apply after brief delay in case viewport hasn't settled
+  setTimeout(_updateLandscapeSize, 200);
+  setTimeout(_updateLandscapeSize, 500);
 }
 
 function _exitLandscape() {
