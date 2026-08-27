@@ -382,6 +382,17 @@ body::before {
 .bnav-item.active svg { transform:scale(1.1); }
 .bnav-label { font-weight:600; }
 
+/* ===== sub-page navigation ===== */
+.back-btn { position:fixed; top:14px; left:18px; z-index:120; background:var(--panel); border:1.5px solid var(--line); border-radius:10px; width:40px; height:40px; display:none; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.06); transition:background .15s; }
+.back-btn:hover { background:var(--accent-pale); }
+.back-btn.show { display:flex; }
+.back-btn svg { width:20px; height:20px; }
+#bnav { transition:transform .3s cubic-bezier(.4,0,.2,1); }
+body.sub-page #bnav { transform:translateY(100%); pointer-events:none; }
+body.sub-page .masthead .wrap { padding-left:66px; }
+body.sub-page .top-hamburger { display:none; }
+body.sub-page .section-head { padding-left:52px; }
+
 /* ===== settings panel ===== */
 #settings-overlay {
   position:fixed; inset:0; z-index:200;
@@ -1108,6 +1119,10 @@ html { overflow-x:hidden; }
     <button class="cart-submit" id="cart-submit" style="display:none">提交订单</button>
   </div>
 
+  <button class="back-btn" id="btn-back" aria-label="返回">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+
   <header class="masthead">
     <div class="wrap">
       <div class="brand">
@@ -1143,15 +1158,24 @@ html { overflow-x:hidden; }
         <div class="cl-entry">
           <span class="cl-ver">v1.5.0</span>
           <span class="cl-date">2026-08-27</span>
-          <h4>留声机与导航优化</h4>
+          <h4>留声机与导航重设计</h4>
           <ul>
             <li><b>新功能</b></li>
-            <li>留声机新增播放列表：可自由添加/移除曲目，支持列表循环、单曲循环、随机播放三种模式</li>
+            <li>新增社区视频模块：按游戏分类浏览官方 PV、角色展示、过场动画、音乐等视频内容</li>
+            <li>新增留声机：收录各游戏 OST，支持在线播放、搜索曲目</li>
+            <li>留声机播放列表：可自由添加/移除曲目，支持列表循环、单曲循环、随机播放三种模式</li>
             <li>留声机专属设置：后台播放（退出留声机仍可播放）、自动播放（进入网站自动续播上次曲目）、播放进度记忆</li>
             <li><b>体验优化</b></li>
-            <li>子页面导航优化：进入社区、留声机、兑换、邮箱、我的订单等页面时，底部导航栏自动隐藏并显示左上角返回按钮</li>
-            <li>视频详情页标题栏高度统一，与播放器操作栏对齐</li>
+            <li>底部导航重设计：5 个 tab（首页、前瞻、遗产名录、商城、我的），设置移入"我的"页面</li>
+            <li>"我的"页面重设计：仿微信风格布局，包含设备码、订单/邮箱/兑换快捷入口、已解锁资料库、设置</li>
+            <li>子页面导航：进入社区、留声机、兑换、邮箱、我的订单等页面时，底部导航栏自动隐藏并显示左上角返回按钮</li>
+            <li>汉堡菜单优化：仅在首页和商城页面显示</li>
+            <li>视频详情页标题栏高度与播放器操作栏对齐</li>
             <li>修复子页面返回按钮遮挡标题文字的问题</li>
+            <li><b>Bug 修复</b></li>
+            <li>修复邮箱"一键已读"无效的问题</li>
+            <li>修复"我的订单"页面在店主确认前提前显示兑换码的问题</li>
+            <li>完善自动解锁机制：订单确认后才分配兑换码并解锁资料库</li>
           </ul>
         </div>
         <div class="cl-entry">
@@ -1604,36 +1628,55 @@ html { overflow-x:hidden; }
     <section class="section-panel hidden" id="sec-mine">
       <div class="section-head">
         <h2>我的</h2>
-        <span class="desc">个人信息与快捷入口</span>
       </div>
-      <div style="display:flex;flex-direction:column;gap:14px">
-        <div style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:18px">
-          <div style="font-size:13px;color:var(--ink-dim);margin-bottom:6px">设备码</div>
-          <div style="font-family:Consolas,monospace;font-size:14px;font-weight:700;color:var(--accent-deep);word-break:break-all" id="mine-device-code">—</div>
-          <button id="mine-copy-device" style="margin-top:8px;padding:5px 14px;border-radius:8px;border:1.5px solid var(--accent-soft);background:var(--accent-pale);color:var(--accent-deep);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">复制设备码</button>
+      <!-- Top profile card -->
+      <div style="background:linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 70%, #000) 100%); border-radius:16px; padding:24px 20px; margin-bottom:18px; color:#fff;">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <div style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#fff" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:18px;font-weight:800;margin-bottom:2px;">旅行者</div>
+            <div style="font-size:12px;opacity:.8;font-family:Consolas,monospace;word-break:break-all;" id="mine-device-code">—</div>
+          </div>
+          <button id="mine-copy-device" style="padding:6px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.15);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0;">复制</button>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <button class="mine-shortcut" data-goto="orders" style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;font-family:inherit">
-            <div style="font-size:24px;margin-bottom:4px">📋</div>
-            <div style="font-size:14px;font-weight:700;color:var(--ink)">我的订单</div>
-          </button>
-          <button class="mine-shortcut" data-goto="inbox" style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;font-family:inherit">
-            <div style="font-size:24px;margin-bottom:4px">📬</div>
-            <div style="font-size:14px;font-weight:700;color:var(--ink)">邮箱</div>
-          </button>
-          <button class="mine-shortcut" data-goto="redeem" style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;font-family:inherit">
-            <div style="font-size:24px;margin-bottom:4px">🔑</div>
-            <div style="font-size:14px;font-weight:700;color:var(--ink)">兑换</div>
-          </button>
-          <button class="mine-shortcut" data-goto="shop" style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px;text-align:center;cursor:pointer;font-family:inherit">
-            <div style="font-size:24px;margin-bottom:4px">🛒</div>
-            <div style="font-size:14px;font-weight:700;color:var(--ink)">商城</div>
-          </button>
+      </div>
+      <!-- Menu group 1 -->
+      <div style="background:var(--panel);border-radius:12px;border:1px solid var(--line);margin-bottom:12px;overflow:hidden;">
+        <button class="mine-row" data-goto="orders" style="display:flex;align-items:center;gap:14px;padding:15px 18px;border:none;background:none;width:100%;cursor:pointer;font-family:inherit;font-size:15px;color:var(--ink);text-align:left;border-bottom:1px solid var(--line);">
+          <span style="font-size:20px;width:28px;text-align:center;">📋</span>
+          <span style="flex:1;font-weight:600;">我的订单</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ink-faint)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <button class="mine-row" data-goto="inbox" style="display:flex;align-items:center;gap:14px;padding:15px 18px;border:none;background:none;width:100%;cursor:pointer;font-family:inherit;font-size:15px;color:var(--ink);text-align:left;border-bottom:1px solid var(--line);">
+          <span style="font-size:20px;width:28px;text-align:center;">📬</span>
+          <span style="flex:1;font-weight:600;">邮箱</span>
+          <span id="mine-inbox-badge" style="display:none;background:#e05050;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-right:4px;"></span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ink-faint)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <button class="mine-row" data-goto="redeem" style="display:flex;align-items:center;gap:14px;padding:15px 18px;border:none;background:none;width:100%;cursor:pointer;font-family:inherit;font-size:15px;color:var(--ink);text-align:left;">
+          <span style="font-size:20px;width:28px;text-align:center;">🔑</span>
+          <span style="flex:1;font-weight:600;">兑换</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ink-faint)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+      <!-- Menu group 2: Unlocked -->
+      <div style="background:var(--panel);border-radius:12px;border:1px solid var(--line);margin-bottom:12px;overflow:hidden;">
+        <div style="display:flex;align-items:center;gap:14px;padding:15px 18px;">
+          <span style="font-size:20px;width:28px;text-align:center;">📚</span>
+          <span style="flex:1;font-weight:600;font-size:15px;color:var(--ink);">已解锁资料库</span>
+          <span id="mine-unlock-count" style="font-size:12px;color:var(--ink-faint);">0 个</span>
         </div>
-        <div style="background:var(--panel);border:1.5px solid var(--line);border-radius:12px;padding:16px">
-          <div style="font-size:13px;color:var(--ink-dim);margin-bottom:8px">已解锁资料库</div>
-          <div id="mine-unlocked-list" style="font-size:13px;color:var(--ink-faint)">加载中…</div>
-        </div>
+        <div id="mine-unlocked-list" style="padding:0 18px 14px;font-size:13px;color:var(--ink-faint);">加载中…</div>
+      </div>
+      <!-- Menu group 3: Settings -->
+      <div style="background:var(--panel);border-radius:12px;border:1px solid var(--line);margin-bottom:12px;overflow:hidden;">
+        <button class="mine-row" id="mine-open-settings" style="display:flex;align-items:center;gap:14px;padding:15px 18px;border:none;background:none;width:100%;cursor:pointer;font-family:inherit;font-size:15px;color:var(--ink);text-align:left;">
+          <span style="font-size:20px;width:28px;text-align:center;">⚙️</span>
+          <span style="flex:1;font-weight:600;">设置</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ink-faint)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
       </div>
     </section>
 
@@ -9804,7 +9847,7 @@ html { overflow-x:hidden; }
     </div>
   </footer>
 
-  <!-- ===== Bottom Navigation (4 tabs: home, preview, archive, settings) ===== -->
+  <!-- ===== Bottom Navigation (5 tabs: home, preview, archive, shop, mine) ===== -->
   <nav id="bnav">
     <div class="bnav-inner">
       <button class="bnav-item active" data-tab="home">
@@ -9826,10 +9869,6 @@ html { overflow-x:hidden; }
       <button class="bnav-item" data-tab="mine">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <span class="bnav-label">我的</span>
-      </button>
-      <button class="bnav-item" data-tab="settings">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        <span class="bnav-label" data-i18n="navSettings">设置</span>
       </button>
     </div>
   </nav>
@@ -10149,23 +10188,34 @@ document.getElementById("settings-overlay").addEventListener("click", function()
 
 function showTab(which) {
   toggleSettings(false);
-  var tabs = ["home", "preview", "archive", "redeem", "shop", "mine", "inbox", "orders"];
+  var tabs = ["home", "preview", "archive", "community", "jukebox", "redeem", "shop", "mine", "inbox", "orders"];
+  var subTabs = ["community", "jukebox", "redeem", "inbox", "orders"];
+  var isSub = subTabs.indexOf(which) > -1;
   tabs.forEach(function(t) {
     var el = document.getElementById("sec-" + t);
     if (el) el.classList.toggle("hidden", t !== which);
   });
+  // Sub-page navigation
+  var backBtn = document.getElementById("btn-back");
+  if (isSub) {
+    document.body.classList.add("sub-page");
+    if (backBtn) backBtn.classList.add("show");
+  } else {
+    document.body.classList.remove("sub-page");
+    if (backBtn) backBtn.classList.remove("show");
+  }
   document.querySelectorAll(".bnav-item").forEach(function(b) {
     var t = b.getAttribute("data-tab");
     b.classList.toggle("active", t === which);
   });
   window.scrollTo({top:0, behavior:"smooth"});
 }
+document.getElementById("btn-back").addEventListener("click", function() { showTab("home"); });
 
 document.querySelectorAll(".bnav-item").forEach(function(btn) {
   btn.addEventListener("click", function() {
     var tab = btn.getAttribute("data-tab");
-    if (tab === "settings") { toggleSettings(); }
-    else if (tab === "mine") { showTab("mine"); initMinePage(); }
+    if (tab === "mine") { showTab("mine"); initMinePage(); }
     else { showTab(tab); }
   });
 });
@@ -10726,34 +10776,42 @@ function initMinePage() {
     copyBtn.onclick = function() {
       if (navigator.clipboard) navigator.clipboard.writeText(myDeviceCode || "");
       else { var t=document.createElement("textarea"); t.value=myDeviceCode||""; t.style.position="fixed"; t.style.opacity="0"; document.body.appendChild(t); t.select(); try{document.execCommand("copy");}catch(e){} document.body.removeChild(t); }
-      copyBtn.textContent = "已复制 ✓"; setTimeout(function() { copyBtn.textContent = "复制设备码"; }, 1500);
+      copyBtn.textContent = "已复制"; setTimeout(function() { copyBtn.textContent = "复制"; }, 1500);
     };
   }
+  // Update inbox badge in mine page
+  sbRpc("shop_unread_count", { p_device: myDeviceCode }).then(function(res) {
+    var count = (res && res.ok) ? (res.count || 0) : 0;
+    var badge = document.getElementById("mine-inbox-badge");
+    if (badge) { if (count > 0) { badge.style.display = ""; badge.textContent = count; } else { badge.style.display = "none"; } }
+  });
   // Load unlocked libraries
   sbRpc("check_unlocks", { p_device: myDeviceCode }).then(function(res) {
     var el = document.getElementById("mine-unlocked-list");
+    var countEl = document.getElementById("mine-unlock-count");
     if (!el) return;
     if (res && res.ok && res.unlocked && res.unlocked.length > 0) {
+      if (countEl) countEl.textContent = res.unlocked.length + " 个";
       el.innerHTML = res.unlocked.map(function(gid) {
-        return '<div style="padding:4px 0;border-bottom:1px solid var(--line);font-size:13px;color:var(--ink)">✅ ' + gid.replace(/-/g, " / ") + '</div>';
+        return '<div style="padding:4px 0;font-size:13px;color:var(--ink-dim);border-top:1px solid var(--line);">' + gid.replace(/-/g, " · ") + '</div>';
       }).join("");
     } else {
-      el.innerHTML = '<div style="color:var(--ink-faint)">暂无已解锁的资料库</div>';
+      if (countEl) countEl.textContent = "0 个";
+      el.innerHTML = '<div style="color:var(--ink-faint);padding-top:4px;">暂无</div>';
     }
   });
 }
-document.querySelectorAll(".mine-shortcut").forEach(function(btn) {
+// Mine page row clicks
+document.querySelectorAll(".mine-row").forEach(function(btn) {
   btn.addEventListener("click", function() {
     var target = btn.getAttribute("data-goto");
-    if (target === "shop") { showTab("shop"); }
-    else if (target === "orders") { showTab("orders"); loadMyOrders(); }
-    else if (target === "community") { showTab("community"); }
-    else if (target === "jukebox") { showTab("jukebox"); }
-
+    if (target === "orders") { showTab("orders"); loadMyOrders(); }
     else if (target === "inbox") { showTab("inbox"); loadInbox(); }
     else if (target === "redeem") { showTab("redeem"); }
   });
 });
+// Settings button from mine page
+document.getElementById("mine-open-settings").addEventListener("click", function() { toggleSettings(); });
 
 function toast(msg) { var t = document.createElement("div"); t.style.cssText = "position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#2d2a32;color:#fff;padding:10px 22px;border-radius:999px;font-size:13px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none"; t.textContent = msg; document.body.appendChild(t); setTimeout(function() { t.style.opacity = "1"; }, 10); setTimeout(function() { t.style.opacity = "0"; setTimeout(function() { document.body.removeChild(t); }, 300); }, 2000); }
 
