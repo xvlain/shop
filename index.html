@@ -369,10 +369,6 @@ body::before {
   border-top:1px solid var(--line);
   display:flex; justify-content:center;
   padding-bottom:env(safe-area-inset-bottom);
-  transition:transform .3s cubic-bezier(.4,0,.2,1), opacity .25s;
-}
-#bnav.hide {
-  transform:translateY(100%); opacity:0; pointer-events:none;
 }
 .bnav-inner { display:flex; width:100%; max-width:520px; }
 .bnav-item {
@@ -519,15 +515,6 @@ body::before {
 .top-hamburger svg { width:20px; height:20px; }
 .hamburger-badge { position:absolute; top:-4px; right:-4px; background:#e05050; color:#fff; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:none; align-items:center; justify-content:center; line-height:1; }
 .hamburger-badge.show { display:flex; }
-/* ===== back button ===== */
-.back-btn { position:fixed; top:14px; left:18px; z-index:120; background:var(--panel); border:1.5px solid var(--line); border-radius:10px; width:40px; height:40px; display:none; align-items:center; justify-content:center; cursor:pointer; color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.06); transition:background .15s; }
-.back-btn:hover { background:var(--accent-pale); }
-.back-btn.show { display:flex; }
-.back-btn svg { width:20px; height:20px; }
-body.sub-page { padding-bottom:0 !important; }
-body.sub-page .masthead .wrap { padding-left:66px; }
-body.sub-page .section-head { padding-left:52px; }
-body.sub-page .section-panel { padding-top:60px; }
 .sidebar-overlay { position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:200; opacity:0; pointer-events:none; transition:opacity .25s; }
 .sidebar-overlay.open { opacity:1; pointer-events:auto; }
 .sidebar { position:fixed; top:0; right:-300px; width:300px; height:100%; background:var(--panel); z-index:201; transition:right .3s cubic-bezier(.4,0,.2,1); padding:28px 22px; box-shadow:-4px 0 20px rgba(0,0,0,.1); overflow-y:auto; }
@@ -707,10 +694,9 @@ html { overflow-x:hidden; }
 #vd-overlay.open { display:flex; }
 
 .vd-header {
-  padding:8px 20px; display:flex; align-items:center; gap:12px;
+  padding:16px 20px; display:flex; align-items:center; gap:12px;
   border-bottom:1px solid var(--line); background:var(--bar-bg);
   backdrop-filter:blur(12px); position:sticky; top:0; z-index:5;
-  min-height:48px; box-sizing:border-box;
 }
 .vd-back {
   width:36px; height:36px; border-radius:50%; border:none;
@@ -1057,45 +1043,6 @@ html { overflow-x:hidden; }
   margin-bottom:8px; letter-spacing:.04em;
 }
 
-/* ===== Jukebox Playlist Panel ===== */
-.jk-toolbar { display:flex; align-items:center; gap:8px; max-width:720px; margin:0 auto 12px; flex-wrap:wrap; }
-.jk-toolbar-btn { padding:6px 14px; border-radius:999px; border:1.5px solid var(--line); background:var(--panel); color:var(--ink-dim); font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s; display:flex; align-items:center; gap:4px; }
-.jk-toolbar-btn:hover { border-color:var(--accent-soft); color:var(--accent-deep); }
-.jk-toolbar-btn.active { background:var(--accent-pale); border-color:var(--accent); color:var(--accent-deep); }
-.jk-toolbar-btn svg { width:14px; height:14px; }
-.jk-playlist-panel { max-width:720px; margin:0 auto 16px; background:var(--panel); border:1.5px solid var(--line); border-radius:14px; overflow:hidden; display:none; }
-.jk-playlist-panel.open { display:block; }
-.jk-pl-header { display:flex; align-items:center; justify-content:space-between; padding:12px 18px; border-bottom:1px solid var(--line); flex-wrap:wrap; gap:8px; }
-.jk-pl-title { font-size:14px; font-weight:700; color:var(--ink); }
-.jk-pl-actions { display:flex; gap:6px; }
-.jk-pl-mode-btn { padding:4px 10px; border-radius:999px; border:1px solid var(--line); background:transparent; color:var(--ink-faint); font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .15s; }
-.jk-pl-mode-btn.active { background:var(--accent-pale); border-color:var(--accent); color:var(--accent-deep); }
-.jk-pl-list { max-height:300px; overflow-y:auto; }
-.jk-pl-item { display:flex; align-items:center; gap:12px; padding:10px 18px; cursor:pointer; transition:background .15s; border-bottom:1px solid var(--line); }
-.jk-pl-item:last-child { border-bottom:none; }
-.jk-pl-item:hover { background:var(--accent-pale); }
-.jk-pl-item.playing { background:var(--accent-pale); }
-.jk-pl-item-info { flex:1; min-width:0; }
-.jk-pl-item-title { font-size:13px; font-weight:700; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.jk-pl-item-meta { font-size:11px; color:var(--ink-faint); margin-top:1px; }
-.jk-pl-remove { width:28px; height:28px; border:none; border-radius:50%; background:transparent; color:var(--ink-faint); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; flex-shrink:0; }
-.jk-pl-remove:hover { background:#fee; color:#e05555; }
-.jk-pl-empty { text-align:center; padding:30px; color:var(--ink-faint); font-size:13px; }
-.jk-track-add { width:28px; height:28px; border:none; border-radius:50%; background:transparent; color:var(--ink-faint); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; flex-shrink:0; }
-.jk-track-add:hover { background:var(--accent-pale); color:var(--accent); }
-.jk-track-add.in-list { color:var(--accent); }
-/* Jukebox Settings Panel */
-.jk-settings-panel { max-width:720px; margin:0 auto 16px; background:var(--panel); border:1.5px solid var(--line); border-radius:14px; overflow:hidden; display:none; padding:18px; }
-.jk-settings-panel.open { display:block; }
-.jk-setting-row { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--line); }
-.jk-setting-row:last-child { border-bottom:none; }
-.jk-setting-label { font-size:14px; font-weight:700; color:var(--ink); }
-.jk-setting-desc { font-size:11px; color:var(--ink-faint); margin-top:2px; }
-.jk-toggle { position:relative; width:44px; height:24px; border-radius:12px; background:var(--line); cursor:pointer; transition:background .2s; flex-shrink:0; border:none; padding:0; }
-.jk-toggle.on { background:var(--accent); }
-.jk-toggle::after { content:''; position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%; background:#fff; transition:transform .2s; box-shadow:0 1px 3px rgba(0,0,0,.2); }
-.jk-toggle.on::after { transform:translateX(20px); }
-
 /* Responsive */
 @media(max-width:600px) {
   .video-grid { grid-template-columns:repeat(2, 1fr); gap:10px; }
@@ -1117,9 +1064,6 @@ html { overflow-x:hidden; }
 <body data-theme="pink" data-cfont="cute" data-efont="sans">
 
   <!-- Sidebar (hamburger menu) -->
-  <button class="back-btn" id="btn-back" aria-label="返回">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-  </button>
   <button class="top-hamburger" id="btn-sidebar" aria-label="菜单">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     <span class="hamburger-badge" id="hamburger-badge">0</span>
@@ -1188,7 +1132,7 @@ html { overflow-x:hidden; }
 
       <div class="about-card">
         <h3 data-i18n="aboutTitle">关于本站</h3>
-        <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.4.0 「售后系统」</span></div>
+        <div class="about-row"><span class="about-label" data-i18n="aboutVer">当前版本</span><span class="about-val font-mono">v1.5.0 「留声机」</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutTotal">收录资料</span><span class="about-val font-mono">19 份</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutSync">最后同步</span><span class="about-val font-mono">2026-08-27 06:00</span></div>
         <div class="about-row"><span class="about-label" data-i18n="aboutGames">收录游戏</span><span class="about-val">崩坏：星穹铁道、原神、异环、绝区零</span></div>
@@ -1196,6 +1140,20 @@ html { overflow-x:hidden; }
 
       <div class="about-card">
         <h3 data-i18n="changelogTitle">更新日志</h3>
+        <div class="cl-entry">
+          <span class="cl-ver">v1.5.0</span>
+          <span class="cl-date">2026-08-27</span>
+          <h4>留声机与导航优化</h4>
+          <ul>
+            <li><b>新功能</b></li>
+            <li>留声机新增播放列表：可自由添加/移除曲目，支持列表循环、单曲循环、随机播放三种模式</li>
+            <li>留声机专属设置：后台播放（退出留声机仍可播放）、自动播放（进入网站自动续播上次曲目）、播放进度记忆</li>
+            <li><b>体验优化</b></li>
+            <li>子页面导航优化：进入社区、留声机、兑换、邮箱、我的订单等页面时，底部导航栏自动隐藏并显示左上角返回按钮</li>
+            <li>视频详情页标题栏高度统一，与播放器操作栏对齐</li>
+            <li>修复子页面返回按钮遮挡标题文字的问题</li>
+          </ul>
+        </div>
         <div class="cl-entry">
           <span class="cl-ver">v1.4.0</span>
           <span class="cl-date">2026-08-24</span>
@@ -9780,35 +9738,6 @@ html { overflow-x:hidden; }
         <input type="text" id="jukebox-search" placeholder="搜索曲目…" autocomplete="off">
         <svg class="jukebox-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </div>
-      <div class="jk-toolbar">
-        <button class="jk-toolbar-btn" id="jk-btn-playlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> 播放列表</button>
-        <button class="jk-toolbar-btn" id="jk-btn-settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> 设置</button>
-      </div>
-      <div class="jk-playlist-panel" id="jk-playlist-panel">
-        <div class="jk-pl-header">
-          <span class="jk-pl-title">播放列表 (<span id="jk-pl-count">0</span>)</span>
-          <div class="jk-pl-actions">
-            <button class="jk-pl-mode-btn active" data-mode="list">列表循环</button>
-            <button class="jk-pl-mode-btn" data-mode="single">单曲循环</button>
-            <button class="jk-pl-mode-btn" data-mode="shuffle">随机播放</button>
-          </div>
-        </div>
-        <div class="jk-pl-list" id="jk-pl-list"><div class="jk-pl-empty">播放列表为空，点击曲目旁的 + 添加</div></div>
-      </div>
-      <div class="jk-settings-panel" id="jk-settings-panel">
-        <div class="jk-setting-row">
-          <div><div class="jk-setting-label">后台播放</div><div class="jk-setting-desc">退出留声机页面后继续在网页内播放</div></div>
-          <button class="jk-toggle" id="jk-opt-bgplay"></button>
-        </div>
-        <div class="jk-setting-row">
-          <div><div class="jk-setting-label">自动播放</div><div class="jk-setting-desc">进入网站时自动播放上次曲目（需开启后台播放）</div></div>
-          <button class="jk-toggle" id="jk-opt-autoplay"></button>
-        </div>
-        <div class="jk-setting-row">
-          <div><div class="jk-setting-label">记忆进度</div><div class="jk-setting-desc">保留每首曲目的播放进度，下次从断点继续</div></div>
-          <button class="jk-toggle" id="jk-opt-remember"></button>
-        </div>
-      </div>
       <div class="jk-player-wrap" id="jk-player-wrap" style="display:none">
         <div class="jk-now-playing">
           <div class="jk-np-info">
@@ -10030,7 +9959,7 @@ var LANG = {
     aboutTitle:"关于本站", aboutVer:"当前版本", aboutTotal:"收录资料",
     aboutSync:"最后同步", aboutGames:"收录游戏",
     changelogTitle:"更新日志",
-    clV1Title:"「售后系统」正式版发布",
+    clV1Title:"「留声机」正式版发布",
     clV1_1:"首页改版：致客信 + 站点信息 + 更新日志",
     clV1_2:"底部导航新增首页入口",
     clV1_3:"新增 3 种英文字体：衡水体、斜体、黑体",
@@ -10073,7 +10002,7 @@ var LANG = {
     aboutTitle:"About This Site", aboutVer:"Version", aboutTotal:"Total Files",
     aboutSync:"Last Synced", aboutGames:"Games Covered",
     changelogTitle:"Changelog",
-    clV1Title:'"售后系统" Official Release',
+    clV1Title:'"留声机" Official Release',
     clV1_1:"Home page redesign: welcome letter + site info + changelog",
     clV1_2:"Added Home tab to bottom navigation",
     clV1_3:"Added 3 English fonts: Hengshui, Italic, Sans",
@@ -10184,23 +10113,12 @@ function showTab(which) {
     var el = document.getElementById("sec-" + t);
     if (el) el.classList.toggle("hidden", t !== which);
   });
-  var secondaryPages = ["community", "jukebox", "redeem", "inbox", "orders"];
-  var isSecondary = secondaryPages.indexOf(which) > -1;
-  var bnavEl = document.getElementById("bnav");
-  var backBtnEl = document.getElementById("btn-back");
-  bnavEl.classList.toggle("hide", isSecondary);
-  backBtnEl.classList.toggle("show", isSecondary);
-  document.body.classList.toggle("sub-page", isSecondary);
   document.querySelectorAll(".bnav-item").forEach(function(b) {
     var t = b.getAttribute("data-tab");
-    b.classList.toggle("active", !isSecondary && t === which);
+    b.classList.toggle("active", t === which);
   });
   window.scrollTo({top:0, behavior:"smooth"});
 }
-
-document.getElementById("btn-back").addEventListener("click", function() {
-  showTab("home");
-});
 
 document.querySelectorAll(".bnav-item").forEach(function(btn) {
   btn.addEventListener("click", function() {
@@ -10608,18 +10526,10 @@ function calcCartTotal() {
 
 function openCart() {
   document.getElementById("cart-overlay").classList.add("open");
-  document.getElementById("bnav").classList.add("hide");
   renderCart();
 }
 document.getElementById("cart-close").addEventListener("click", function() {
   document.getElementById("cart-overlay").classList.remove("open");
-  var secondaryPages = ["community", "jukebox", "redeem", "inbox", "orders"];
-  var currentVisible = null;
-  secondaryPages.forEach(function(p) {
-    var el = document.getElementById("sec-" + p);
-    if (el && !el.classList.contains("hidden")) currentVisible = p;
-  });
-  if (!currentVisible) document.getElementById("bnav").classList.remove("hide");
 });
 
 function renderCart() {
@@ -10688,7 +10598,7 @@ document.getElementById("cart-submit").addEventListener("click", function() {
         if (res.unlocked_gids && res.unlocked_gids.length > 0) { res.unlocked_gids.forEach(function(ugid) { unlockGroup(ugid); }); checkPurchased(); }
         if (gid && res.group_ready === false) toast("订单已提交！拼团进行中（" + (res.item_count || 0) + "/3商品）");
         else toast("订单已提交！兑换码已自动分配");
-        cart = []; updateCartUI(); document.getElementById("cart-overlay").classList.remove("open"); document.getElementById("bnav").classList.remove("hide"); renderShop(); updateInboxBadge();
+        cart = []; updateCartUI(); document.getElementById("cart-overlay").classList.remove("open"); renderShop(); updateInboxBadge();
       } else { toast("提交失败: " + (res && res.error || "未知错误")); }
     });
   }
@@ -11422,38 +11332,12 @@ document.addEventListener('keydown', function(e) {
 
 /* ===== Jukebox Player ===== */
 var JUKEBOX_TRACKS = [{"title": "星间旅行 Interstellar Journey", "bvid": "BV1rh4y1n77f", "album": "失控 Out of Control", "group": "主题曲", "game": "星铁"}, {"title": "不眠之夜 WHITE NIGHT", "bvid": "BV1me411n7eu", "album": "不眠之夜 WHITE NIGHT", "group": "主题曲", "game": "星铁"}, {"title": "何者 Nameless Faces", "bvid": "BV1yX66YcEPk", "album": "何者 Nameless Faces", "group": "主题曲", "game": "星铁"}, {"title": "天生鬼才", "bvid": "BV1XVDfBLE3D", "album": "三周年主题曲", "group": "主题曲", "game": "星铁"}, {"title": "希望有羽毛和翅膀", "bvid": "BV1Tf421m7iW", "album": "空气蛹 INSIDE", "group": "EP", "game": "星铁"}, {"title": "下一站 Beyond This Station", "bvid": "BV1JqKM6rELh", "album": "神说要有笑（中篇）", "group": "EP", "game": "星铁"}, {"title": "拂晓 Proi Proi", "bvid": "BV12HJBzHERG", "album": "洞穴寓言（中篇）", "group": "EP", "game": "星铁"}, {"title": "洞穴寓言", "bvid": "BV1XxcReqEtf", "album": "洞穴寓言", "group": "EP", "game": "星铁"}, {"title": "昔涟", "bvid": "BV1XG2FBTEHK", "album": "行于命途 Vol.5", "group": "角色曲", "game": "星铁"}, {"title": "耀斑", "bvid": "BV1sV3xzfEXP", "album": "行于命途 Vol.4", "group": "角色曲", "game": "星铁"}, {"title": "在银河中孤独摇摆", "bvid": "BV1xSKp6fEm8", "album": "空气蛹 INSIDE", "group": "角色曲", "game": "星铁"}, {"title": "若我不曾见过太阳", "bvid": "BV1Qw4m1S7ku", "album": "若我不曾见过太阳", "group": "角色曲", "game": "星铁"}, {"title": "你的终点，我的起点", "bvid": "BV1kZNN6iEPq", "album": "行于命途 Vol.6", "group": "动画", "game": "星铁"}, {"title": "即兴巡演PV——「致仰望者」", "bvid": "BV1MHMe6vE94", "album": "行于命途 Vol.6", "group": "动画", "game": "星铁"}, {"title": "至冬交响音乐现场", "bvid": "BV1riGw6zELu", "album": "至冬", "group": "交响", "game": "原神"}, {"title": "纳塔交响音乐现场", "bvid": "BV18E4m1d7b7", "album": "纳塔", "group": "交响", "game": "原神"}, {"title": "回家的路（五周年主题曲）", "bvid": "BV1XmnhzVEby", "album": "五周年", "group": "主题曲", "game": "原神"}, {"title": "经过（四周年主题曲）", "bvid": "BV1LEsdevEMc", "album": "四周年", "group": "主题曲", "game": "原神"}, {"title": "EP - 忘忧谐律之歌", "bvid": "BV1M6421f7Q2", "album": "EP", "group": "EP", "game": "原神"}, {"title": "EP - 晨露浮光之初", "bvid": "BV1N4421D7vc", "album": "EP", "group": "EP", "game": "原神"}, {"title": "EP - 灯影柔寂之夜", "bvid": "BV1KD421n7PG", "album": "EP", "group": "EP", "game": "原神"}, {"title": "EP - 雨濯万象之息", "bvid": "BV1VZ421B7nU", "album": "EP", "group": "EP", "game": "原神"}, {"title": "EP - 幽谷舟咏", "bvid": "BV1EYwxePEHJ", "album": "特别EP", "group": "EP", "game": "原神"}, {"title": "挪德卡莱音乐现场", "bvid": "BV16EhRzmEgr", "album": "挪德卡莱", "group": "交响", "game": "原神"}, {"title": "预言（二周年主题曲）", "bvid": "BV1QRKJ6ZEzC", "album": "二周年", "group": "主题曲", "game": "绝区零"}, {"title": "蕾米埃尔EP | Two to Tango", "bvid": "BV1jhgf6pEJw", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "星徽比利EP | Billy Mode", "bvid": "BV16xVw6gEgu", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "妄想天使EP | ReDreaming Angel", "bvid": "BV11UBfBMEfQ", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "叶瞬光EP | 千万次初见", "bvid": "BV1M7BYBeExM", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "诺姆EP | chaos.exe", "bvid": "BV1WdTS6eECV", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "南宫羽EP | 妄想色心跳", "bvid": "BV1qDQdB7EbG", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "卢西娅EP | DAMIDAMI", "bvid": "BV1Ta4gzxE7i", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "残虹EP | Seven Shades of Red", "bvid": "BV1W1uq6zEdG", "album": "EP", "group": "EP", "game": "异环"}, {"title": "伊洛伊EP | Lullaby", "bvid": "BV1YVKH6vEdg", "album": "EP", "group": "EP", "game": "异环"}, {"title": "真红EP | Whatever It Says", "bvid": "BV1xiKU6eED2", "album": "EP", "group": "EP", "game": "异环"}, {"title": "卡厄斯EP | Chains of the Dark", "bvid": "BV1tcEk67EBB", "album": "EP", "group": "EP", "game": "异环"}, {"title": "安魂曲EP | 100% Crimson Solver", "bvid": "BV1s3LA64ErQ", "album": "EP", "group": "EP", "game": "异环"}];
+var jkState = { playing: -1 };
 
-/* --- Jukebox State & Settings --- */
-var jkState = { playing: -1, playlist: [], plMode: 'list', bgPlay: false, autoPlay: false, rememberProgress: false };
-var jkProgressMap = {};
-var jkIframeTimer = null;
-
-function jkLoadSettings() {
-  try {
-    var s = JSON.parse(localStorage.getItem('jk_settings') || '{}');
-    jkState.bgPlay = !!s.bgPlay;
-    jkState.autoPlay = !!s.autoPlay && !!s.bgPlay;
-    jkState.rememberProgress = !!s.rememberProgress;
-    jkState.plMode = s.plMode || 'list';
-    jkState.playlist = Array.isArray(s.playlist) ? s.playlist : [];
-    jkProgressMap = s.progressMap || {};
-  } catch(e) {}
-}
-function jkSaveSettings() {
-  try {
-    localStorage.setItem('jk_settings', JSON.stringify({
-      bgPlay: jkState.bgPlay, autoPlay: jkState.autoPlay,
-      rememberProgress: jkState.rememberProgress,
-      plMode: jkState.plMode, playlist: jkState.playlist,
-      progressMap: jkProgressMap
-    }));
-  } catch(e) {}
-}
-
-/* --- Render Track List (with + button for playlist) --- */
 function renderJukeboxTracks() {
   var list = document.getElementById('jk-tracklist');
   if (!list) return;
+  /* Group by game first, then by group within each game */
   var gameOrder = ["\u661f\u94c1", "\u539f\u795e", "\u7edd\u533a\u96f6", "\u5f02\u73af"];
   var gameNames = {"\u661f\u94c1":"\u5d29\u574f\uff1a\u661f\u7a79\u94c1\u9053","\u539f\u795e":"\u539f\u795e","\u7edd\u533a\u96f6":"\u7edd\u533a\u96f6","\u5f02\u73af":"\u5f02\u73af"};
   var groupOrder = ["\u4e3b\u9898\u66f2", "\u4ea4\u54cd", "EP", "\u89d2\u8272\u66f2", "\u52a8\u753b"];
@@ -11476,18 +11360,12 @@ function renderJukeboxTracks() {
       games[g][grp].forEach(function(item) {
         var t = item.track;
         var i = item.idx;
-        var inList = jkState.playlist.indexOf(i) > -1;
         html += '<div class="jk-track" data-idx="' + i + '" onclick="playJukeboxTrack(' + i + ')">';
         html += '  <div class="jk-track-num">' + num + '</div>';
         html += '  <div class="jk-track-info">';
         html += '    <div class="jk-track-title">' + t.title + '</div>';
         html += '    <div class="jk-track-meta">' + t.album + '</div>';
         html += '  </div>';
-        html += '  <button class="jk-track-add' + (inList ? ' in-list' : '') + '" data-idx="' + i + '" onclick="event.stopPropagation();jkTogglePlaylist(' + i + ')" title="' + (inList ? '\u79fb\u51fa\u64ad\u653e\u5217\u8868' : '\u52a0\u5165\u64ad\u653e\u5217\u8868') + '">';
-        html += inList
-          ? '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>'
-          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
-        html += '</button>';
         html += '  <div class="jk-track-play"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M8 5v14l11-7z"/></svg></div>';
         html += '</div>';
         num++;
@@ -11497,75 +11375,15 @@ function renderJukeboxTracks() {
     html += '</div>';
   });
   list.innerHTML = html;
-  updatePlayingHighlight();
 }
 
-/* --- Playlist Management --- */
-function jkTogglePlaylist(idx) {
-  var pos = jkState.playlist.indexOf(idx);
-  if (pos > -1) { jkState.playlist.splice(pos, 1); }
-  else { jkState.playlist.push(idx); }
-  jkSaveSettings();
-  renderJukeboxTracks();
-  renderPlaylistPanel();
-}
-function jkRemoveFromPlaylist(idx) {
-  var pos = jkState.playlist.indexOf(idx);
-  if (pos > -1) { jkState.playlist.splice(pos, 1); }
-  jkSaveSettings();
-  renderJukeboxTracks();
-  renderPlaylistPanel();
-}
-function renderPlaylistPanel() {
-  var container = document.getElementById('jk-pl-list');
-  document.getElementById('jk-pl-count').textContent = jkState.playlist.length;
-  if (jkState.playlist.length === 0) {
-    container.innerHTML = '<div class="jk-pl-empty">\u64ad\u653e\u5217\u8868\u4e3a\u7a7a\uff0c\u70b9\u51fb\u66f2\u76ee\u65c1\u7684 + \u6dfb\u52a0</div>';
-    return;
-  }
-  var html = '';
-  jkState.playlist.forEach(function(idx, order) {
-    var t = JUKEBOX_TRACKS[idx];
-    if (!t) return;
-    var isPlaying = jkState.playing === idx;
-    html += '<div class="jk-pl-item' + (isPlaying ? ' playing' : '') + '" onclick="jkPlayFromPlaylist(' + order + ')">';
-    html += '  <div class="jk-pl-item-info">';
-    html += '    <div class="jk-pl-item-title">' + (isPlaying ? '\u25b6 ' : '') + t.title + '</div>';
-    html += '    <div class="jk-pl-item-meta">' + t.album + ' \u00b7 ' + t.group + '</div>';
-    html += '  </div>';
-    html += '  <button class="jk-pl-remove" onclick="event.stopPropagation();jkRemoveFromPlaylist(' + idx + ')" title="\u79fb\u9664"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>';
-    html += '</div>';
-  });
-  container.innerHTML = html;
-  document.querySelectorAll('.jk-pl-mode-btn').forEach(function(b) {
-    b.classList.toggle('active', b.getAttribute('data-mode') === jkState.plMode);
-  });
-}
-function jkPlayFromPlaylist(order) {
-  if (order < 0 || order >= jkState.playlist.length) return;
-  var idx = jkState.playlist[order];
-  playJukeboxTrack(idx);
-}
-function jkNextInPlaylist() {
-  if (jkState.playlist.length === 0) return;
-  var currentOrder = jkState.playlist.indexOf(jkState.playing);
-  var nextOrder;
-  if (jkState.plMode === 'single') {
-    nextOrder = currentOrder;
-  } else if (jkState.plMode === 'shuffle') {
-    nextOrder = Math.floor(Math.random() * jkState.playlist.length);
-  } else {
-    nextOrder = (currentOrder + 1) % jkState.playlist.length;
-  }
-  jkPlayFromPlaylist(nextOrder);
-}
-
-/* --- Play Track --- */
 function playJukeboxTrack(idx) {
   var t = JUKEBOX_TRACKS[idx];
   if (!t) return;
   jkState.playing = idx;
-  updatePlayingHighlight();
+  document.querySelectorAll('.jk-track').forEach(function(el, i) {
+    el.classList.toggle('playing', parseInt(el.getAttribute('data-idx')) === idx);
+  });
   document.getElementById('jk-np-title').textContent = t.title;
   document.getElementById('jk-np-album').textContent = t.album + ' \u00b7 ' + t.group;
   var wrap = document.getElementById('jk-player-wrap');
@@ -11573,107 +11391,18 @@ function playJukeboxTrack(idx) {
   var iframe = document.getElementById('jk-iframe');
   iframe.src = 'https://player.bilibili.com/player.html?bvid=' + t.bvid + '&high_quality=1&danmaku=0&autoplay=1';
   wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  renderPlaylistPanel();
-  try { localStorage.setItem('jk_lastBvid', t.bvid); localStorage.setItem('jk_lastIdx', String(idx)); } catch(e){}
-}
-function updatePlayingHighlight() {
-  document.querySelectorAll('.jk-track').forEach(function(el) {
-    el.classList.toggle('playing', parseInt(el.getAttribute('data-idx')) === jkState.playing);
-  });
 }
 
-/* --- Close Player --- */
 document.getElementById('jk-np-close').addEventListener('click', function() {
   document.getElementById('jk-player-wrap').style.display = 'none';
   document.getElementById('jk-iframe').src = '';
   jkState.playing = -1;
-  updatePlayingHighlight();
-  renderPlaylistPanel();
-});
-
-/* --- Toolbar Toggle --- */
-document.getElementById('jk-btn-playlist').addEventListener('click', function() {
-  var panel = document.getElementById('jk-playlist-panel');
-  var settingsPanel = document.getElementById('jk-settings-panel');
-  settingsPanel.classList.remove('open');
-  this.classList.toggle('active');
-  document.getElementById('jk-btn-settings').classList.remove('active');
-  panel.classList.toggle('open');
-  if (panel.classList.contains('open')) renderPlaylistPanel();
-});
-document.getElementById('jk-btn-settings').addEventListener('click', function() {
-  var panel = document.getElementById('jk-settings-panel');
-  var plPanel = document.getElementById('jk-playlist-panel');
-  plPanel.classList.remove('open');
-  this.classList.toggle('active');
-  document.getElementById('jk-btn-playlist').classList.remove('active');
-  panel.classList.toggle('open');
-  jkRenderSettings();
-});
-
-/* --- Playlist Mode Switch --- */
-document.querySelectorAll('.jk-pl-mode-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    jkState.plMode = this.getAttribute('data-mode');
-    jkSaveSettings();
-    renderPlaylistPanel();
+  document.querySelectorAll('.jk-track').forEach(function(el) {
+    el.classList.remove('playing');
   });
 });
 
-/* --- Settings Toggles --- */
-function jkRenderSettings() {
-  document.getElementById('jk-opt-bgplay').classList.toggle('on', jkState.bgPlay);
-  document.getElementById('jk-opt-autoplay').classList.toggle('on', jkState.autoPlay);
-  document.getElementById('jk-opt-remember').classList.toggle('on', jkState.rememberProgress);
-}
-document.getElementById('jk-opt-bgplay').addEventListener('click', function() {
-  jkState.bgPlay = !jkState.bgPlay;
-  if (!jkState.bgPlay) jkState.autoPlay = false;
-  jkSaveSettings(); jkRenderSettings();
-});
-document.getElementById('jk-opt-autoplay').addEventListener('click', function() {
-  if (!jkState.bgPlay) { toast('\u8bf7\u5148\u5f00\u542f\u540e\u53f0\u64ad\u653e'); return; }
-  jkState.autoPlay = !jkState.autoPlay;
-  jkSaveSettings(); jkRenderSettings();
-});
-document.getElementById('jk-opt-remember').addEventListener('click', function() {
-  jkState.rememberProgress = !jkState.rememberProgress;
-  jkSaveSettings(); jkRenderSettings();
-});
-
-/* --- B站 iframe postMessage listener for playback end --- */
-window.addEventListener('message', function(e) {
-  try {
-    var data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
-    if (data && (data.type === 'videoEnded' || data.event === 'onEnded') && jkState.playlist.length > 0) {
-      jkNextInPlaylist();
-    }
-  } catch(ex) {}
-});
-
-/* --- Auto-play on load --- */
-function jkTryAutoPlay() {
-  if (!jkState.autoPlay || !jkState.bgPlay) return;
-  var lastIdx = parseInt(localStorage.getItem('jk_lastIdx') || '-1');
-  if (lastIdx >= 0 && lastIdx < JUKEBOX_TRACKS.length) {
-    var t = JUKEBOX_TRACKS[lastIdx];
-    jkState.playing = lastIdx;
-    document.getElementById('jk-np-title').textContent = t.title;
-    document.getElementById('jk-np-album').textContent = t.album + ' \u00b7 ' + t.group;
-    var wrap = document.getElementById('jk-player-wrap');
-    wrap.style.display = '';
-    document.getElementById('jk-iframe').src = 'https://player.bilibili.com/player.html?bvid=' + t.bvid + '&high_quality=1&danmaku=0&autoplay=1';
-    updatePlayingHighlight();
-    renderPlaylistPanel();
-  }
-}
-
-/* --- Init --- */
-jkLoadSettings();
 renderJukeboxTracks();
-jkRenderSettings();
-setTimeout(jkTryAutoPlay, 1500);
-
 
 </script>
 </body>
