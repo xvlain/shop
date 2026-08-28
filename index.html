@@ -10666,6 +10666,8 @@ function initDevice() {
       myDeviceCode = saved;
       var el = document.getElementById("my-device-code");
       if (el) el.textContent = saved;
+      loadShopProducts();
+      updateInboxBadge();
       restoreUnlocks();
     } else {
       claimDevice();
