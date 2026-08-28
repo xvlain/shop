@@ -1207,7 +1207,7 @@ html { overflow-x:hidden; }
             <li>商城限购：每个商品限购一次，不再显示数量加减按钮</li>
             <li>自动分配兑换码：订单提交后系统自动分配兑换码并解锁资料库，管理员一键确认即可</li>
             <li>兑换码库清理：管理后台新增"清理废码"功能，可删除无效的已用旧码</li>
-            <li>捆绑优惠恢复：同一游戏同一版本的角色库 + 武器库同时购买，武器库免费</li>
+            <li>拼团优惠修正：全库普通价28元，拼团价20元（角色库4元 + 武器库1元），无捆绑免费</li>
             <li>拼团机制重构：以"商品数"（同游戏同版本角色 + 武器算 1 个商品）取代"单数"作为成团条件，拼团内总商品数 ≥ 3 即可成团</li>
             <li>加入拼团时显示拼团详情：人数 / 单数 / 总商品数</li>
             <li>邮箱新增"一键已读"按钮，点击后全部消息标记为已读</li>
@@ -10620,13 +10620,11 @@ function calcCartTotal() {
   var groupTotal = 0;
   Object.keys(groups).forEach(function(k) {
     var items = groups[k];
-    var hasChar = items.some(function(i) { return i.category === 'character'; });
     items.forEach(function(item) {
       var regPrice = item.price;
       var grpPrice = item.group_price != null ? item.group_price : item.price;
-      var bundleFree = (item.category !== 'character' && hasChar);
-      regularTotal += bundleFree ? 0 : regPrice;
-      groupTotal += bundleFree ? 0 : grpPrice;
+      regularTotal += regPrice;
+      groupTotal += grpPrice;
     });
   });
   var radio = document.querySelector('input[name="gb-type"]:checked');
@@ -10661,18 +10659,14 @@ function renderCart() {
   });
   Object.keys(groups).forEach(function(k) {
     var items = groups[k];
-    var hasChar = items.some(function(i) { return i.category === 'character'; });
     items.forEach(function(item) {
-      var bundleFree = (item.category !== 'character' && hasChar);
       var priceStr = '';
-      if (bundleFree) {
-        priceStr = '<span style="text-decoration:line-through;color:var(--ink-faint);margin-right:4px">' + item.price + '元</span><span style="color:var(--success);font-weight:700">0元</span>';
-      } else if (item.group_price != null && item.group_price !== item.price) {
+      if (item.group_price != null && item.group_price !== item.price) {
         priceStr = '<span style="margin-right:4px">' + item.price + '元</span><span style="color:var(--accent-deep);font-weight:700;font-size:12px">拼团 ' + item.group_price + '元</span>';
       } else {
         priceStr = item.price + '元';
       }
-      html += '<div class="cart-item"><span class="ci-name">' + item.name + (bundleFree ? ' <span style="font-size:11px;color:var(--success)">捆绑优惠</span>' : '') + '</span><span class="ci-price">' + priceStr + '</span><button class="ci-remove" data-code="' + item.product_code + '">&times;</button></div>';
+      html += '<div class="cart-item"><span class="ci-name">' + item.name + '</span><span class="ci-price">' + priceStr + '</span><button class="ci-remove" data-code="' + item.product_code + '">&times;</button></div>';
     });
   });
   html += '<div class="gb-options" style="margin-top:16px;padding:14px;background:var(--panel);border:1.5px solid var(--line);border-radius:12px">';
