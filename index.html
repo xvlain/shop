@@ -611,6 +611,70 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
   .preview-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
   .letter-body { font-size:14px; }
 }
+/* ===== landing page ===== */
+#landing-gate {
+  position:fixed; inset:0; z-index:9999;
+  background:var(--bg);
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+  transition:opacity .4s ease, transform .4s ease;
+}
+#landing-gate.gone { opacity:0; transform:translateY(-30px); pointer-events:none; }
+.lg-inner {
+  width:100%; max-width:440px; padding:48px 24px 40px;
+  display:flex; flex-direction:column; align-items:center;
+}
+.lg-brand {
+  font-size:32px; font-weight:900; letter-spacing:1px;
+  color:var(--accent); margin-bottom:4px;
+}
+.lg-brand em { font-style:normal; color:var(--accent-deep); }
+.lg-tagline {
+  font-size:13px; color:var(--ink-dim); margin-bottom:32px; letter-spacing:.5px;
+}
+.lg-card {
+  width:100%; background:var(--panel); border:1px solid var(--line);
+  border-radius:14px; padding:20px 22px; margin-bottom:14px;
+  box-shadow:0 2px 12px rgba(0,0,0,.04);
+}
+.lg-card-title {
+  font-size:14px; font-weight:700; color:var(--accent);
+  margin-bottom:10px; display:flex; align-items:center; gap:8px;
+}
+.lg-card-title svg { flex-shrink:0; }
+.lg-card p, .lg-card li {
+  font-size:13.5px; color:var(--ink); line-height:1.75;
+}
+.lg-card ul { padding-left:18px; margin:0; }
+.lg-card li { margin-bottom:4px; }
+.lg-card li::marker { color:var(--accent-soft); }
+.lg-price-row {
+  display:flex; gap:10px; margin-top:8px; flex-wrap:wrap;
+}
+.lg-price-tag {
+  font-size:12px; padding:4px 10px; border-radius:20px;
+  background:var(--accent-pale); color:var(--accent-deep); font-weight:600;
+}
+.lg-enter-btn {
+  margin-top:28px; width:100%; max-width:280px;
+  padding:14px 0; border:none; border-radius:40px;
+  background:var(--accent); color:#fff;
+  font-size:16px; font-weight:700; letter-spacing:2px;
+  cursor:pointer; transition:background .2s, transform .15s;
+  box-shadow:0 4px 20px rgba(0,0,0,.1);
+}
+.lg-enter-btn:hover { background:var(--accent-deep); }
+.lg-enter-btn:active { transform:scale(.97); }
+.lg-foot {
+  margin-top:18px; font-size:11.5px; color:var(--ink-faint);
+}
+@media (max-width:560px) {
+  .lg-inner { padding:36px 18px 32px; }
+  .lg-brand { font-size:26px; }
+  .lg-card { padding:16px 16px; }
+  .lg-enter-btn { max-width:100%; }
+}
+
 
 /* Prevent horizontal scroll globally */
 html { overflow-x:hidden; }
@@ -1072,6 +1136,57 @@ html { overflow-x:hidden; }
 </style>
 </head>
 <body data-theme="pink" data-cfont="cute" data-efont="sans">
+
+  <!-- Landing Gate -->
+  <div id="landing-gate">
+    <div class="lg-inner">
+      <div class="lg-brand">二游<em>情报铺</em></div>
+      <div class="lg-tagline">版本情报 · 角色资料 · 武器档案</div>
+
+      <div class="lg-card">
+        <div class="lg-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          这是什么地方？
+        </div>
+        <p>二游情报铺是一个版本情报整理站，为每款二游的当前版本提供角色、武器（光锥/音擎）等资料 PDF。所有资料按版本归档，方便你随时查阅。</p>
+      </div>
+
+      <div class="lg-card">
+        <div class="lg-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          如何获取资料？
+        </div>
+        <ul>
+          <li>每个资料库（角色/武器）单独定价，可在商城购买</li>
+          <li>购买后你会收到<b>兑换码</b>，在「兑换」页面输入即可解锁</li>
+          <li>解锁后的资料永久可访问，不限次数</li>
+        </ul>
+      </div>
+
+      <div class="lg-card">
+        <div class="lg-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          拼团优惠
+        </div>
+        <p>开启拼团后，全场商品享受拼团价：</p>
+        <div class="lg-price-row">
+          <span class="lg-price-tag">角色库 普通5元 / 拼团4元</span>
+          <span class="lg-price-tag">武器库 普通2元 / 拼团1元</span>
+        </div>
+      </div>
+
+      <div class="lg-card">
+        <div class="lg-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          关于加密资料
+        </div>
+        <p>前瞻版本（最新版本）的资料默认加密，需要购买兑换码后解锁。遗产名录中较旧版本的资料可直接访问。</p>
+      </div>
+
+      <button class="lg-enter-btn" id="lg-enter-btn">确认入站</button>
+      <div class="lg-foot">入站后会为你分配一个设备码，用于购买和兑换</div>
+    </div>
+  </div>
 
   <!-- Sidebar (hamburger menu) -->
   <button class="top-hamburger" id="btn-sidebar" aria-label="菜单">
@@ -10412,18 +10527,44 @@ function claimDevice() {
   });
 }
 
-// Restore device code from localStorage
-try {
-  var saved = localStorage.getItem("erp3_device");
-  if (saved) {
-    myDeviceCode = saved;
-    var el = document.getElementById("my-device-code");
-    if (el) el.textContent = saved;
-    restoreUnlocks();
-  } else {
-    claimDevice();
+// Restore device code from localStorage — deferred until landing gate is passed
+var _deviceReady = false;
+function initDevice() {
+  if (_deviceReady) return;
+  _deviceReady = true;
+  try {
+    var saved = localStorage.getItem("erp3_device");
+    if (saved) {
+      myDeviceCode = saved;
+      var el = document.getElementById("my-device-code");
+      if (el) el.textContent = saved;
+      restoreUnlocks();
+    } else {
+      claimDevice();
+    }
+  } catch(e) { claimDevice(); }
+}
+
+// Landing gate logic
+(function() {
+  var gate = document.getElementById("landing-gate");
+  var btn = document.getElementById("lg-enter-btn");
+  var entered = false;
+  try { entered = localStorage.getItem("erp3_entered") === "1"; } catch(e) {}
+  if (entered) {
+    gate.style.display = "none";
+    initDevice();
+  } else if (btn) {
+    btn.addEventListener("click", function() {
+      gate.classList.add("gone");
+      try { localStorage.setItem("erp3_entered", "1"); } catch(e) {}
+      setTimeout(function() {
+        gate.style.display = "none";
+        initDevice();
+      }, 420);
+    });
   }
-} catch(e) { claimDevice(); }
+})();
 
 /* ===== redemption logic (code-based unlock) ===== */
 var redeemBtn = document.getElementById("redeem-btn");
