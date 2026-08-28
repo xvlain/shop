@@ -615,10 +615,11 @@ footer .sig { color:var(--accent-deep); letter-spacing:.08em; }
 #landing-gate {
   position:fixed; inset:0; z-index:9999;
   background:var(--bg);
-  display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+  display:none; flex-direction:column; align-items:center; justify-content:flex-start;
   overflow-y:auto; -webkit-overflow-scrolling:touch;
   transition:opacity .4s ease, transform .4s ease;
 }
+#landing-gate.show { display:flex; }
 #landing-gate.gone { opacity:0; transform:translateY(-30px); pointer-events:none; }
 .lg-inner {
   width:100%; max-width:440px; padding:48px 24px 40px;
@@ -1116,6 +1117,95 @@ html { overflow-x:hidden; }
   padding:12px 18px 6px; border-bottom:1.5px solid var(--line);
   margin-bottom:8px; letter-spacing:.04em;
 }
+
+/* Jukebox Toolbar */
+.jk-toolbar {
+  display:flex; gap:10px; max-width:720px; margin:0 auto 12px; padding:0 4px;
+}
+.jk-tool-btn {
+  display:flex; align-items:center; gap:6px;
+  padding:8px 14px; border-radius:20px;
+  background:var(--panel); border:1px solid var(--line);
+  color:var(--ink-dim); font-size:13px; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:all .2s;
+}
+.jk-tool-btn:hover { border-color:var(--accent-soft); color:var(--accent-deep); }
+.jk-tool-btn.active { background:var(--accent-pale); border-color:var(--accent); color:var(--accent-deep); }
+.jk-pl-count {
+  font-size:11px; background:var(--accent); color:#fff;
+  padding:1px 6px; border-radius:10px; min-width:18px; text-align:center;
+}
+/* Jukebox Playlist Panel */
+.jk-playlist-panel {
+  max-width:720px; margin:0 auto 16px;
+  background:var(--panel); border:1px solid var(--line);
+  border-radius:12px; overflow:hidden;
+}
+.jk-pl-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px; border-bottom:1px solid var(--line);
+}
+.jk-pl-title { font-size:14px; font-weight:700; color:var(--ink); }
+.jk-pl-actions { display:flex; gap:6px; }
+.jk-loop-btn {
+  width:32px; height:32px; border-radius:8px; border:1px solid var(--line);
+  background:none; color:var(--ink-faint); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; transition:all .2s;
+}
+.jk-loop-btn.active { background:var(--accent-pale); border-color:var(--accent); color:var(--accent-deep); }
+.jk-pl-list { max-height:300px; overflow-y:auto; padding:8px 0; }
+.jk-pl-empty { padding:24px; text-align:center; font-size:13px; color:var(--ink-faint); }
+.jk-pl-item {
+  display:flex; align-items:center; gap:10px;
+  padding:8px 16px; cursor:pointer; transition:background .15s;
+}
+.jk-pl-item:hover { background:var(--accent-pale); }
+.jk-pl-item.playing { background:var(--accent-pale); }
+.jk-pl-item.playing .jk-pl-item-title { color:var(--accent-deep); font-weight:700; }
+.jk-pl-item-info { flex:1; min-width:0; }
+.jk-pl-item-title { font-size:13px; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.jk-pl-item-meta { font-size:11px; color:var(--ink-faint); }
+.jk-pl-item-remove {
+  width:24px; height:24px; border:none; background:none;
+  color:var(--ink-faint); cursor:pointer; font-size:16px; line-height:1;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+}
+.jk-pl-item-remove:hover { background:rgba(224,80,80,.1); color:#e05050; }
+/* Track add button */
+.jk-track-add {
+  width:28px; height:28px; border:1px solid var(--line); border-radius:50%;
+  background:none; color:var(--ink-faint); cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; font-weight:700; transition:all .2s; flex-shrink:0; margin-left:4px;
+}
+.jk-track-add:hover { border-color:var(--accent); color:var(--accent); }
+.jk-track-add.in-list { background:var(--accent-pale); border-color:var(--accent); color:var(--accent-deep); }
+/* Jukebox Settings Panel */
+.jk-settings-panel {
+  max-width:720px; margin:0 auto 16px;
+  background:var(--panel); border:1px solid var(--line);
+  border-radius:12px; overflow:hidden; padding:4px 0;
+}
+.jk-setting-row {
+  display:flex; align-items:center; gap:10px;
+  padding:12px 18px; border-bottom:1px solid var(--line);
+}
+.jk-setting-row:last-child { border-bottom:none; }
+.jk-setting-label { font-size:14px; font-weight:600; color:var(--ink); white-space:nowrap; }
+.jk-setting-desc { font-size:12px; color:var(--ink-faint); flex:1; min-width:0; }
+/* Toggle switch */
+.jk-switch { position:relative; display:inline-block; width:42px; height:24px; flex-shrink:0; }
+.jk-switch input { opacity:0; width:0; height:0; }
+.jk-slider {
+  position:absolute; cursor:pointer; inset:0;
+  background:var(--line); border-radius:24px; transition:.3s;
+}
+.jk-slider:before {
+  content:""; position:absolute; height:18px; width:18px;
+  left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.3s;
+}
+.jk-switch input:checked + .jk-slider { background:var(--accent); }
+.jk-switch input:checked + .jk-slider:before { transform:translateX(18px); }
 
 /* Responsive */
 @media(max-width:600px) {
@@ -1759,35 +1849,26 @@ html { overflow-x:hidden; }
       <!-- Menu group 1 -->
       <div style="background:var(--panel);border-radius:12px;border:1px solid var(--line);margin-bottom:12px;overflow:hidden;">
         <button class="mine-row" data-goto="orders" style="display:flex;align-items:center;gap:14px;padding:15px 18px;border:none;background:none;width:100%;cursor:pointer;font-family:inherit;font-size:15px;color:var(--ink);text-align:left;border-bottom:1px solid var(--line);">
-          <span style="font-size:20px;width:28px;text-align:center;">📋</span>
+          <span style="width:28px;text-align:center;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></span>
           <span style="flex:1;font-weight:600;">我的订单</span>
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ink-faint)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
         <button class="mine-row" data-goto="inbox" style="display:flex;align-items:center;gap:14px;padding:15px 18px;border:none;background:none;width:100%;cursor:pointer;font-family:inherit;font-size:15px;color:var(--ink);text-align:left;border-bottom:1px solid var(--line);">
-          <span style="font-size:20px;width:28px;text-align:center;">📬</span>
+          <span style="width:28px;text-align:center;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
           <span style="flex:1;font-weight:600;">邮箱</span>
           <span id="mine-inbox-badge" style="display:none;background:#e05050;color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-right:4px;"></span>
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ink-faint)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
         <button class="mine-row" data-goto="redeem" style="display:flex;align-items:center;gap:14px;padding:15px 18px;border:none;background:none;width:100%;cursor:pointer;font-family:inherit;font-size:15px;color:var(--ink);text-align:left;">
-          <span style="font-size:20px;width:28px;text-align:center;">🔑</span>
+          <span style="width:28px;text-align:center;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4h-4z"/></svg></span>
           <span style="flex:1;font-weight:600;">兑换</span>
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ink-faint)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
       </div>
-      <!-- Menu group 2: Unlocked -->
-      <div style="background:var(--panel);border-radius:12px;border:1px solid var(--line);margin-bottom:12px;overflow:hidden;">
-        <div style="display:flex;align-items:center;gap:14px;padding:15px 18px;">
-          <span style="font-size:20px;width:28px;text-align:center;">📚</span>
-          <span style="flex:1;font-weight:600;font-size:15px;color:var(--ink);">已解锁资料库</span>
-          <span id="mine-unlock-count" style="font-size:12px;color:var(--ink-faint);">0 个</span>
-        </div>
-        <div id="mine-unlocked-list" style="padding:0 18px 14px;font-size:13px;color:var(--ink-faint);">加载中…</div>
-      </div>
-      <!-- Menu group 3: Settings -->
+      <!-- Menu group 2: Settings -->
       <div style="background:var(--panel);border-radius:12px;border:1px solid var(--line);margin-bottom:12px;overflow:hidden;">
         <button class="mine-row" id="mine-open-settings" style="display:flex;align-items:center;gap:14px;padding:15px 18px;border:none;background:none;width:100%;cursor:pointer;font-family:inherit;font-size:15px;color:var(--ink);text-align:left;">
-          <span style="font-size:20px;width:28px;text-align:center;">⚙️</span>
+          <span style="width:28px;text-align:center;display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
           <span style="flex:1;font-weight:600;">设置</span>
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ink-faint)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
@@ -9932,6 +10013,56 @@ html { overflow-x:hidden; }
         <input type="text" id="jukebox-search" placeholder="搜索曲目…" autocomplete="off">
         <svg class="jukebox-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </div>
+      <!-- Playlist + Settings toolbar -->
+      <div class="jk-toolbar">
+        <button class="jk-tool-btn" id="jk-toggle-playlist">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <span>播放列表</span>
+          <span class="jk-pl-count" id="jk-pl-count">0</span>
+        </button>
+        <button class="jk-tool-btn" id="jk-toggle-settings">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>设置</span>
+        </button>
+      </div>
+      <!-- Playlist panel -->
+      <div class="jk-playlist-panel" id="jk-playlist-panel" style="display:none">
+        <div class="jk-pl-header">
+          <span class="jk-pl-title">播放列表</span>
+          <div class="jk-pl-actions">
+            <button class="jk-loop-btn active" id="jk-loop-list" title="列表循环">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+            </button>
+            <button class="jk-loop-btn" id="jk-loop-single" title="单曲循环">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/><text x="10" y="15" font-size="8" fill="currentColor" stroke="none" font-weight="900">1</text></svg>
+            </button>
+            <button class="jk-loop-btn" id="jk-loop-shuffle" title="随机播放">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="jk-pl-list" id="jk-pl-list">
+          <div class="jk-pl-empty">播放列表为空，点击曲目旁的 + 添加</div>
+        </div>
+      </div>
+      <!-- Settings panel -->
+      <div class="jk-settings-panel" id="jk-settings-panel" style="display:none">
+        <div class="jk-setting-row">
+          <span class="jk-setting-label">后台播放</span>
+          <span class="jk-setting-desc">退出留声机仍可继续播放</span>
+          <label class="jk-switch"><input type="checkbox" id="jk-opt-bgplay"><span class="jk-slider"></span></label>
+        </div>
+        <div class="jk-setting-row">
+          <span class="jk-setting-label">自动播放</span>
+          <span class="jk-setting-desc">进入网站自动续播上次曲目</span>
+          <label class="jk-switch"><input type="checkbox" id="jk-opt-autoplay"><span class="jk-slider"></span></label>
+        </div>
+        <div class="jk-setting-row">
+          <span class="jk-setting-label">播放进度记忆</span>
+          <span class="jk-setting-desc">记住上次播放的曲目</span>
+          <label class="jk-switch"><input type="checkbox" id="jk-opt-remember"><span class="jk-slider"></span></label>
+        </div>
+      </div>
       <div class="jk-player-wrap" id="jk-player-wrap" style="display:none">
         <div class="jk-now-playing">
           <div class="jk-np-info">
@@ -10545,24 +10676,37 @@ function initDevice() {
   } catch(e) { claimDevice(); }
 }
 
-// Landing gate logic
+// Landing gate logic — run immediately to avoid flash
 (function() {
   var gate = document.getElementById("landing-gate");
   var btn = document.getElementById("lg-enter-btn");
   var entered = false;
   try { entered = localStorage.getItem("erp3_entered") === "1"; } catch(e) {}
   if (entered) {
-    gate.style.display = "none";
+    /* Already entered — skip gate entirely */
+    if (gate) gate.style.display = "none";
     initDevice();
-  } else if (btn) {
-    btn.addEventListener("click", function() {
-      gate.classList.add("gone");
-      try { localStorage.setItem("erp3_entered", "1"); } catch(e) {}
-      setTimeout(function() {
-        gate.style.display = "none";
-        initDevice();
-      }, 420);
-    });
+  } else {
+    /* Show gate */
+    if (gate) gate.classList.add("show");
+    if (btn) {
+      var handled = false;
+      function onEnter() {
+        if (handled) return;
+        handled = true;
+        gate.classList.add("gone");
+        try { localStorage.setItem("erp3_entered", "1"); } catch(e) {}
+        setTimeout(function() {
+          gate.style.display = "none";
+          initDevice();
+        }, 420);
+      }
+      btn.addEventListener("click", onEnter);
+      btn.addEventListener("touchend", function(e) {
+        e.preventDefault();
+        onEnter();
+      });
+    }
   }
 })();
 
@@ -10969,21 +11113,7 @@ function initMinePage() {
     var badge = document.getElementById("mine-inbox-badge");
     if (badge) { if (count > 0) { badge.style.display = ""; badge.textContent = count; } else { badge.style.display = "none"; } }
   });
-  // Load unlocked libraries
-  sbRpc("check_unlocks", { p_device: myDeviceCode }).then(function(res) {
-    var el = document.getElementById("mine-unlocked-list");
-    var countEl = document.getElementById("mine-unlock-count");
-    if (!el) return;
-    if (res && res.ok && res.unlocked && res.unlocked.length > 0) {
-      if (countEl) countEl.textContent = res.unlocked.length + " 个";
-      el.innerHTML = res.unlocked.map(function(gid) {
-        return '<div style="padding:4px 0;font-size:13px;color:var(--ink-dim);border-top:1px solid var(--line);">' + gid.replace(/-/g, " · ") + '</div>';
-      }).join("");
-    } else {
-      if (countEl) countEl.textContent = "0 个";
-      el.innerHTML = '<div style="color:var(--ink-faint);padding-top:4px;">暂无</div>';
-    }
-  });
+  // Load unlocked libraries — removed (section deleted from UI)
 }
 // Mine page row clicks
 document.querySelectorAll(".mine-row").forEach(function(btn) {
@@ -11668,12 +11798,30 @@ document.addEventListener('keydown', function(e) {
 
 /* ===== Jukebox Player ===== */
 var JUKEBOX_TRACKS = [{"title": "星间旅行 Interstellar Journey", "bvid": "BV1rh4y1n77f", "album": "失控 Out of Control", "group": "主题曲", "game": "星铁"}, {"title": "不眠之夜 WHITE NIGHT", "bvid": "BV1me411n7eu", "album": "不眠之夜 WHITE NIGHT", "group": "主题曲", "game": "星铁"}, {"title": "何者 Nameless Faces", "bvid": "BV1yX66YcEPk", "album": "何者 Nameless Faces", "group": "主题曲", "game": "星铁"}, {"title": "天生鬼才", "bvid": "BV1XVDfBLE3D", "album": "三周年主题曲", "group": "主题曲", "game": "星铁"}, {"title": "希望有羽毛和翅膀", "bvid": "BV1Tf421m7iW", "album": "空气蛹 INSIDE", "group": "EP", "game": "星铁"}, {"title": "下一站 Beyond This Station", "bvid": "BV1JqKM6rELh", "album": "神说要有笑（中篇）", "group": "EP", "game": "星铁"}, {"title": "拂晓 Proi Proi", "bvid": "BV12HJBzHERG", "album": "洞穴寓言（中篇）", "group": "EP", "game": "星铁"}, {"title": "洞穴寓言", "bvid": "BV1XxcReqEtf", "album": "洞穴寓言", "group": "EP", "game": "星铁"}, {"title": "昔涟", "bvid": "BV1XG2FBTEHK", "album": "行于命途 Vol.5", "group": "角色曲", "game": "星铁"}, {"title": "耀斑", "bvid": "BV1sV3xzfEXP", "album": "行于命途 Vol.4", "group": "角色曲", "game": "星铁"}, {"title": "在银河中孤独摇摆", "bvid": "BV1xSKp6fEm8", "album": "空气蛹 INSIDE", "group": "角色曲", "game": "星铁"}, {"title": "若我不曾见过太阳", "bvid": "BV1Qw4m1S7ku", "album": "若我不曾见过太阳", "group": "角色曲", "game": "星铁"}, {"title": "你的终点，我的起点", "bvid": "BV1kZNN6iEPq", "album": "行于命途 Vol.6", "group": "动画", "game": "星铁"}, {"title": "即兴巡演PV——「致仰望者」", "bvid": "BV1MHMe6vE94", "album": "行于命途 Vol.6", "group": "动画", "game": "星铁"}, {"title": "至冬交响音乐现场", "bvid": "BV1riGw6zELu", "album": "至冬", "group": "交响", "game": "原神"}, {"title": "纳塔交响音乐现场", "bvid": "BV18E4m1d7b7", "album": "纳塔", "group": "交响", "game": "原神"}, {"title": "回家的路（五周年主题曲）", "bvid": "BV1XmnhzVEby", "album": "五周年", "group": "主题曲", "game": "原神"}, {"title": "经过（四周年主题曲）", "bvid": "BV1LEsdevEMc", "album": "四周年", "group": "主题曲", "game": "原神"}, {"title": "EP - 忘忧谐律之歌", "bvid": "BV1M6421f7Q2", "album": "EP", "group": "EP", "game": "原神"}, {"title": "EP - 晨露浮光之初", "bvid": "BV1N4421D7vc", "album": "EP", "group": "EP", "game": "原神"}, {"title": "EP - 灯影柔寂之夜", "bvid": "BV1KD421n7PG", "album": "EP", "group": "EP", "game": "原神"}, {"title": "EP - 雨濯万象之息", "bvid": "BV1VZ421B7nU", "album": "EP", "group": "EP", "game": "原神"}, {"title": "EP - 幽谷舟咏", "bvid": "BV1EYwxePEHJ", "album": "特别EP", "group": "EP", "game": "原神"}, {"title": "挪德卡莱音乐现场", "bvid": "BV16EhRzmEgr", "album": "挪德卡莱", "group": "交响", "game": "原神"}, {"title": "预言（二周年主题曲）", "bvid": "BV1QRKJ6ZEzC", "album": "二周年", "group": "主题曲", "game": "绝区零"}, {"title": "蕾米埃尔EP | Two to Tango", "bvid": "BV1jhgf6pEJw", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "星徽比利EP | Billy Mode", "bvid": "BV16xVw6gEgu", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "妄想天使EP | ReDreaming Angel", "bvid": "BV11UBfBMEfQ", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "叶瞬光EP | 千万次初见", "bvid": "BV1M7BYBeExM", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "诺姆EP | chaos.exe", "bvid": "BV1WdTS6eECV", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "南宫羽EP | 妄想色心跳", "bvid": "BV1qDQdB7EbG", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "卢西娅EP | DAMIDAMI", "bvid": "BV1Ta4gzxE7i", "album": "EP", "group": "EP", "game": "绝区零"}, {"title": "残虹EP | Seven Shades of Red", "bvid": "BV1W1uq6zEdG", "album": "EP", "group": "EP", "game": "异环"}, {"title": "伊洛伊EP | Lullaby", "bvid": "BV1YVKH6vEdg", "album": "EP", "group": "EP", "game": "异环"}, {"title": "真红EP | Whatever It Says", "bvid": "BV1xiKU6eED2", "album": "EP", "group": "EP", "game": "异环"}, {"title": "卡厄斯EP | Chains of the Dark", "bvid": "BV1tcEk67EBB", "album": "EP", "group": "EP", "game": "异环"}, {"title": "安魂曲EP | 100% Crimson Solver", "bvid": "BV1s3LA64ErQ", "album": "EP", "group": "EP", "game": "异环"}];
-var jkState = { playing: -1 };
+var jkState = { playing: -1, loopMode: 'list' };
+
+/* Playlist state */
+var jkPlaylist = [];
+try { jkPlaylist = JSON.parse(localStorage.getItem('jk_playlist') || '[]'); } catch(e) { jkPlaylist = []; }
+try { jkState.loopMode = localStorage.getItem('jk_loopMode') || 'list'; } catch(e) {}
+
+function savePlaylist() {
+  try { localStorage.setItem('jk_playlist', JSON.stringify(jkPlaylist)); } catch(e) {}
+}
+function saveLoopMode() {
+  try { localStorage.setItem('jk_loopMode', jkState.loopMode); } catch(e) {}
+}
+
+/* Settings state */
+var jkSettings = { bgplay: false, autoplay: false, remember: false };
+try { var _s = JSON.parse(localStorage.getItem('jk_settings') || '{}'); jkSettings.bgplay = !!_s.bgplay; jkSettings.autoplay = !!_s.autoplay; jkSettings.remember = !!_s.remember; } catch(e) {}
+function saveSettings() {
+  try { localStorage.setItem('jk_settings', JSON.stringify(jkSettings)); } catch(e) {}
+}
 
 function renderJukeboxTracks() {
   var list = document.getElementById('jk-tracklist');
   if (!list) return;
-  /* Group by game first, then by group within each game */
   var gameOrder = ["\u661f\u94c1", "\u539f\u795e", "\u7edd\u533a\u96f6", "\u5f02\u73af"];
   var gameNames = {"\u661f\u94c1":"\u5d29\u574f\uff1a\u661f\u7a79\u94c1\u9053","\u539f\u795e":"\u539f\u795e","\u7edd\u533a\u96f6":"\u7edd\u533a\u96f6","\u5f02\u73af":"\u5f02\u73af"};
   var groupOrder = ["\u4e3b\u9898\u66f2", "\u4ea4\u54cd", "EP", "\u89d2\u8272\u66f2", "\u52a8\u753b"];
@@ -11696,13 +11844,15 @@ function renderJukeboxTracks() {
       games[g][grp].forEach(function(item) {
         var t = item.track;
         var i = item.idx;
-        html += '<div class="jk-track" data-idx="' + i + '" onclick="playJukeboxTrack(' + i + ')">';
-        html += '  <div class="jk-track-num">' + num + '</div>';
-        html += '  <div class="jk-track-info">';
+        var inList = jkPlaylist.indexOf(i) !== -1;
+        html += '<div class="jk-track" data-idx="' + i + '">';
+        html += '  <div class="jk-track-num" onclick="playJukeboxTrack(' + i + ')">' + num + '</div>';
+        html += '  <div class="jk-track-info" onclick="playJukeboxTrack(' + i + ')">';
         html += '    <div class="jk-track-title">' + t.title + '</div>';
         html += '    <div class="jk-track-meta">' + t.album + '</div>';
         html += '  </div>';
-        html += '  <div class="jk-track-play"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M8 5v14l11-7z"/></svg></div>';
+        html += '  <button class="jk-track-add' + (inList ? ' in-list' : '') + '" onclick="togglePlaylist(' + i + ')" title="' + (inList ? '移除' : '添加到播放列表') + '">' + (inList ? '\u2713' : '+') + '</button>';
+        html += '  <div class="jk-track-play" onclick="playJukeboxTrack(' + i + ')"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M8 5v14l11-7z"/></svg></div>';
         html += '</div>';
         num++;
       });
@@ -11713,11 +11863,64 @@ function renderJukeboxTracks() {
   list.innerHTML = html;
 }
 
+function updatePlaylistUI() {
+  var countEl = document.getElementById('jk-pl-count');
+  if (countEl) countEl.textContent = jkPlaylist.length;
+  /* Update add buttons */
+  document.querySelectorAll('.jk-track-add').forEach(function(btn) {
+    var idx = parseInt(btn.parentElement.getAttribute('data-idx'));
+    var inList = jkPlaylist.indexOf(idx) !== -1;
+    btn.className = 'jk-track-add' + (inList ? ' in-list' : '');
+    btn.textContent = inList ? '\u2713' : '+';
+    btn.title = inList ? '\u79fb\u9664' : '\u6dfb\u52a0\u5230\u64ad\u653e\u5217\u8868';
+  });
+  /* Render playlist panel */
+  var plList = document.getElementById('jk-pl-list');
+  if (!plList) return;
+  if (jkPlaylist.length === 0) {
+    plList.innerHTML = '<div class="jk-pl-empty">\u64ad\u653e\u5217\u8868\u4e3a\u7a7a\uff0c\u70b9\u51fb\u66f2\u76ee\u65c1\u7684 + \u6dfb\u52a0</div>';
+    return;
+  }
+  var html = '';
+  jkPlaylist.forEach(function(idx, pos) {
+    var t = JUKEBOX_TRACKS[idx];
+    if (!t) return;
+    html += '<div class="jk-pl-item' + (jkState.playing === idx ? ' playing' : '') + '" data-pl-pos="' + pos + '">';
+    html += '  <div class="jk-pl-item-info" onclick="playJukeboxTrack(' + idx + ')">';
+    html += '    <div class="jk-pl-item-title">' + t.title + '</div>';
+    html += '    <div class="jk-pl-item-meta">' + t.album + '</div>';
+    html += '  </div>';
+    html += '  <button class="jk-pl-item-remove" onclick="removeFromPlaylist(' + pos + ')" title="\u79fb\u9664">&times;</button>';
+    html += '</div>';
+  });
+  plList.innerHTML = html;
+}
+
+function togglePlaylist(idx) {
+  var pos = jkPlaylist.indexOf(idx);
+  if (pos !== -1) {
+    jkPlaylist.splice(pos, 1);
+  } else {
+    jkPlaylist.push(idx);
+  }
+  savePlaylist();
+  updatePlaylistUI();
+}
+
+function removeFromPlaylist(pos) {
+  jkPlaylist.splice(pos, 1);
+  savePlaylist();
+  updatePlaylistUI();
+}
+
 function playJukeboxTrack(idx) {
   var t = JUKEBOX_TRACKS[idx];
   if (!t) return;
   jkState.playing = idx;
-  document.querySelectorAll('.jk-track').forEach(function(el, i) {
+  if (jkSettings.remember) {
+    try { localStorage.setItem('jk_lastTrack', idx); } catch(e) {}
+  }
+  document.querySelectorAll('.jk-track').forEach(function(el) {
     el.classList.toggle('playing', parseInt(el.getAttribute('data-idx')) === idx);
   });
   document.getElementById('jk-np-title').textContent = t.title;
@@ -11727,8 +11930,44 @@ function playJukeboxTrack(idx) {
   var iframe = document.getElementById('jk-iframe');
   iframe.src = 'https://player.bilibili.com/player.html?bvid=' + t.bvid + '&high_quality=1&danmaku=0&autoplay=1';
   wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  updatePlaylistUI();
 }
 
+function playNext() {
+  if (jkPlaylist.length === 0) return;
+  var curPos = jkPlaylist.indexOf(jkState.playing);
+  var nextIdx;
+  if (jkState.loopMode === 'single') {
+    nextIdx = jkState.playing;
+  } else if (jkState.loopMode === 'shuffle') {
+    nextIdx = jkPlaylist[Math.floor(Math.random() * jkPlaylist.length)];
+  } else {
+    /* list loop */
+    if (curPos === -1 || curPos >= jkPlaylist.length - 1) {
+      nextIdx = jkPlaylist[0];
+    } else {
+      nextIdx = jkPlaylist[curPos + 1];
+    }
+  }
+  playJukeboxTrack(nextIdx);
+}
+
+/* B站 iframe 播放结束检测 — 监听 iframe src 变化 */
+var _jkIframeCheck = setInterval(function() {
+  var iframe = document.getElementById('jk-iframe');
+  if (!iframe || !iframe.src) return;
+  try {
+    /* If iframe navigated away or ended, try next */
+    var doc = iframe.contentDocument || iframe.contentWindow.document;
+    if (doc && doc.readyState === 'complete') {
+      /* Cannot reliably detect video end in cross-origin iframe, skip */
+    }
+  } catch(e) {
+    /* Cross-origin - expected */
+  }
+}, 5000);
+
+/* Close player */
 document.getElementById('jk-np-close').addEventListener('click', function() {
   document.getElementById('jk-player-wrap').style.display = 'none';
   document.getElementById('jk-iframe').src = '';
@@ -11736,9 +11975,72 @@ document.getElementById('jk-np-close').addEventListener('click', function() {
   document.querySelectorAll('.jk-track').forEach(function(el) {
     el.classList.remove('playing');
   });
+  updatePlaylistUI();
 });
 
+/* Playlist toggle */
+var _plBtn = document.getElementById('jk-toggle-playlist');
+var _plPanel = document.getElementById('jk-playlist-panel');
+if (_plBtn && _plPanel) {
+  _plBtn.addEventListener('click', function() {
+    var open = _plPanel.style.display !== 'none';
+    _plPanel.style.display = open ? 'none' : '';
+    _plBtn.classList.toggle('active', !open);
+    /* Close settings if open */
+    var sBtn = document.getElementById('jk-toggle-settings');
+    var sPanel = document.getElementById('jk-settings-panel');
+    if (sPanel && !open) { sPanel.style.display = 'none'; if (sBtn) sBtn.classList.remove('active'); }
+  });
+}
+
+/* Settings toggle */
+var _sBtn = document.getElementById('jk-toggle-settings');
+var _sPanel = document.getElementById('jk-settings-panel');
+if (_sBtn && _sPanel) {
+  _sBtn.addEventListener('click', function() {
+    var open = _sPanel.style.display !== 'none';
+    _sPanel.style.display = open ? 'none' : '';
+    _sBtn.classList.toggle('active', !open);
+    /* Close playlist if open */
+    var plPanel = document.getElementById('jk-playlist-panel');
+    var plBtn = document.getElementById('jk-toggle-playlist');
+    if (plPanel && !open) { plPanel.style.display = 'none'; if (plBtn) plBtn.classList.remove('active'); }
+  });
+}
+
+/* Loop mode buttons */
+function setLoopMode(mode) {
+  jkState.loopMode = mode;
+  saveLoopMode();
+  document.getElementById('jk-loop-list').classList.toggle('active', mode === 'list');
+  document.getElementById('jk-loop-single').classList.toggle('active', mode === 'single');
+  document.getElementById('jk-loop-shuffle').classList.toggle('active', mode === 'shuffle');
+}
+document.getElementById('jk-loop-list').addEventListener('click', function() { setLoopMode('list'); });
+document.getElementById('jk-loop-single').addEventListener('click', function() { setLoopMode('single'); });
+document.getElementById('jk-loop-shuffle').addEventListener('click', function() { setLoopMode('shuffle'); });
+
+/* Settings checkboxes */
+var bgCheck = document.getElementById('jk-opt-bgplay');
+var autoCheck = document.getElementById('jk-opt-autoplay');
+var remCheck = document.getElementById('jk-opt-remember');
+if (bgCheck) { bgCheck.checked = jkSettings.bgplay; bgCheck.addEventListener('change', function() { jkSettings.bgplay = this.checked; saveSettings(); }); }
+if (autoCheck) { autoCheck.checked = jkSettings.autoplay; autoCheck.addEventListener('change', function() { jkSettings.autoplay = this.checked; saveSettings(); }); }
+if (remCheck) { remCheck.checked = jkSettings.remember; remCheck.addEventListener('change', function() { jkSettings.remember = this.checked; saveSettings(); }); }
+
+/* Init */
+setLoopMode(jkState.loopMode);
 renderJukeboxTracks();
+updatePlaylistUI();
+
+/* Auto-play on load */
+if (jkSettings.autoplay && jkSettings.remember) {
+  var lastIdx = null;
+  try { lastIdx = parseInt(localStorage.getItem('jk_lastTrack')); } catch(e) {}
+  if (lastIdx !== null && !isNaN(lastIdx) && JUKEBOX_TRACKS[lastIdx]) {
+    setTimeout(function() { playJukeboxTrack(lastIdx); }, 800);
+  }
+}
 
 </script>
 </body>
