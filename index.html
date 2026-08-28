@@ -10543,7 +10543,10 @@ function restoreUnlocks() {
   if (!myDeviceCode) return;
   sbRpc("check_unlocks", { p_device: myDeviceCode }).then(function(res) {
     if (res && res.ok && res.unlocked) {
-      res.unlocked.forEach(function(gid) { unlockGroup(gid); });
+      res.unlocked.forEach(function(rawGid) {
+        var gid = rawGid.replace(/ /g,'').replace(/：/g,'').replace(/\//g,'');
+        unlockGroup(gid);
+      });
       if (typeof checkPurchased === 'function' && shopProducts.length) checkPurchased();
     }
   });
@@ -10821,10 +10824,11 @@ function checkPurchased() {
   if (!myDeviceCode) return;
   sbRpc("check_unlocks", { p_device: myDeviceCode }).then(function(res) {
     if (!res || !res.ok) return;
-    var unlocked = res.unlocked || [];
+    var rawUnlocked = res.unlocked || [];
+    var unlocked = rawUnlocked.map(function(g) { return g.replace(/ /g,'').replace(/：/g,'').replace(/\//g,''); });
     purchasedProducts = [];
     shopProducts.forEach(function(p) {
-      var gid = p.game_name + '-' + (p.ver || '') + '-' + (p.category === 'character' ? ((p.game_group||'').indexOf('zzz')>-1?'代理人':'角色') : ((p.game_group||'').indexOf('hsr')>-1?'光锥':((p.game_group||'').indexOf('zzz')>-1?'音擎':'武器')));
+      var gid = (p.game_name||'').replace(/ /g,'').replace(/：/g,'').replace(/\//g,'') + '-' + (p.ver || '') + '-' + (p.category === 'character' ? ((p.game_group||'').indexOf('zzz')>-1?'代理人':'角色') : ((p.game_group||'').indexOf('hsr')>-1?'光锥':((p.game_group||'').indexOf('zzz')>-1?'音擎':'武器')));
       if (unlocked.indexOf(gid) > -1) purchasedProducts.push(p.code);
     });
     renderShop();
@@ -10854,9 +10858,13 @@ function renderShop() {
       var catLabel = p.category === "character" ? "角色库" : "武器库";
       var inCart = cart.some(function(c) { return c.product_code === p.code; });
       var purchased = purchasedProducts.indexOf(p.code) > -1;
+      var priceHtml = p.price + '元';
+      if (p.group_price != null && p.group_price < p.price) {
+        priceHtml = p.price + '元 <small style="color:var(--accent-deep);font-weight:600">拼团 ' + p.group_price + '元</small>';
+      }
       html += '<div class="shop-product" data-code="' + p.code + '">' +
         '<div class="sp-info"><div class="sp-name">' + p.name + '</div><div class="sp-cat">' + catLabel + '</div></div>' +
-        '<div class="sp-price">' + p.price + '元</div>' +
+        '<div class="sp-price">' + priceHtml + '</div>' +
         '<button class="shop-buy-btn' + (purchased ? ' purchased' : (inCart ? ' in-cart' : '')) + '" data-code="' + p.code + '">' + (purchased ? '已购买' : (inCart ? '✓ 已选' : '购买')) + '</button>' +
         '</div>';
     });
