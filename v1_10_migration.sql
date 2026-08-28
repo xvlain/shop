@@ -73,21 +73,7 @@ BEGIN
     v_total := v_total + v_lt;
   END LOOP;
 
-  -- 捆绑优惠：同游戏角色+武器，武器免费
-  UPDATE order_items SET line_total = 0, unit_price = 0
-  WHERE order_id = v_oid
-  AND product_code IN (
-    SELECT code FROM products p2
-    WHERE p2.category = 'weapon'
-    AND EXISTS (
-      SELECT 1 FROM order_items oi2
-      JOIN products p3 ON oi2.product_code = p3.code
-      WHERE oi2.order_id = v_oid AND p3.category = 'character' AND p3.game_group = p2.game_group AND oi2.line_total > 0
-    )
-  )
-  AND line_total > 0;
-
-  -- 重算总价
+  -- 重算总价（无捆绑优惠，直接累加）
   SELECT COALESCE(SUM(line_total), 0) INTO v_total FROM order_items WHERE order_id = v_oid;
   UPDATE orders SET total_price = v_total WHERE id = v_oid;
 
@@ -249,3 +235,7 @@ BEGIN
   RETURN jsonb_build_object('ok', true, 'unlocked', COALESCE(rows, '[]'::jsonb));
 END; $function$;
 GRANT EXECUTE ON FUNCTION check_unlocks(TEXT) TO anon;
+
+-- ===== 4. 校准产品价格（角色5/拼团4，武器2/拼团1）=====
+UPDATE products SET price = 5, group_price = 4 WHERE category = 'character';
+UPDATE products SET price = 2, group_price = 1 WHERE category = 'weapon';
